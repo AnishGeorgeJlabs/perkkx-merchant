@@ -1,0 +1,52 @@
+<!--
+Create tabs with an icon and label, using the tabs-positive style.
+Each tab's child <ion-nav-view> directive will have its own
+navigation history that also transitions its views in and out.
+-->
+<ion-tabs class="tabs-icon-top tabs-color-active-positive">
+
+  <!-- Pending Tab -->
+  <ion-tab title="Pending" 
+        icon-off="ion-cube" 
+        icon-on="ion-cube" 
+        ng-controller="BadgeCtrl" 
+        badge="badges.pending"
+        on-deselect='updateBadge("pending", 0)'
+        href="#/tab/pending">
+    <ion-nav-view name="tab-pending"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Used Tab -->
+  <ion-tab title="Used" 
+        icon-off="ion-android-done-all" 
+        icon-on="ion-android-done-all" 
+        ng-controller="BadgeCtrl" 
+        badge="badges.used"
+        on-deselect='updateBadge("used", 0)'
+        href="#/tab/used">
+    <ion-nav-view name="tab-used"></ion-nav-view>
+  </ion-tab>
+
+  <!-- Expired Tab -->
+  <ion-tab title="Expired" 
+        icon-off="ion-trash-a" 
+        icon-on="ion-trash-a" 
+        ng-controller="BadgeCtrl" 
+        badge="badges.expired"
+        on-deselect='updateBadge("expired", 0)'
+        href="#/tab/expired">
+    <ion-nav-view name="tab-expired"></ion-nav-view>
+  </ion-tab>
+  
+  <ion-tab title="Disputed" 
+        icon-off="ion-alert-circled" 
+        icon-on="ion-alert-circled" 
+        ng-controller="BadgeCtrl" 
+        badge="badges.disputed"
+        on-deselect='updateBadge("disputed", 0)'
+        href="#/tab/dispute">
+    <ion-nav-view name="tab-dispute"></ion-nav-view>
+  </ion-tab>
+
+
+</ion-tabs>

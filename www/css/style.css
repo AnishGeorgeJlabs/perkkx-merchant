@@ -1,0 +1,11 @@
+/* Empty. Add your own CSS if you like */
+i.icon.ion-card {
+  position: absolute;
+  top: 23px;
+  left: 16px;
+  max-width: 94px;
+  max-height: 94px;
+  width: 170% !important;
+  height: 170% !important;
+  border-radius: 50%;
+}

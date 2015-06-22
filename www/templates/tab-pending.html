@@ -1,0 +1,37 @@
+<ion-view view-title="Perkkx">
+  <ion-content>
+    <ion-list>
+        <!--
+        <div class="list card" ng-repeat="code in pcodes" href="">
+            <div class="item" >
+                <h2>{{ code.code }}</h2>
+                <h4>{{ code.desc }}</h4>
+            </div>
+
+            <div class="item item-body">
+                <p>
+                    Valid till {{ code.expiry | date }}<br />
+                    Redeemed on {{ code.usedOn | date }}
+                </p>
+                <p>
+                    feedback<br/>
+                    rating<br/>
+                </p>
+
+            </div>
+        </div>
+        -->
+        <div class="card" ng-repeat="code in pcodes">
+            <div class="item item-divider">
+                <h1>{{ code.code }}</h1>
+                <h4>{{ code.desc }}</h4>
+            </div>
+            <div class="item item-text-wrap">
+                <p>Redeemed on {{ code.usedOn | date }}</p>
+                <p>Expiry: {{ code.expiry | date }}</p>
+            </div>
+        </div>
+
+    </ion-list>
+  </ion-content>
+</ion-view>

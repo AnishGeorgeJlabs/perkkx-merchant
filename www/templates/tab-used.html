@@ -1,0 +1,20 @@
+<ion-view view-title="Perkkx">
+  <ion-content>
+    <ion-list>
+        <div class="list card" ng-repeat="chat in chats" href="#/tab/chats/{{chat.id}}">
+            <div class="item item-avatar" >
+                <i class="icon ion-card"></i>
+                <h2>{{chat.name}}</h2>
+                <p>{{chat.lastText}}</p>
+            </div>
+
+            <div class="item item-body">
+                <p>
+                  feedback<br/>
+                  rating<br/>
+                </p>
+            </div>
+        </div>
+    </ion-list>
+  </ion-content>
+</ion-view>
