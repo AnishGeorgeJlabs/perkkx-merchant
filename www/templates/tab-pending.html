@@ -21,14 +21,29 @@
             </div>
         </div>
         -->
-        <div class="card" ng-repeat="code in pcodes">
-            <div class="item item-divider">
-                <h1>{{ code.code }}</h1>
-                <h4>{{ code.desc }}</h4>
+        <div class="card" ng-repeat="code in pcodes"
+            ng-init="formshow = false" >
+            <div ng-click="formshow = !formshow">
+                <div class="item item-divider">
+                    <h1>{{ code.code }}</h1>
+                    <h4>{{ code.desc }}</h4>
+                </div>
+                <div class="item item-text-wrap">
+                    <p>Redeemed on {{ code.usedOn | date }}</p>
+                    <p>Expiry: {{ code.expiry | date }}</p>
+                </div>
             </div>
-            <div class="item item-text-wrap">
-                <p>Redeemed on {{ code.usedOn | date }}</p>
-                <p>Expiry: {{ code.expiry | date }}</p>
+            <div class="item list" ng-show="formshow" ng-init="form; form.invalid = false">
+                <ion-toggle ng-model="form.invalid" toggle-class="toggle-assertive">Did not use service</ion-toggle>
+                <label class="item item-input" ng-hide="form.invalid">
+                    <span class="input-label">Paid amount : </span>
+                    <input type="tel" ng-model="form.paid"> 
+                </label>
+                <label class="item item-input" ng-hide="form.invalid">
+                    <span class="input-label">Discount : </span>
+                    <input type="tel" ng-model="form.discount">
+                </label>
+                <button ng-click="submit(form)" class='button button-block button-positive'>Submit</button>
             </div>
         </div>
 

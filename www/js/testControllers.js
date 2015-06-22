@@ -66,13 +66,16 @@ angular.module("perkkx.testControllers", [])
     $scope.submit = function(obj) {     // TODO
         /* The object is probably as follows: 
            the object from $scope.pcodes array appended with the field:
-           valid: <Boolean>,
+           invalid: <Boolean>,
            paid: Number,
            discount: Number
 
           This function will use an external service to confirm the code
         */
-        console.log(JSON.stringify(obj));
+        alert(JSON.stringify(obj));
+    };
+    $scope.alert = function(str) {
+        alert(str)
     }
 })
 .controller('UsedCtrl', function($scope){})
