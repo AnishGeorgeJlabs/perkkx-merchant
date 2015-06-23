@@ -61,6 +61,12 @@ angular.module("perkkx.testControllers", [])
             usedOn: Date.now()
         }
     ]
+    $scope.fullSubmit = function(codeObj) {
+        return function(billObj) {
+            $scope.submit(billObj);     // Temporary
+        }
+    }
+            
 
     // adding bill
     $scope.submit = function(obj) {     // TODO
@@ -78,6 +84,126 @@ angular.module("perkkx.testControllers", [])
         alert(str)
     }
 })
-.controller('UsedCtrl', function($scope){})
-.controller('ExpiredCtrl', function($scope){})
-.controller('DisputeCtrl', function($scope){});
+.controller('UsedCtrl', function($scope){
+    $scope.ucodes = [
+        {
+            code: "ABC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: true,
+            paid: 1000,
+            discount: 205,
+            submittedOn: Date.now()
+        },
+        {
+            code: "AB2C",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: true,
+            paid: 1000,
+            discount: 205,
+            submittedOn: Date.now()
+        },
+        {
+            code: "AdqBC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: true,
+            paid: 1000,
+            discount: 205,
+            submittedOn: Date.now()
+        },
+        {
+            code: "xdAC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: true,
+            paid: 1000,
+            discount: 205,
+            submittedOn: Date.now()
+        }
+    ]
+    $scope.submit = function(obj) {     // TODO
+        alert(JSON.stringify(obj));
+    };
+})
+.controller('ExpiredCtrl', function($scope){
+    $scope.ecodes = [
+        {
+            code: "ABC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            valid: false
+        },
+        {
+            code: "AB2C",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            valid: false
+        },
+        {
+            code: "AdqBC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            valid: false
+        },
+        {
+            code: "xdAC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            valid: false
+        }
+    ]
+    $scope.submit = function(obj) {     // TODO
+        alert(JSON.stringify(obj));
+    };
+})
+.controller('DisputeCtrl', function($scope){
+    $scope.dcodes = [
+        {
+            code: "ABC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: false,
+            submittedOn: Date.now()
+        },
+        {
+            code: "AB2C",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: false,
+            submittedOn: Date.now()
+        },
+        {
+            code: "AdqBC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: false,
+            submittedOn: Date.now()
+        },
+        {
+            code: "xdAC",
+            desc: "Get 50% off on minimum perchase of some stuff",
+            expiry: Date.now(),
+            usedOn: Date.now(),
+
+            valid: false,
+            submittedOn: Date.now()
+        }
+    ]
+
+});

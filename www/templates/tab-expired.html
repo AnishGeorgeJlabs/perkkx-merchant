@@ -1,18 +1,31 @@
 <ion-view view-title="Perkkx">
   <ion-content>
     <ion-list>
-    <!--
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="chat in chats" type="item-text-wrap" href="#/tab/chats/{{chat.id}}">
-        <img ng-src="{{chat.face}}">
-        <h2>{{chat.name}}</h2>
-        <p>{{chat.lastText}}</p>
-        <i class="icon ion-chevron-right icon-accessory"></i>
-
-        <ion-option-button class="button-assertive" ng-click="remove(chat)">
-          Delete
-        </ion-option-button>
-      </ion-item>
-    -->
+        <div class="card" ng-repeat="code in ecodes"
+            ng-init="formshow = false, detailshow = false" >
+            <div ng-click="detailshow = formshow ? detailshow : !detailshow">
+                <div class="item item-divider">
+                    <h1>{{ code.code }}</h1>
+                    <h4>{{ code.desc }}</h4>
+                </div>
+                <div class="item item-text-wrap">
+                    <p>Expired on {{ code.expiry | date }}</p>
+                </div>
+            </div>
+            <div ng-show='detailshow' class='item item-text-wrap'>
+                <h2><i class='icon ion-ios-information-outline'></i>
+                    Customer did not use this service</h2>
+                <p>If cutomer used this service, 
+                <a ng-click='formshow = true; detailshow = false' href='#'>Please click here</a> 
+                to submit bill.</p>
+            </div>
+            <px-bill-form 
+                submit-obj='code' 
+                submit-func='submit' 
+                slider='false'
+                show='formshow'>
+            </px-bill-form>
+        </div>
     </ion-list>
   </ion-content>
 </ion-view>

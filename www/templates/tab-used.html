@@ -1,19 +1,45 @@
 <ion-view view-title="Perkkx">
   <ion-content>
     <ion-list>
-        <div class="list card" ng-repeat="chat in chats" href="#/tab/chats/{{chat.id}}">
-            <div class="item item-avatar" >
-                <i class="icon ion-card"></i>
-                <h2>{{chat.name}}</h2>
-                <p>{{chat.lastText}}</p>
+        <div class="card" ng-repeat="code in ucodes"
+            ng-init="formshow = false, detailshow = false" >
+            <div ng-click="detailshow = formshow ? detailshow : !detailshow">
+                <div class="item item-divider">
+                    <h1>{{ code.code }}</h1>
+                    <h4>{{ code.desc }}</h4>
+                </div>
+                <div class="item item-text-wrap">
+                    <p>Redeemed on {{ code.usedOn | date }}</p>
+                    <p>Bill submitted on {{ code.submittedOn | date }}</p>
+                </div>
             </div>
-
-            <div class="item item-body">
-                <p>
-                  feedback<br/>
-                  rating<br/>
-                </p>
+            <div ng-show='detailshow' class='item item-text-wrap'>
+                <div class='row'>
+                    <div class='col col-50'><p>Paid Amount: <p></div>
+                    <div class='col'><p><strong>Rs. {{ code.paid }}</strong><p></div>
+                </div>
+                <div class='row'>
+                    <div class='col col-50'><p>Discount Amount: <p></div>
+                    <div class='col'><p><strong>Rs. {{ code.discount }}</strong><p></div>
+                </div>
+                <div class='row'>
+                    <div class='col col-50'></div>
+                    <div class='col'>
+                        <button 
+                            ng-click='detailshow = false; formshow = true'
+                            class='button button-block button-small button-positive'>
+                                Edit Bill
+                        </button>
+                    </div>
+                </div>
             </div>
+            <px-bill-form 
+                submit-obj='code' 
+                submit-func='submit' 
+                show='formshow'
+                default-paid='code.paid'
+                default-discount='code.discount'>
+            </px-bill-form>
         </div>
     </ion-list>
   </ion-content>

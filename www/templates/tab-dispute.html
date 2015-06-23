@@ -1,60 +1,24 @@
 <ion-view view-title="Perkkx">
-  <ion-content>
-
-     
-	 <div class="list card">
-
- <div class="card">
-  <div class="item item-divider">
-    423526
-  </div>
-  <div class="item item-text-wrap">
-    dghdhsdfg.
-  </div>
-  <div class="item item-divider">
-    I!
-  </div>
-</div>
-
-  <div class="card">
-  <div class="item item-divider">
-    I'm a Header in a Card!
-  </div>
-  <div class="item item-text-wrap">
-    This is a basic Card with some text.
-  </div>
-  <div class="item item-divider">
-    I'm a Footer in a Card!
-  </div>
-</div>
-
-  <div class="card">
-  <div class="item item-divider">
-    I'm a Header in a Card!
-  </div>
-  <div class="item item-text-wrap">
-    This is a basic Card with some text.
-  </div>
-  <div class="item item-divider">
-    I'm a Footer in a Card!
-  </div>
-</div>
-
-  <div class="card">
-  <div class="item item-divider">
-    I'm a Header in a Card!
-  </div>
-  <div class="item item-text-wrap">
-    This is a basic Card with some text.
-  </div>
-  <div class="item item-divider">
-    I'm a Footer in a Card!
-  </div>
-</div>
-
-</div>
-
-  
-
+  <ion-content class='has-header'>
+    <ion-list>
+        <div class="card" ng-repeat="code in dcodes"
+            ng-init="formshow = false" >
+            <div ng-click="formshow = !formshow">
+                <div class="item item-divider">
+                    <h1>{{ code.code }}</h1>
+                    <h4>{{ code.desc }}</h4>
+                </div>
+                <div class="item item-text-wrap">
+                    <p>Redeemed on {{ code.usedOn | date }}</p>
+                </div>
+            </div>
+            <px-bill-form 
+                submit-obj='code' 
+                submit-func='submit' 
+                show='formshow'
+                slider='false'>
+            </bill-form>
+        </div>
+    </ion-list>
   </ion-content>
 </ion-view>

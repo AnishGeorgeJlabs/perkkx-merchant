@@ -1,26 +1,6 @@
 <ion-view view-title="Perkkx">
   <ion-content>
     <ion-list>
-        <!--
-        <div class="list card" ng-repeat="code in pcodes" href="">
-            <div class="item" >
-                <h2>{{ code.code }}</h2>
-                <h4>{{ code.desc }}</h4>
-            </div>
-
-            <div class="item item-body">
-                <p>
-                    Valid till {{ code.expiry | date }}<br />
-                    Redeemed on {{ code.usedOn | date }}
-                </p>
-                <p>
-                    feedback<br/>
-                    rating<br/>
-                </p>
-
-            </div>
-        </div>
-        -->
         <div class="card" ng-repeat="code in pcodes"
             ng-init="formshow = false" >
             <div ng-click="formshow = !formshow">
@@ -33,20 +13,12 @@
                     <p>Expiry: {{ code.expiry | date }}</p>
                 </div>
             </div>
-            <div class="item list" ng-show="formshow" ng-init="form; form.invalid = false">
-                <ion-toggle ng-model="form.invalid" toggle-class="toggle-assertive">Did not use service</ion-toggle>
-                <label class="item item-input" ng-hide="form.invalid">
-                    <span class="input-label">Paid amount : </span>
-                    <input type="tel" ng-model="form.paid"> 
-                </label>
-                <label class="item item-input" ng-hide="form.invalid">
-                    <span class="input-label">Discount : </span>
-                    <input type="tel" ng-model="form.discount">
-                </label>
-                <button ng-click="submit(form)" class='button button-block button-positive'>Submit</button>
-            </div>
+            <px-bill-form 
+                submit-obj='code' 
+                submit-func='submit' 
+                show='formshow'>
+            </bill-form>
         </div>
-
     </ion-list>
   </ion-content>
 </ion-view>
