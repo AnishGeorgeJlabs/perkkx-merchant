@@ -13,31 +13,18 @@ angular.module('perkkx.controllers', [])
         }
     }
 })
-.controller('DisputeCtrl', function($scope) {})
-.controller('PendingCtrl', function($scope,usedcode) {
-	$scope.ucodes = usedcode.all();
-	$scope.remove= function(item) {
-		usedcode.remove(item);
-		
-	}
-	
+
+.controller('PendingCtrl', function($scope) {
+    $scope.pcodes = []
+    $scope.submit = function(obj) {};
 })
 
-.controller('UsedCtrl', function($scope, Chats) {
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-	
-  }
-  
+.controller('UsedCtrl', function($scope){
+    $scope.ucodes = [];
+    $scope.submit = function(obj) {};
 })
-/*
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
-}) */
 
-.controller('ExpiredCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('ExpiredCtrl', function($scope){
+    $scope.ecodes = [];
+    $scope.submit = function(obj) {};
 });

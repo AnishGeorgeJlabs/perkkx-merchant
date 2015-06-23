@@ -4,14 +4,19 @@
         <div class="card" ng-repeat="code in pcodes"
             ng-init="formshow = false" >
             <div ng-click="formshow = !formshow">
-                <div class="item item-divider">
-                    <h1>{{ code.code }}</h1>
-                    <h4>{{ code.desc }}</h4>
-                </div>
+                <!--
+                <px-coupon-header 
+                    coupon='code'
+                    class="item item-divider">
+                </px-coupon-header>
                 <div class="item item-text-wrap">
                     <p>Redeemed on {{ code.usedOn | date }}</p>
                     <p>Expiry: {{ code.expiry | date }}</p>
-                </div>
+                </div> -->
+                <px-coupon coupon='code'
+                    redeem='true'
+                    expiry='true'>
+                </px-coupon>
             </div>
             <px-bill-form 
                 submit-obj='code' 

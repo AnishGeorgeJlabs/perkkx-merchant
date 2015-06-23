@@ -4,13 +4,10 @@
         <div class="card" ng-repeat="code in ecodes"
             ng-init="formshow = false, detailshow = false" >
             <div ng-click="detailshow = formshow ? detailshow : !detailshow">
-                <div class="item item-divider">
-                    <h1>{{ code.code }}</h1>
-                    <h4>{{ code.desc }}</h4>
-                </div>
-                <div class="item item-text-wrap">
-                    <p>Expired on {{ code.expiry | date }}</p>
-                </div>
+                <px-coupon
+                    coupon='code'
+                    expiry='true'>
+                </px-coupon>
             </div>
             <div ng-show='detailshow' class='item item-text-wrap'>
                 <h2><i class='icon ion-ios-information-outline'></i>
