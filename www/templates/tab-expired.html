@@ -1,28 +1,36 @@
 <ion-view view-title="Perkkx">
   <ion-content>
-    <ion-list>
-        <div class="card" ng-repeat="code in ecodes"
-            ng-init="formshow = false; detailshow = false" >
-            <div ng-click="detailshow = formshow ? detailshow : !detailshow">
-                <px-coupon
-                    coupon='code'
-                    expiry='true'>
-                </px-coupon>
+        <ion-refresher
+              pulling-text="Pull to refresh"
+              on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="card" ng-repeat="code in ecodes"
+                ng-init="formshow = false; detailshow = false" >
+                <div ng-click="detailshow = formshow ? detailshow : !detailshow">
+                    <px-coupon
+                        coupon='code'
+                        expiry='true'>
+                    </px-coupon>
+                </div>
+                <div ng-show='detailshow' class='item item-text-wrap'>
+                    <h2><i class='icon ion-ios-information-outline'></i>
+                        Customer did not use this service</h2>
+                    <p>If cutomer used this service,
+                    <a ng-click='formshow = true; detailshow = false' href='#'>Please click here</a>
+                    to submit bill.</p>
+                </div>
+                <px-bill-form
+                    submit-obj='code'
+                    submit-func='submit'
+                    slider='false'
+                    show='formshow'>
+                </px-bill-form>
             </div>
-            <div ng-show='detailshow' class='item item-text-wrap'>
-                <h2><i class='icon ion-ios-information-outline'></i>
-                    Customer did not use this service</h2>
-                <p>If cutomer used this service, 
-                <a ng-click='formshow = true; detailshow = false' href='#'>Please click here</a> 
-                to submit bill.</p>
-            </div>
-            <px-bill-form 
-                submit-obj='code' 
-                submit-func='submit' 
-                slider='false'
-                show='formshow'>
-            </px-bill-form>
-        </div>
-    </ion-list>
-  </ion-content>
+        </ion-list>
+        <ion-infinite-scroll
+              on-infinite="loadMore()"
+              distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
 </ion-view>

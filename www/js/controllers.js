@@ -14,32 +14,132 @@
     };
   }).controller('PendingCtrl', function($scope, pxApiConnect) {
     $scope.pcodes = [];
-    pxApiConnect.setCallBack('pending', function(data) {
-      return $scope.pcodes = data.data;
+    pxApiConnect.setCallBack('pending', function(data, more) {
+      var i, len, obj, results;
+      if (more) {
+        results = [];
+        for (i = 0, len = data.length; i < len; i++) {
+          obj = data[i];
+          results.push($scope.pcodes.push(obj));
+        }
+        return results;
+      } else {
+        return $scope.pcodes = data;
+      }
     });
     pxApiConnect.apiGet('pending');
-    return $scope.submit = function(obj) {};
+    $scope.refresh = function() {
+      return pxApiConnect.apiGet('pending')["finally"](function() {
+        return $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+    return $scope.loadMore = function() {
+      var res;
+      res = pxApiConnect.apiMore('pending');
+      if (res.more) {
+        return res.future["finally"](function() {
+          return $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+      } else {
+        return $scope.$broadcast('scroll.infiniteScrollComplete');
+      }
+    };
   }).controller('UsedCtrl', function($scope, pxApiConnect) {
     $scope.ucodes = [];
-    pxApiConnect.setCallBack('used', function(data) {
-      return $scope.ucodes = data.data;
+    pxApiConnect.setCallBack('used', function(data, more) {
+      var i, len, obj, results;
+      if (more) {
+        results = [];
+        for (i = 0, len = data.length; i < len; i++) {
+          obj = data[i];
+          results.push($scope.ucodes.push(obj));
+        }
+        return results;
+      } else {
+        return $scope.ucodes = data;
+      }
     });
     pxApiConnect.apiGet('used');
-    return $scope.submit = function(obj) {};
+    $scope.refresh = function() {
+      return pxApiConnect.apiGet('used')["finally"](function() {
+        return $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+    return $scope.loadMore = function() {
+      var res;
+      res = pxApiConnect.apiMore('used');
+      if (res.more) {
+        return res.future["finally"](function() {
+          return $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+      } else {
+        return $scope.$broadcast('scroll.infiniteScrollComplete');
+      }
+    };
   }).controller('ExpiredCtrl', function($scope, pxApiConnect) {
     $scope.ecodes = [];
-    pxApiConnect.setCallBack('expired', function(data) {
-      return $scope.ecodes = data.data;
+    pxApiConnect.setCallBack('expired', function(data, more) {
+      var i, len, obj, results;
+      if (more) {
+        results = [];
+        for (i = 0, len = data.length; i < len; i++) {
+          obj = data[i];
+          results.push($scope.ecodes.push(obj));
+        }
+        return results;
+      } else {
+        return $scope.ecodes = data;
+      }
     });
     pxApiConnect.apiGet('expired');
-    return $scope.submit = function(obj) {};
+    $scope.refresh = function() {
+      return pxApiConnect.apiGet('expired')["finally"](function() {
+        return $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+    return $scope.loadMore = function() {
+      var res;
+      res = pxApiConnect.apiMore('expired');
+      if (res.more) {
+        return res.future["finally"](function() {
+          return $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+      } else {
+        return $scope.$broadcast('scroll.infiniteScrollComplete');
+      }
+    };
   }).controller('DisputeCtrl', function($scope, pxApiConnect) {
     $scope.dcodes = [];
-    pxApiConnect.setCallBack('disputed', function(data) {
-      return $scope.dcodes = data.data;
+    pxApiConnect.setCallBack('disputed', function(data, more) {
+      var i, len, obj, results;
+      if (more) {
+        results = [];
+        for (i = 0, len = data.length; i < len; i++) {
+          obj = data[i];
+          results.push($scope.dcodes.push(obj));
+        }
+        return results;
+      } else {
+        return $scope.dcodes = data;
+      }
     });
     pxApiConnect.apiGet('disputed');
-    return $scope.submit = function(obj) {};
+    $scope.refresh = function() {
+      return pxApiConnect.apiGet('disputed')["finally"](function() {
+        return $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+    return $scope.loadMore = function() {
+      var res;
+      res = pxApiConnect.apiMore('disputed');
+      if (res.more) {
+        return res.future["finally"](function() {
+          return $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+      } else {
+        return $scope.$broadcast('scroll.infiniteScrollComplete');
+      }
+    };
   });
 
 

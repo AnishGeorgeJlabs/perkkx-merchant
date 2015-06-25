@@ -1,21 +1,29 @@
 <ion-view view-title="Perkkx">
-  <ion-content class='has-header'>
-    <ion-list>
-        <div class="card" ng-repeat="code in dcodes"
-            ng-init="formshow = false" >
-            <div ng-click='formshow = !formshow'>
-                <px-coupon 
-                    redeem='true' 
-                    coupon='code'>
-                </px-coupon>
+    <ion-content class='has-header'>
+        <ion-refresher
+                pulling-text="Pull to refresh"
+                on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="card" ng-repeat="code in dcodes"
+                ng-init="formshow = false" >
+                <div ng-click='formshow = !formshow'>
+                    <px-coupon
+                        redeem='true'
+                        coupon='code'>
+                    </px-coupon>
+                </div>
+                <px-bill-form
+                    submit-obj='code'
+                    submit-func='submit'
+                    show='formshow'
+                    slider='false'>
+                </bill-form>
             </div>
-            <px-bill-form 
-                submit-obj='code' 
-                submit-func='submit' 
-                show='formshow'
-                slider='false'>
-            </bill-form>
-        </div>
-    </ion-list>
-  </ion-content>
+        </ion-list>
+        <ion-infinite-scroll
+              on-infinite="loadMore()"
+              distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
 </ion-view>

@@ -1,29 +1,37 @@
 <ion-view view-title="Perkkx">
-  <ion-content>
-    <ion-list>
-        <div class="card" ng-repeat="code in pcodes"
-            ng-init="formshow = false" >
-            <div ng-click="formshow = !formshow">
-                <!--
-                <px-coupon-header 
-                    coupon='code'
-                    class="item item-divider">
-                </px-coupon-header>
-                <div class="item item-text-wrap">
-                    <p>Redeemed on {{ code.usedOn | date }}</p>
-                    <p>Expiry: {{ code.expiry | date }}</p>
-                </div> -->
-                <px-coupon coupon='code'
-                    redeem='true'
-                    expiry='true'>
-                </px-coupon>
+    <ion-content>
+        <ion-refresher
+            pulling-text="Pull to refresh"
+            on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="card" ng-repeat="code in pcodes"
+                ng-init="formshow = false" >
+                <div ng-click="formshow = !formshow">
+                    <!--
+                    <px-coupon-header
+                        coupon='code'
+                        class="item item-divider">
+                    </px-coupon-header>
+                    <div class="item item-text-wrap">
+                        <p>Redeemed on {{ code.usedOn | date }}</p>
+                        <p>Expiry: {{ code.expiry | date }}</p>
+                    </div> -->
+                    <px-coupon coupon='code'
+                        redeem='true'
+                        expiry='true'>
+                    </px-coupon>
+                </div>
+                <px-bill-form
+                    submit-obj='code'
+                    submit-func='submit'
+                    show='formshow'>
+                </bill-form>
             </div>
-            <px-bill-form 
-                submit-obj='code' 
-                submit-func='submit' 
-                show='formshow'>
-            </bill-form>
-        </div>
-    </ion-list>
-  </ion-content>
+        </ion-list>
+        <ion-infinite-scroll
+            on-infinite="loadMore()"
+            distance="1%">
+        </ion-infinite-scroll>
+    </ion-content>
 </ion-view>

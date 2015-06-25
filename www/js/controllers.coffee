@@ -9,40 +9,83 @@ angular.module 'perkkx.controllers', []
   $scope.updateBadge = (key, num) ->
     if $scope.badges.hasOwnProperty(key) && num >= 0
       $scope.badges[key] = num
+
 .controller 'PendingCtrl', ($scope, pxApiConnect) ->
   $scope.pcodes = []
-  pxApiConnect.setCallBack 'pending', (data) ->
-    $scope.pcodes = data.data
+  pxApiConnect.setCallBack 'pending', (data, more) ->
+    if more
+      $scope.pcodes.push obj for obj in data
+    else $scope.pcodes = data
 
   pxApiConnect.apiGet 'pending'
-  $scope.submit = (obj) ->
+  $scope.refresh = () ->
+    pxApiConnect.apiGet 'pending'
+    .finally () ->
+      $scope.$broadcast('scroll.refreshComplete')
+  $scope.loadMore = () ->
+    res = pxApiConnect.apiMore 'pending'
+    if res.more
+      res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
+    else
+      $scope.$broadcast('scroll.infiniteScrollComplete')
+
 
 .controller 'UsedCtrl', ($scope, pxApiConnect) ->
   $scope.ucodes = []
-  pxApiConnect.setCallBack 'used', (data) ->
-    $scope.ucodes = data.data
+  pxApiConnect.setCallBack 'used', (data, more) ->
+    if more
+      $scope.ucodes.push obj for obj in data
+    else $scope.ucodes = data
 
   pxApiConnect.apiGet 'used'
-
-  $scope.submit = (obj) ->
+  $scope.refresh = () ->
+    pxApiConnect.apiGet 'used'
+    .finally () ->
+      $scope.$broadcast('scroll.refreshComplete')
+  $scope.loadMore = () ->
+    res = pxApiConnect.apiMore 'used'
+    if res.more
+      res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
+    else
+      $scope.$broadcast('scroll.infiniteScrollComplete')
 
 .controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
   $scope.ecodes = []
-  pxApiConnect.setCallBack 'expired', (data) ->
-    $scope.ecodes = data.data
+  pxApiConnect.setCallBack 'expired', (data, more) ->
+    if more
+      $scope.ecodes.push obj for obj in data
+    else $scope.ecodes = data
 
   pxApiConnect.apiGet 'expired'
-
-  $scope.submit = (obj) ->
+  $scope.refresh = () ->
+    pxApiConnect.apiGet 'expired'
+    .finally () ->
+      $scope.$broadcast('scroll.refreshComplete')
+  $scope.loadMore = () ->
+    res = pxApiConnect.apiMore 'expired'
+    if res.more
+      res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
+    else
+      $scope.$broadcast('scroll.infiniteScrollComplete')
 
 .controller 'DisputeCtrl', ($scope, pxApiConnect) ->
   $scope.dcodes = []
-  pxApiConnect.setCallBack 'disputed', (data) ->
-    $scope.dcodes = data.data
+  pxApiConnect.setCallBack 'disputed', (data, more) ->
+    if more
+      $scope.dcodes.push obj for obj in data
+    else $scope.dcodes = data
 
   pxApiConnect.apiGet 'disputed'
-
-  $scope.submit = (obj) ->
+  $scope.refresh = () ->
+    pxApiConnect.apiGet 'disputed'
+    .finally () ->
+      $scope.$broadcast('scroll.refreshComplete')
+  $scope.loadMore = () ->
+    res = pxApiConnect.apiMore 'disputed'
+    if res.more
+      res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
+    else
+      $scope.$broadcast('scroll.infiniteScrollComplete')
 
 ###
 .controller 'PendingCtrl', ($scope, pxApiConnect) ->
