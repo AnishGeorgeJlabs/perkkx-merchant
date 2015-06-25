@@ -1,5 +1,5 @@
 /** API assumptions
- * Codes: { code: "", desc: "", expiry: "", usedOn: "" }
+ * Codes: { rcode: "", deal: "", expiry: "", used_on: "" }
  */
 
 angular.module("perkkx.testControllers", [])
@@ -19,46 +19,46 @@ angular.module("perkkx.testControllers", [])
 .controller('PendingCtrl', function($scope){
     $scope.pcodes = [
         {
-            code: "ABC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "ABC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now()
+            used_on: Date.now()
         },
         {
-            code: "AB2C",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AB2C",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now()
+            used_on: Date.now()
         },
         {
-            code: "AdqBC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AdqBC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now()
+            used_on: Date.now()
         },
         {
-            code: "xdAC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "xdAC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now()
+            used_on: Date.now()
         },
         {
-            code: "sdAsdb",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "sdAsdb",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now()
+            used_on: Date.now()
         },
         {
-            code: "xdfABC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "xdfABC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now()
+            used_on: Date.now()
         },
         {
-            code: "ABC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "ABC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now()
+            used_on: Date.now()
         }
     ]
     $scope.fullSubmit = function(codeObj) {
@@ -76,7 +76,7 @@ angular.module("perkkx.testControllers", [])
            paid: Number,
            discount: Number
 
-          This function will use an external service to confirm the code
+          This function will use an external service to confirm the rcode
         */
         alert(JSON.stringify(obj));
     };
@@ -87,48 +87,44 @@ angular.module("perkkx.testControllers", [])
 .controller('UsedCtrl', function($scope){
     $scope.ucodes = [
         {
-            code: "ABC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "ABC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: true,
             paid: 1000,
             discount: 205,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         },
         {
-            code: "AB2C",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AB2C",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: true,
             paid: 1000,
             discount: 205,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         },
         {
-            code: "AdqBC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AdqBC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: true,
             paid: 1000,
             discount: 205,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         },
         {
-            code: "xdAC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "xdAC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: true,
             paid: 1000,
             discount: 205,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         }
     ]
     $scope.submit = function(obj) {     // TODO
@@ -138,28 +134,24 @@ angular.module("perkkx.testControllers", [])
 .controller('ExpiredCtrl', function($scope){
     $scope.ecodes = [
         {
-            code: "ABC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "ABC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            valid: false
         },
         {
-            code: "AB2C",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AB2C",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            valid: false
         },
         {
-            code: "AdqBC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AdqBC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            valid: false
         },
         {
-            code: "xdAC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "xdAC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            valid: false
         }
     ]
     $scope.submit = function(obj) {     // TODO
@@ -169,40 +161,36 @@ angular.module("perkkx.testControllers", [])
 .controller('DisputeCtrl', function($scope){
     $scope.dcodes = [
         {
-            code: "ABC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "ABC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: false,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         },
         {
-            code: "AB2C",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AB2C",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: false,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         },
         {
-            code: "AdqBC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "AdqBC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: false,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         },
         {
-            code: "xdAC",
-            desc: "Get 50% off on minimum perchase of some stuff",
+            rcode: "xdAC",
+            deal: "Get 50% off on minimum perchase of some stuff",
             expiry: Date.now(),
-            usedOn: Date.now(),
+            used_on: Date.now(),
 
-            valid: false,
-            submittedOn: Date.now()
+            submitted_on: Date.now()
         }
     ]
 

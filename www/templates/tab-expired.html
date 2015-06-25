@@ -2,7 +2,7 @@
   <ion-content>
     <ion-list>
         <div class="card" ng-repeat="code in ecodes"
-            ng-init="formshow = false, detailshow = false" >
+            ng-init="formshow = false; detailshow = false" >
             <div ng-click="detailshow = formshow ? detailshow : !detailshow">
                 <px-coupon
                     coupon='code'

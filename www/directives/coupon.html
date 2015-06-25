@@ -1,9 +1,9 @@
 <div class='item item-divider'>
-    <h1>{{ coupon.code }}</h1>
-    <h4>{{ coupon.desc }}</h4>
+    <h1>{{ coupon.rcode }}</h1>
+    <h4>{{ coupon.deal }}</h4>
 </div>
 <div class='item item-text-wrap'>
-    <p ng-if='hRedeem'>Redeemed on {{ coupon.usedOn | date }}</p>
+    <p ng-if='hRedeem'>Redeemed on {{ coupon.used_on | date }}</p>
     <p ng-if='hExpiry'>Expiry - {{ coupon.expiry | date }}</p>
-    <p ng-if='hBill'>Bill submitted on {{ coupon.submittedOn | date }}</p>
+    <p ng-if='hBill'>Bill submitted on {{ coupon.submitted_on | date }}</p>
 </div>
