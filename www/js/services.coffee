@@ -41,3 +41,10 @@ angular.module 'perkkx.services', []
             callbacks[key](sdata.data, true)     # refresh
         {more: true, future: res}
       else {more: false}
+
+    apiSubmit: (data) ->
+      $http.post "#{baseUrl}submit/#{vendor_id}", data, {
+        headers: { "Access-Control-Allow-Origin": true }
+      }
+      .success () ->
+        console.log "heooo"

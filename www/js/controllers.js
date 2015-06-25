@@ -33,7 +33,7 @@
         return $scope.$broadcast('scroll.refreshComplete');
       });
     };
-    return $scope.loadMore = function() {
+    $scope.loadMore = function() {
       var res;
       res = pxApiConnect.apiMore('pending');
       if (res.more) {
@@ -43,6 +43,10 @@
       } else {
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       }
+    };
+    return $scope.submit = function(data) {
+      pxApiConnect.apiSubmit(data);
+      return pxApiConnect.apiGet('pending');
     };
   }).controller('UsedCtrl', function($scope, pxApiConnect) {
     $scope.ucodes = [];
@@ -65,7 +69,7 @@
         return $scope.$broadcast('scroll.refreshComplete');
       });
     };
-    return $scope.loadMore = function() {
+    $scope.loadMore = function() {
       var res;
       res = pxApiConnect.apiMore('used');
       if (res.more) {
@@ -75,6 +79,9 @@
       } else {
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       }
+    };
+    return $scope.submit = function(data) {
+      return console.log("Data: " + data);
     };
   }).controller('ExpiredCtrl', function($scope, pxApiConnect) {
     $scope.ecodes = [];
@@ -97,7 +104,7 @@
         return $scope.$broadcast('scroll.refreshComplete');
       });
     };
-    return $scope.loadMore = function() {
+    $scope.loadMore = function() {
       var res;
       res = pxApiConnect.apiMore('expired');
       if (res.more) {
@@ -107,6 +114,9 @@
       } else {
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       }
+    };
+    return $scope.submit = function(data) {
+      return console.log("Data: " + data);
     };
   }).controller('DisputeCtrl', function($scope, pxApiConnect) {
     $scope.dcodes = [];
@@ -129,7 +139,7 @@
         return $scope.$broadcast('scroll.refreshComplete');
       });
     };
-    return $scope.loadMore = function() {
+    $scope.loadMore = function() {
       var res;
       res = pxApiConnect.apiMore('disputed');
       if (res.more) {
@@ -139,6 +149,9 @@
       } else {
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       }
+    };
+    return $scope.submit = function(data) {
+      return console.log("Data: " + data);
     };
   });
 

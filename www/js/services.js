@@ -63,6 +63,15 @@
             more: false
           };
         }
+      },
+      apiSubmit: function(data) {
+        return $http.post(baseUrl + "submit/" + vendor_id, data, {
+          headers: {
+            "Access-Control-Allow-Origin": true
+          }
+        }).success(function() {
+          return console.log("heooo");
+        });
       }
     };
   });

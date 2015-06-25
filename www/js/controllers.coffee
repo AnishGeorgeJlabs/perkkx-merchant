@@ -28,6 +28,9 @@ angular.module 'perkkx.controllers', []
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
+  $scope.submit = (data) ->
+    pxApiConnect.apiSubmit(data)
+    pxApiConnect.apiGet 'pending'
 
 
 .controller 'UsedCtrl', ($scope, pxApiConnect) ->
@@ -48,6 +51,7 @@ angular.module 'perkkx.controllers', []
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
+  $scope.submit = (data) -> console.log "Data: #{data}"
 
 .controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
   $scope.ecodes = []
@@ -67,6 +71,7 @@ angular.module 'perkkx.controllers', []
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
+  $scope.submit = (data) -> console.log "Data: #{data}"
 
 .controller 'DisputeCtrl', ($scope, pxApiConnect) ->
   $scope.dcodes = []
@@ -86,6 +91,7 @@ angular.module 'perkkx.controllers', []
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
+  $scope.submit = (data) -> console.log "Data: #{data}"
 
 ###
 .controller 'PendingCtrl', ($scope, pxApiConnect) ->

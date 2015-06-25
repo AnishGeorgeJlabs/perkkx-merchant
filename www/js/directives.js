@@ -49,6 +49,7 @@ angular.module('perkkx.directives', [])
                 $scope.formshow = false;
             }
             $scope.submit = function() {
+                /*
                 var res = {}
                 if ($scope.invalid) {
                     res = { valid: false };
@@ -59,7 +60,7 @@ angular.module('perkkx.directives', [])
                         discount: $scope.discount
                     };
                 };
-                res.submittedOn = Date.now();
+                res.submittedOn = Date.now() / 1000;        // Javascript uses milliseconds, python seconds
                 //cleanup();
                 var obj = jQuery.extend(true, {}, $scope.submitObj)
                 if (obj.hasOwnProperty('valid')) {
@@ -72,6 +73,23 @@ angular.module('perkkx.directives', [])
                 
                 jQuery.extend(res, obj);
                 $scope.submitFunc(res);
+                $scope.formshow = false;
+                */
+                var res = {};
+                if ($scope.invalid) {
+                    res = { status: "expired" }
+                } else {
+                    res = {
+                        status: "used",
+                        paid: $scope.paid,
+                        discount: $scope.discount
+                    };
+                }
+                res.submitted_on = parseInt(Date.now() / 1000);
+                res.cID = $scope.submitObj.cID;
+                res.rcode = $scope.submitObj.rcode;
+                res.userID = $scope.submitObj.userID
+                $scope.submitFunc(res)
                 $scope.formshow = false;
             }
         },
