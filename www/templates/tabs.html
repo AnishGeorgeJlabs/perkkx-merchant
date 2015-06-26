@@ -12,6 +12,7 @@ navigation history that also transitions its views in and out.
         ng-controller="BadgeCtrl" 
         badge="badges.pending"
         on-deselect='updateBadge("pending", 0)'
+        on-select='initGet()'
         href="#/tab/pending">
     <ion-nav-view name="tab-pending"></ion-nav-view>
   </ion-tab>
@@ -23,6 +24,7 @@ navigation history that also transitions its views in and out.
         ng-controller="BadgeCtrl" 
         badge="badges.used"
         on-deselect='updateBadge("used", 0)'
+        on-select='initGet()'
         href="#/tab/used">
     <ion-nav-view name="tab-used"></ion-nav-view>
   </ion-tab>
@@ -34,6 +36,7 @@ navigation history that also transitions its views in and out.
         ng-controller="BadgeCtrl" 
         badge="badges.expired"
         on-deselect='updateBadge("expired", 0)'
+        on-select="initGet()"
         href="#/tab/expired">
     <ion-nav-view name="tab-expired"></ion-nav-view>
   </ion-tab>
@@ -44,6 +47,7 @@ navigation history that also transitions its views in and out.
         ng-controller="BadgeCtrl" 
         badge="badges.disputed"
         on-deselect='updateBadge("disputed", 0)'
+        on-select="initGet()"
         href="#/tab/dispute">
     <ion-nav-view name="tab-dispute"></ion-nav-view>
   </ion-tab>

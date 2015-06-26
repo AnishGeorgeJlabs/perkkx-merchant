@@ -36,7 +36,7 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    $scope.initGet()
+    .finally () -> $scope.initGet()
 
 
 .controller 'UsedCtrl', ($scope, pxApiConnect) ->
@@ -64,7 +64,7 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    $scope.initGet()
+    .finally () -> $scope.initGet()
 
 .controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
   $scope.codes = []
@@ -91,7 +91,7 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    $scope.initGet()
+    .finally () -> $scope.initGet()
 
 .controller 'DisputeCtrl', ($scope, pxApiConnect) ->
   $scope.codes = []
@@ -118,7 +118,8 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    $scope.initGet()
+    .finally () -> $scope.initGet()
+
 
 .controller 'TestCtrl', ($scope) ->
   console.log "Initialised Test"

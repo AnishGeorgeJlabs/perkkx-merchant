@@ -49,8 +49,9 @@
       }
     };
     return $scope.submit = function(data) {
-      pxApiConnect.apiSubmit(data);
-      return $scope.initGet();
+      return pxApiConnect.apiSubmit(data)["finally"](function() {
+        return $scope.initGet();
+      });
     };
   }).controller('UsedCtrl', function($scope, pxApiConnect) {
     $scope.codes = [];
@@ -88,8 +89,9 @@
       }
     };
     return $scope.submit = function(data) {
-      pxApiConnect.apiSubmit(data);
-      return $scope.initGet();
+      return pxApiConnect.apiSubmit(data)["finally"](function() {
+        return $scope.initGet();
+      });
     };
   }).controller('ExpiredCtrl', function($scope, pxApiConnect) {
     $scope.codes = [];
@@ -127,8 +129,9 @@
       }
     };
     return $scope.submit = function(data) {
-      pxApiConnect.apiSubmit(data);
-      return $scope.initGet();
+      return pxApiConnect.apiSubmit(data)["finally"](function() {
+        return $scope.initGet();
+      });
     };
   }).controller('DisputeCtrl', function($scope, pxApiConnect) {
     $scope.codes = [];
@@ -166,8 +169,9 @@
       }
     };
     return $scope.submit = function(data) {
-      pxApiConnect.apiSubmit(data);
-      return $scope.initGet();
+      return pxApiConnect.apiSubmit(data)["finally"](function() {
+        return $scope.initGet();
+      });
     };
   }).controller('TestCtrl', function($scope) {
     return console.log("Initialised Test");
