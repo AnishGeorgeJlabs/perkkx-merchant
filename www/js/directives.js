@@ -21,7 +21,7 @@ angular.module('perkkx.directives', [])
     };
 })
 
-.directive('pxBillForm', function() {
+.directive('pxBillForm', function(pxDateCheck) {
     return {
         restrict: 'E',
         scope: {
@@ -37,7 +37,10 @@ angular.module('perkkx.directives', [])
             if (!attr.defaultDiscount) { attr.defaultDiscount = '0' }
             if (!attr.slider) { attr.slider = 'true' }
         },
-        controller: function($scope) {
+        controller: function($scope, pxDateCheck) {
+            $scope.sliderCheck = function() {
+                return $scope.slider && pxDateCheck($scope.submitObj.used_on)
+            }
             var cleanup = function() {
                 $scope.paid = parseInt($scope.defPaid);
                 $scope.discount = parseInt($scope.defDiscount);
@@ -49,32 +52,6 @@ angular.module('perkkx.directives', [])
                 $scope.formshow = false;
             }
             $scope.submit = function() {
-                /*
-                var res = {}
-                if ($scope.invalid) {
-                    res = { valid: false };
-                } else {
-                    res = {
-                        valid: true,
-                        paid: $scope.paid,
-                        discount: $scope.discount
-                    };
-                };
-                res.submittedOn = Date.now() / 1000;        // Javascript uses milliseconds, python seconds
-                //cleanup();
-                var obj = jQuery.extend(true, {}, $scope.submitObj)
-                if (obj.hasOwnProperty('valid')) {
-                    if (obj.valid) {
-                        delete obj.paid;
-                        delete obj.discount;
-                    }
-                    delete obj.valid;
-                }
-                
-                jQuery.extend(res, obj);
-                $scope.submitFunc(res);
-                $scope.formshow = false;
-                */
                 var res = {};
                 if ($scope.invalid) {
                     res = { status: "expired" }

@@ -1,5 +1,5 @@
 <div class="item list" ng-show="formshow">
-    <ion-toggle ng-show='slider' ng-model="invalid" toggle-class="toggle-assertive">Did not use service</ion-toggle>
+    <ion-toggle ng-show='sliderCheck()' ng-model="invalid" toggle-class="toggle-assertive">Did not use service</ion-toggle>
     <label class="item item-input" ng-hide="invalid">
         <span class="input-label">Paid amount : </span>
         <input type="tel" ng-model="paid"> 

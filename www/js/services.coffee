@@ -1,9 +1,16 @@
 angular.module 'perkkx.services', []
 .constant('pxApiEndpoints', {
-    post: 'http://45.55.72.208/submit',                # proxie
-    postProxy: 'http://localhost:8100/submit',                # proxie
+    post: 'http://45.55.72.208/submit',                       # Actual Post api
+    postProxy: 'http://localhost:8100/submit',                # Proxie for ionic serve
     get: 'http://45.55.72.208/perkkx/merchantapp'     # Add pending and all that
   })
+
+.factory 'pxDateCheck', ($log) ->
+  return (data) ->             # milliseconds
+    rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0)
+    return moment() > rDate
+
+
 .factory 'pxApiConnect', ($http, $log, pxApiEndpoints) ->
   vendor_id = 1
   urls =
@@ -49,4 +56,4 @@ angular.module 'perkkx.services', []
     apiSubmit: (data) ->
       $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
       .success () ->
-        console.log "heooo"
+        $log.debug "Post successfull"

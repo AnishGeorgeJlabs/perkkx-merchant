@@ -4,6 +4,12 @@
     post: 'http://45.55.72.208/submit',
     postProxy: 'http://localhost:8100/submit',
     get: 'http://45.55.72.208/perkkx/merchantapp'
+  }).factory('pxDateCheck', function($log) {
+    return function(data) {
+      var rDate;
+      rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0);
+      return moment() > rDate;
+    };
   }).factory('pxApiConnect', function($http, $log, pxApiEndpoints) {
     var callbacks, refreshData, res, urls, vendor_id;
     vendor_id = 1;
@@ -69,7 +75,7 @@
       },
       apiSubmit: function(data) {
         return $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function() {
-          return console.log("heooo");
+          return $log.debug("Post successfull");
         });
       }
     };
