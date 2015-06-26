@@ -4,6 +4,7 @@ angular.module 'perkkx.services', []
     postProxy: 'http://localhost:8100/submit',                # Proxie for ionic serve
     get: 'http://45.55.72.208/perkkx/merchantapp'     # Add pending and all that
   })
+.constant('vendor_id', 1)
 
 .factory 'pxDateCheck', ($log) ->
   return (data) ->             # milliseconds
@@ -11,8 +12,7 @@ angular.module 'perkkx.services', []
     return moment() > rDate
 
 
-.factory 'pxApiConnect', ($http, $log, pxApiEndpoints) ->
-  vendor_id = 1
+.factory 'pxApiConnect', ($http, $log, pxApiEndpoints, vendor_id) ->
   urls =
     pending: "#{pxApiEndpoints.get}/pending/#{vendor_id}"
     used: "#{pxApiEndpoints.get}/used/#{vendor_id}"

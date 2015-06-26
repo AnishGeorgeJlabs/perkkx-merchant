@@ -4,15 +4,14 @@
     post: 'http://45.55.72.208/submit',
     postProxy: 'http://localhost:8100/submit',
     get: 'http://45.55.72.208/perkkx/merchantapp'
-  }).factory('pxDateCheck', function($log) {
+  }).constant('vendor_id', 1).factory('pxDateCheck', function($log) {
     return function(data) {
       var rDate;
       rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0);
       return moment() > rDate;
     };
-  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints) {
-    var callbacks, refreshData, res, urls, vendor_id;
-    vendor_id = 1;
+  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, vendor_id) {
+    var callbacks, refreshData, res, urls;
     urls = {
       pending: pxApiEndpoints.get + "/pending/" + vendor_id,
       used: pxApiEndpoints.get + "/used/" + vendor_id,
