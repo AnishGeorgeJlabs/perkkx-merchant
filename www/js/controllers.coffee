@@ -1,5 +1,6 @@
 angular.module 'perkkx.controllers', []
 .controller 'BadgeCtrl', ($scope) ->
+  console.log "initialized BadgeCtrl"
   $scope.badges =
     pending: 0
     used: 0
@@ -11,88 +12,116 @@ angular.module 'perkkx.controllers', []
       $scope.badges[key] = num
 
 .controller 'PendingCtrl', ($scope, pxApiConnect) ->
-  $scope.pcodes = []
+  $scope.codes = []
   pxApiConnect.setCallBack 'pending', (data, more) ->
     if more
-      $scope.pcodes.push obj for obj in data
-    else $scope.pcodes = data
+      $scope.codes.push obj for obj in data
+    else $scope.codes = data
 
-  pxApiConnect.apiGet 'pending'
+  $scope.initGet = () -> pxApiConnect.apiGet 'pending'
+
+  $scope.initGet()
+
   $scope.refresh = () ->
-    pxApiConnect.apiGet 'pending'
+    $scope.initGet()
     .finally () ->
       $scope.$broadcast('scroll.refreshComplete')
+
   $scope.loadMore = () ->
     res = pxApiConnect.apiMore 'pending'
     if res.more
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
+
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    pxApiConnect.apiGet 'pending'
+    $scope.initGet()
 
 
 .controller 'UsedCtrl', ($scope, pxApiConnect) ->
-  $scope.ucodes = []
+  $scope.codes = []
   pxApiConnect.setCallBack 'used', (data, more) ->
     if more
-      $scope.ucodes.push obj for obj in data
-    else $scope.ucodes = data
+      $scope.codes.push obj for obj in data
+    else $scope.codes = data
 
-  pxApiConnect.apiGet 'used'
+  $scope.initGet = () -> pxApiConnect.apiGet 'used'
+
+  $scope.initGet()
+
   $scope.refresh = () ->
-    pxApiConnect.apiGet 'used'
+    $scope.initGet()
     .finally () ->
       $scope.$broadcast('scroll.refreshComplete')
+
   $scope.loadMore = () ->
     res = pxApiConnect.apiMore 'used'
     if res.more
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
-  $scope.submit = (data) -> console.log "Data: #{data}"
+
+  $scope.submit = (data) ->
+    pxApiConnect.apiSubmit(data)
+    $scope.initGet()
 
 .controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
-  $scope.ecodes = []
+  $scope.codes = []
   pxApiConnect.setCallBack 'expired', (data, more) ->
     if more
-      $scope.ecodes.push obj for obj in data
-    else $scope.ecodes = data
+      $scope.codes.push obj for obj in data
+    else $scope.codes = data
 
-  pxApiConnect.apiGet 'expired'
+  $scope.initGet = () -> pxApiConnect.apiGet 'expired'
+
+  $scope.initGet()
+
   $scope.refresh = () ->
-    pxApiConnect.apiGet 'expired'
+    $scope.initGet()
     .finally () ->
       $scope.$broadcast('scroll.refreshComplete')
+
   $scope.loadMore = () ->
     res = pxApiConnect.apiMore 'expired'
     if res.more
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
-  $scope.submit = (data) -> console.log "Data: #{data}"
+
+  $scope.submit = (data) ->
+    pxApiConnect.apiSubmit(data)
+    $scope.initGet()
 
 .controller 'DisputeCtrl', ($scope, pxApiConnect) ->
-  $scope.dcodes = []
+  $scope.codes = []
   pxApiConnect.setCallBack 'disputed', (data, more) ->
     if more
-      $scope.dcodes.push obj for obj in data
-    else $scope.dcodes = data
+      $scope.codes.push obj for obj in data
+    else $scope.codes = data
 
-  pxApiConnect.apiGet 'disputed'
+  $scope.initGet = () -> pxApiConnect.apiGet 'disputed'
+
+  $scope.initGet()
+
   $scope.refresh = () ->
-    pxApiConnect.apiGet 'disputed'
+    $scope.initGet()
     .finally () ->
       $scope.$broadcast('scroll.refreshComplete')
+
   $scope.loadMore = () ->
     res = pxApiConnect.apiMore 'disputed'
     if res.more
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
-  $scope.submit = (data) -> console.log "Data: #{data}"
 
+  $scope.submit = (data) ->
+    pxApiConnect.apiSubmit(data)
+    $scope.initGet()
+
+.controller 'TestCtrl', ($scope) ->
+  console.log "Initialised Test"
 ###
 .controller 'PendingCtrl', ($scope, pxApiConnect) ->
   $scope.pcodes = []
@@ -107,3 +136,25 @@ angular.module 'perkkx.controllers', []
   $scope.dcodes = []
   $scope.submit = (obj) ->
 ###
+###
+.controller 'TabCtrl', ($scope, pxApiConnect) ->
+  $scope.data = []
+
+  $scope.setCallBack = (key) ->
+    pxApiConnect.setCallBack key, (data, more) ->
+      if more
+        $scope.data.push obj for obj in data
+      else $scope.data = data
+
+  $scope.initGet = (key) -> pxApiConnect.getApi key
+  $scope.refresh = (key) ->
+    $scope.initGet key
+    .finally () ->
+      $scope.$broadcast 'scroll.refreshComplete'
+  $scope.loadMore = (key) ->
+    $scope.initGet key
+    .finally () ->
+      $scope.$broadcast 'scroll.infiniteScrollComplete'
+  $scope.submit = (obj) -> pxApiConnect.apiSubmit(obj)
+###
+

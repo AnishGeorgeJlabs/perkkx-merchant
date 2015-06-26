@@ -1,12 +1,16 @@
 angular.module 'perkkx.services', []
-.factory 'pxApiConnect', ($http, $log) ->
+.constant('pxApiEndpoints', {
+    post: 'http://45.55.72.208/submit',                # proxie
+    postProxy: 'http://localhost:8100/submit',                # proxie
+    get: 'http://45.55.72.208/perkkx/merchantapp'     # Add pending and all that
+  })
+.factory 'pxApiConnect', ($http, $log, pxApiEndpoints) ->
   vendor_id = 1
-  baseUrl = 'http://45.55.72.208/perkkx/merchantapp/'
   urls =
-    pending: "#{baseUrl}pending/#{vendor_id}"
-    used: "#{baseUrl}used/#{vendor_id}"
-    expired: "#{baseUrl}expired/#{vendor_id}"
-    disputed: "#{baseUrl}disputed/#{vendor_id}"
+    pending: "#{pxApiEndpoints.get}/pending/#{vendor_id}"
+    used: "#{pxApiEndpoints.get}/used/#{vendor_id}"
+    expired: "#{pxApiEndpoints.get}/expired/#{vendor_id}"
+    disputed: "#{pxApiEndpoints.get}/disputed/#{vendor_id}"
 
   callbacks = {}
 
@@ -43,8 +47,6 @@ angular.module 'perkkx.services', []
       else {more: false}
 
     apiSubmit: (data) ->
-      $http.post "#{baseUrl}submit/#{vendor_id}", data, {
-        headers: { "Access-Control-Allow-Origin": true }
-      }
+      $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
       .success () ->
         console.log "heooo"

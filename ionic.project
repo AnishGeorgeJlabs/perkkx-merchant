@@ -1,4 +1,10 @@
 {
   "name": "perkkx",
-  "app_id": ""
+  "app_id": "",
+  "proxies": [
+    {
+      "path": "/submit",
+      "proxyUrl": "http://45.55.72.208/perkkx/merchantapp/submit"
+    }
+  ]
 }

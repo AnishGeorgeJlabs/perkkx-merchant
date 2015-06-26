@@ -5,7 +5,7 @@
               on-refresh="refresh()">
         </ion-refresher>
         <ion-list>
-            <div class="card" ng-repeat="code in ucodes"
+            <div class="card" ng-repeat="code in codes"
                 ng-init="formshow = false; detailshow = false" >
                 <div ng-click="detailshow = formshow ? detailshow : !detailshow">
                     <px-coupon coupon='code'
