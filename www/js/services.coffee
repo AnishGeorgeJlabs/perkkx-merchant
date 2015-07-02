@@ -54,7 +54,7 @@ angular.module 'perkkx.services', []
       else {more: false}
 
     apiSubmit: (data) ->
-      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id}", data       # TODO: change
+      res = $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
       .success () ->
         $log.debug "Post successfull"
       res

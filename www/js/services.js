@@ -73,7 +73,7 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function() {
+        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function() {
           return $log.debug("Post successfull");
         });
         return res;
