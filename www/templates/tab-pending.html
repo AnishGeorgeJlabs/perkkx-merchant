@@ -9,7 +9,10 @@
                 </span>
                 <input type="text"
                        size="8"
-                       ng-model='rcode' ng-change='get(rcode)' placeholder="Enter redeem code"/>
+                       maxlength="8"
+                       ng-model='rcode' ng-change='get(rcode)'
+                       placeholder="Enter redeem code"
+                       reset-field />
             </label>
         </div>
         <!--
