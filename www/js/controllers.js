@@ -16,18 +16,24 @@
   }).controller('PendingCtrl', function($log, $scope, $ionicLoading, pxApiConnect) {
     $scope.rcode = "";
     $scope.resultCode = {};
+    $scope.load = false;
+    $scope.result = false;
+    $scope.error = false;
+    $scope.billshow = false;
+    $scope.toggleBill = function() {
+      return $scope.billshow = !$scope.billshow;
+    };
     $scope.get = function(code) {
-      if (code) {
-        $log.debug("rcode : " + code);
-        if (code.length === 8) {
-          $log.debug("yeahh");
-          $scope.load = true;
-          return pxApiConnect.apiCheckValid(code, $scope.callback);
-        }
+      $log.debug("rcode : " + code);
+      if (code.length === 8) {
+        $log.debug("yeahh");
+        $scope.load = true;
+        return pxApiConnect.apiCheckValid(code, $scope.callback);
       } else {
         $scope.result = false;
         $scope.error = false;
-        return $scope.billshow = false;
+        $scope.billshow = false;
+        return $log.debug("else part, " + $scope.billshow);
       }
     };
     $scope.callback = function(data) {
@@ -41,10 +47,6 @@
         return $scope.error = true;
       }
     };
-    $scope.load = false;
-    $scope.result = false;
-    $scope.error = false;
-    $scope.billshow = false;
     return $scope.submit = function(data) {
       $scope.load = true;
       return pxApiConnect.apiSubmit(data)["finally"](function() {

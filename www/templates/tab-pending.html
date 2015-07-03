@@ -7,8 +7,6 @@
                     Redeem code
                 </span>
                 <input type="text"
-                       maxlength="8"
-                       ng-minlength="8"
                        size="8"
                        ng-model='rcode' ng-change='get(rcode)' placeholder="Enter Redeem Code">
             </label>
@@ -18,18 +16,24 @@
                 <ion-spinner></ion-spinner>
             </p>
         </div>
-        <div class="card" ng-show="result" ng-click="billshow = !billshow">
+        <div class="card" ng-show="result" ng-click="toggleBill()">
             <div class="item item-text-wrap">
                 {{ rcode }} is valid. Please click to enter Bill details.
             </div>
+            <px-coupon
+                expiry="false"
+                redeem="false"
+                bill="false"
+                coupon="resultCode">
+            </px-coupon>
         </div>
-        <px-bill-form
-                submit-obj="resultCode"
-                submit-func="submit"
-                show="billshow">
-        </px-bill-form>
-
-
+        <div class="card" ng-show="billshow">
+            <px-bill-form
+                    submit-obj="resultCode"
+                    submit-func="submit"
+                    show="true">
+            </px-bill-form>
+        </div>
 
         <div class="card" ng-show="error">
             <div class="item item-text-wrap item-assertive">

@@ -2,7 +2,7 @@
     <h1>{{ coupon.rcode }}</h1>
     <h4>{{ coupon.deal }}</h4>
 </div>
-<div class='item item-text-wrap'>
+<div class='item item-text-wrap' ng-if="hRedeem || hExpiry || hBill">
     <p ng-if='hRedeem'>Redeemed on {{ coupon.used_on | date }}</p>
     <p ng-if='hExpiry'>Expiry - {{ coupon.expiry | date }}</p>
     <p ng-if='hBill'>Bill submitted on {{ coupon.submitted_on | date }}</p>

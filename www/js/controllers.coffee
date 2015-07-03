@@ -15,17 +15,25 @@ angular.module 'perkkx.controllers', []
   $scope.rcode = ""
   $scope.resultCode = {}
 
+  $scope.load = false
+  $scope.result = false
+  $scope.error = false
+  $scope.billshow = false
+
+  $scope.toggleBill = () ->
+    $scope.billshow = !$scope.billshow
+
   $scope.get = (code) ->
-    if code
-      $log.debug "rcode : #{code}"
-      if code.length == 8
-        $log.debug "yeahh"
-        $scope.load = true
-        pxApiConnect.apiCheckValid(code, $scope.callback)
+    $log.debug "rcode : #{code}"
+    if code.length == 8
+      $log.debug "yeahh"
+      $scope.load = true
+      pxApiConnect.apiCheckValid(code, $scope.callback)
     else
       $scope.result = false
       $scope.error = false
       $scope.billshow = false
+      $log.debug "else part, #{$scope.billshow}"
 
   $scope.callback = (data) ->
     $scope.load = false
@@ -37,10 +45,6 @@ angular.module 'perkkx.controllers', []
       $log.debug "else part"
       $scope.error = true
 
-  $scope.load = false
-  $scope.result = false
-  $scope.error = false
-  $scope.billshow = false
 
   $scope.submit = (data) ->
     $scope.load = true
