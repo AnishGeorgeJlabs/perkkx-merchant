@@ -11,8 +11,13 @@ angular.module 'perkkx.controllers', []
     if $scope.badges.hasOwnProperty(key) && num >= 0
       $scope.badges[key] = num
 
-.controller 'PendingCtrl', ($log, $scope, $ionicLoading, pxApiConnect) ->
+.controller 'AuxCtrl', ($scope, $log) ->
+  $scope.code = ""
+  $scope.clearCode = () -> $scope.code = ""
+
+.controller 'PendingCtrl', ($log, $scope, pxApiConnect) ->
   $scope.rcode = ""
+  $scope.clearRcode = (rcode) -> rcode = ""
   $scope.resultCode = {}
 
   $scope.load = false

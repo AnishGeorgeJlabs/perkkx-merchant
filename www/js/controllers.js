@@ -13,8 +13,16 @@
         return $scope.badges[key] = num;
       }
     };
-  }).controller('PendingCtrl', function($log, $scope, $ionicLoading, pxApiConnect) {
+  }).controller('AuxCtrl', function($scope, $log) {
+    $scope.code = "";
+    return $scope.clearCode = function() {
+      return $scope.code = "";
+    };
+  }).controller('PendingCtrl', function($log, $scope, pxApiConnect) {
     $scope.rcode = "";
+    $scope.clearRcode = function(rcode) {
+      return rcode = "";
+    };
     $scope.resultCode = {};
     $scope.load = false;
     $scope.result = false;

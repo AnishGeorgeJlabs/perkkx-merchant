@@ -1,6 +1,13 @@
 <div class='item item-divider'>
     <h1>{{ coupon.rcode }}</h1>
-    <h4>{{ coupon.deal }}</h4>
+    <div class="row">
+        <div class="col-90">
+            <h4>{{ coupon.deal }}</h4>
+        </div>
+        <div class="col">
+            <i class="icon ion-arrow-down-b"></i>
+        </div>
+    </div>
 </div>
 <div class='item item-text-wrap' ng-if="hRedeem || hExpiry || hBill">
     <p ng-if='hRedeem'>Redeemed on {{ coupon.used_on | date }}</p>

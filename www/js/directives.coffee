@@ -18,8 +18,8 @@ angular.module 'perkkx.directives', []
     defDiscount: '=defaultDiscount'
     slider: '=slider'
   compile: (elem, attr) ->
-    attr.defaultPaid = '0' if not attr.defaultPaid
-    attr.defaultDiscount = '0' if not attr.defaultDiscount
+    # attr.defaultPaid = '0' if not attr.defaultPaid
+    # attr.defaultDiscount = '0' if not attr.defaultDiscount
     attr.slider = 'true' if not attr.slider
   controller: ($scope, pxDateCheck) ->
     $scope.sliderCheck = () ->

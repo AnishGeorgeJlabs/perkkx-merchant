@@ -1,6 +1,7 @@
 <ion-view view-title="Perkkx">
     <ion-content
             scroll="false">
+
         <div class="list">
             <label class="item item-input item-floating-label">
                 <span class="input-label icon ion-search placeholder-icon">
@@ -8,18 +9,24 @@
                 </span>
                 <input type="text"
                        size="8"
-                       ng-model='rcode' ng-change='get(rcode)' placeholder="Enter Redeem Code">
+                       ng-model='rcode' ng-change='get(rcode)' placeholder="Enter redeem code"/>
             </label>
         </div>
+        <!--
+        <div class="list">
+            <label class="item item-input item-stacked-label">
+                <span class="input-label">Redeem code</span>
+                <input type="text" placeholder="Redeem code" ng-model="rcode" reset-field>
+            </label>
+        </div>
+        -->
+
         <div ng-show="load">
             <p class="text-center">
                 <ion-spinner></ion-spinner>
             </p>
         </div>
         <div class="card" ng-show="result" ng-click="toggleBill()">
-            <div class="item item-text-wrap">
-                {{ rcode }} is valid. Please click to enter Bill details.
-            </div>
             <px-coupon
                 expiry="false"
                 redeem="false"
