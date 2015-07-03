@@ -5,6 +5,18 @@
     {
       "path": "/submit",
       "proxyUrl": "http://45.55.72.208/perkkx/merchantapp/submit"
+    },
+    {
+      "path": "/merchantapp",
+      "proxyUrl": "http://localhost:8000/perkkx/merchantapp"
+    },
+    {
+      "path": "/lsubmit",
+      "proxyUrl": "http://localhost:8000/perkkx/merchantapp/submit"
+    },
+    {
+      "path": "/lvalidate",
+      "proxyUrl": "http://localhost:8000/perkkx/merchantapp/validate"
     }
   ]
 }

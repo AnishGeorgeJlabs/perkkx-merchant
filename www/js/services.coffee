@@ -1,8 +1,15 @@
 angular.module 'perkkx.services', []
-.constant('pxApiEndpoints', {
-    post: 'http://45.55.72.208/submit',                       # Actual Post api
-    postProxy: 'http://localhost:8100/submit',                # Proxie for ionic serve
+.constant('pxApiEndpointso', {    # TODO
+    checkValid: 'http://45.55.72.208/perkkx/merchantapp/validate?rcode=',
+    post: 'http://45.55.72.208/perkkx/merchantapp/submit',    # Actual Post api
+    postProxy: 'http://localhost:8100/submit',                # Proxy for ionic serve
     get: 'http://45.55.72.208/perkkx/merchantapp'     # Add pending and all that
+  })
+.constant('pxApiEndpoints', { # TODO
+    checkValid: 'http://localhost:8100/lvalidate?rcode=',
+    post: 'http://localhost:8100/lsubmit',    # Actual Post api
+    postProxy: 'http://localhost:8100/lsubmit',    # Actual Post api
+    get: 'http://localhost:8100/merchantapp'     # Add pending and all that
   })
 .constant('vendor_id', 1)
 
@@ -58,3 +65,11 @@ angular.module 'perkkx.services', []
       .success () ->
         $log.debug "Post successfull"
       res
+
+    apiCheckValid: (code, callback) ->
+       $http.get "#{pxApiEndpoints.checkValid}#{code}"
+       .success (data, status) ->
+         $log.debug "Response: #{data}"
+         callback(data)
+
+

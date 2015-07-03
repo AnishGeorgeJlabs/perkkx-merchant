@@ -13,46 +13,83 @@
         return $scope.badges[key] = num;
       }
     };
-  }).controller('PendingCtrl', function($scope, pxApiConnect) {
-    $scope.codes = [];
-    pxApiConnect.setCallBack('pending', function(data, more) {
-      var i, len, obj, results;
-      if (more) {
-        results = [];
-        for (i = 0, len = data.length; i < len; i++) {
-          obj = data[i];
-          results.push($scope.codes.push(obj));
+  }).controller('PendingCtrl', function($log, $scope, $ionicLoading, pxApiConnect) {
+    $scope.rcode = "";
+    $scope.resultCode = {};
+    $scope.get = function(code) {
+      if (code) {
+        $log.debug("rcode : " + code);
+        if (code.length === 8) {
+          $log.debug("yeahh");
+          $scope.load = true;
+          return pxApiConnect.apiCheckValid(code, $scope.callback);
         }
-        return results;
       } else {
-        return $scope.codes = data;
-      }
-    });
-    $scope.initGet = function() {
-      return pxApiConnect.apiGet('pending');
-    };
-    $scope.initGet();
-    $scope.refresh = function() {
-      return $scope.initGet()["finally"](function() {
-        return $scope.$broadcast('scroll.refreshComplete');
-      });
-    };
-    $scope.loadMore = function() {
-      var res;
-      res = pxApiConnect.apiMore('pending');
-      if (res.more) {
-        return res.future["finally"](function() {
-          return $scope.$broadcast('scroll.infiniteScrollComplete');
-        });
-      } else {
-        return $scope.$broadcast('scroll.infiniteScrollComplete');
+        $scope.result = false;
+        $scope.error = false;
+        return $scope.billshow = false;
       }
     };
+    $scope.callback = function(data) {
+      $scope.load = false;
+      $log.debug("data : " + (JSON.stringify(data)));
+      if (data.valid) {
+        $scope.resultCode = data.data;
+        return $scope.result = true;
+      } else {
+        $log.debug("else part");
+        return $scope.error = true;
+      }
+    };
+    $scope.load = false;
+    $scope.result = false;
+    $scope.error = false;
+    $scope.billshow = false;
     return $scope.submit = function(data) {
+      $scope.load = true;
       return pxApiConnect.apiSubmit(data)["finally"](function() {
-        return $scope.initGet();
+        $scope.billshow = false;
+        $scope.error = false;
+        $scope.result = false;
+        return $scope.load = false;
       });
     };
+
+    /*
+    $scope.load = () ->
+      $ionicLoading.show(
+        template: "Loading..."
+        hideOnStateChange: true
+      )
+     */
+
+    /*
+    $scope.codes = []
+    pxApiConnect.setCallBack 'pending', (data, more) ->
+      if more
+        $scope.codes.push obj for obj in data
+      else $scope.codes = data
+    
+    $scope.initGet = () -> pxApiConnect.apiGet 'pending'
+    
+    $scope.initGet()
+    
+    $scope.refresh = () ->
+      $scope.initGet()
+      .finally () ->
+        $scope.$broadcast('scroll.refreshComplete')
+    
+    $scope.loadMore = () ->
+      res = pxApiConnect.apiMore 'pending'
+      if res.more
+        res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
+      else
+        $scope.$broadcast('scroll.infiniteScrollComplete')
+    
+    $scope.submit = (data) ->
+      pxApiConnect.apiSubmit(data)
+      .finally () -> $scope.initGet()
+     */
   }).controller('UsedCtrl', function($scope, pxApiConnect) {
     $scope.codes = [];
     pxApiConnect.setCallBack('used', function(data, more) {
@@ -217,5 +254,3 @@
    */
 
 }).call(this);
-
-//# sourceMappingURL=controllers.js.map

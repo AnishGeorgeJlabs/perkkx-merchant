@@ -11,7 +11,55 @@ angular.module 'perkkx.controllers', []
     if $scope.badges.hasOwnProperty(key) && num >= 0
       $scope.badges[key] = num
 
-.controller 'PendingCtrl', ($scope, pxApiConnect) ->
+.controller 'PendingCtrl', ($log, $scope, $ionicLoading, pxApiConnect) ->
+  $scope.rcode = ""
+  $scope.resultCode = {}
+
+  $scope.get = (code) ->
+    if code
+      $log.debug "rcode : #{code}"
+      if code.length == 8
+        $log.debug "yeahh"
+        $scope.load = true
+        pxApiConnect.apiCheckValid(code, $scope.callback)
+    else
+      $scope.result = false
+      $scope.error = false
+      $scope.billshow = false
+
+  $scope.callback = (data) ->
+    $scope.load = false
+    $log.debug "data : #{JSON.stringify(data)}"
+    if data.valid
+      $scope.resultCode = data.data
+      $scope.result = true
+    else
+      $log.debug "else part"
+      $scope.error = true
+
+  $scope.load = false
+  $scope.result = false
+  $scope.error = false
+  $scope.billshow = false
+
+  $scope.submit = (data) ->
+    $scope.load = true
+    pxApiConnect.apiSubmit(data)
+    .finally () ->
+      $scope.billshow = false
+      $scope.error = false
+      $scope.result = false
+      $scope.load = false
+
+  ###
+  $scope.load = () ->
+    $ionicLoading.show(
+      template: "Loading..."
+      hideOnStateChange: true
+    )
+  ###
+
+  ###
   $scope.codes = []
   pxApiConnect.setCallBack 'pending', (data, more) ->
     if more
@@ -37,6 +85,7 @@ angular.module 'perkkx.controllers', []
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
     .finally () -> $scope.initGet()
+  ###
 
 
 .controller 'UsedCtrl', ($scope, pxApiConnect) ->

@@ -1,5 +1,42 @@
 <ion-view view-title="Perkkx">
-    <ion-content>
+    <ion-content
+            scroll="false">
+        <div class="list">
+            <label class="item item-input item-floating-label">
+                <span class="input-label icon ion-search placeholder-icon">
+                    Redeem code
+                </span>
+                <input type="text"
+                       maxlength="8"
+                       ng-minlength="8"
+                       size="8"
+                       ng-model='rcode' ng-change='get(rcode)' placeholder="Enter Redeem Code">
+            </label>
+        </div>
+        <div ng-show="load">
+            <p class="text-center">
+                <ion-spinner></ion-spinner>
+            </p>
+        </div>
+        <div class="card" ng-show="result" ng-click="billshow = !billshow">
+            <div class="item item-text-wrap">
+                {{ rcode }} is valid. Please click to enter Bill details.
+            </div>
+        </div>
+        <px-bill-form
+                submit-obj="resultCode"
+                submit-func="submit"
+                show="billshow">
+        </px-bill-form>
+
+
+
+        <div class="card" ng-show="error">
+            <div class="item item-text-wrap item-assertive">
+                The code you entered doesn't seem to be a valid one
+            </div>
+        </div>
+        <!--
         <ion-refresher
             pulling-text="Pull to refresh"
             on-refresh="refresh()">
@@ -8,15 +45,6 @@
             <div class="card" ng-repeat="code in codes"
                 ng-init="formshow = false" >
                 <div ng-click="formshow = !formshow">
-                    <!--
-                    <px-coupon-header
-                        coupon='code'
-                        class="item item-divider">
-                    </px-coupon-header>
-                    <div class="item item-text-wrap">
-                        <p>Redeemed on {{ code.usedOn | date }}</p>
-                        <p>Expiry: {{ code.expiry | date }}</p>
-                    </div> -->
                     <px-coupon coupon='code'
                         redeem='true'
                         expiry='true'>
@@ -33,5 +61,6 @@
             on-infinite="loadMore()"
             distance="1%">
         </ion-infinite-scroll>
+        -->
     </ion-content>
 </ion-view>

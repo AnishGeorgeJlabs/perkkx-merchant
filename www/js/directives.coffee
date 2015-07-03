@@ -1,4 +1,4 @@
-angular.module 'perkkx/directives', []
+angular.module 'perkkx.directives', []
 .directive 'pxCoupon', () ->
   restrict: 'E'
   templateUrl: 'directives/coupon.html'
@@ -48,7 +48,7 @@ angular.module 'perkkx/directives', []
 
       res.submitted_on = parseInt( Date.now() / 1000 )
       res.cID = $scope.submitObj.cID
-      res.rcode = $scope.submitObj.charCodeAt
+      res.rcode = $scope.submitObj.rcode
       res.userID = $scope.submitObj.userID
       $scope.submitFunc res
   templateUrl: 'directives/bill-form.html'
