@@ -30,3 +30,8 @@ input.reset-field { padding-right: 20px; }
   top: 20px;
   color: #bbb;
 }
+
+.title-image {
+  margin-top: 8px;
+  height: 27px;
+}
