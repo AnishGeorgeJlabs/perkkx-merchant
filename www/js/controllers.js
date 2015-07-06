@@ -13,7 +13,7 @@
         return $scope.badges[key] = num;
       }
     };
-  }).controller('PendingCtrl', function($log, $scope, pxApiConnect) {
+  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, $ionicScrollDelegate) {
     var clearState;
     $scope.data = {
       rcode: "",
@@ -39,13 +39,11 @@
     $scope.checkCode = function() {
       var rcode;
       rcode = $scope.data.rcode;
-      $log.debug("rcode: " + rcode);
       if (rcode.length === 8) {
         $scope.state.isLoading = true;
         return pxApiConnect.apiCheckValid(rcode, $scope.callback);
       } else {
-        clearState();
-        return $log.debug("else part");
+        return clearState();
       }
     };
     $scope.callback = function(data) {
@@ -61,6 +59,7 @@
     };
     return $scope.submit = function(data) {
       $scope.state.isLoading = true;
+      $ionicScrollDelegate.scrollTop();
       return pxApiConnect.apiSubmit(data)["finally"](function() {
         return clearState();
       });

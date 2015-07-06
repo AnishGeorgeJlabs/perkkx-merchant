@@ -8,8 +8,18 @@
         <span class="input-label">Discount : </span>
         <input type="tel" ng-model="discount" placeholder="Enter discount">
     </label>
-    <div class="button-bar">
+    <div class="item" ng-if="dealOptsCheck()">
+        <p class="text-center padding-top">Please select the deal</p>
+        <div class="list list-inset">
+            <ion-radio type="radio" ng-repeat="opt in submitObj.dealOpts"
+                       ng-model="selectedOpt"
+                       ng-value="opt">
+                <p>{{opt.deal}}</p>
+            </ion-radio>
+        </div>
+    </div>
+    <div class="item button-bar">
         <button ng-click="cancel()" class="button button-light">Cancel</button>
-        <button ng-click="submit()" class="button button-positive">Submit</button>
+        <button ng-click="validate() && submit()" class="button button-positive">Submit</button>
     </div>
 </div>

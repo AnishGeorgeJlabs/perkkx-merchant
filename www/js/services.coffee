@@ -48,12 +48,12 @@ angular.module 'perkkx.services', []
 
     apiSubmit: (data) ->
       res = $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
-      .success () ->
-        $log.debug "Post successfull"
+      .success (data) ->
+        $log.debug "Post done: #{JSON.stringify(data)}"
       res
 
     apiCheckValid: (code, callback) ->
-       $http.get "#{pxApiEndpoints.checkValid}#{code}"
+       $http.get "#{pxApiEndpoints.checkValid}?rcode=#{code}&vendor_id=#{vendor_id}"
        .success (data, status) ->
          $log.debug "Response: #{data}"
          callback(data)

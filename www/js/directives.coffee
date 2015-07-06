@@ -21,13 +21,29 @@ angular.module 'perkkx.directives', []
     # attr.defaultPaid = '0' if not attr.defaultPaid
     # attr.defaultDiscount = '0' if not attr.defaultDiscount
     attr.slider = 'true' if not attr.slider
-  controller: ($scope, pxDateCheck) ->
+
+  controller: ($scope, pxDateCheck, $log) ->
+
     $scope.sliderCheck = () ->
       $scope.slider and pxDateCheck $scope.submitObj.used_on
+
+    $scope.dealOptsCheck = () ->
+      $scope.submitObj.hasOwnProperty('dealOpts')
+
+    $scope.selectedOpt = {}
+
+    $scope.$watch(
+      () -> $scope.submitObj,
+      () ->
+        if $scope.dealOptsCheck()
+          $scope.selectedOpt = $scope.submitObj.dealOpts[0]
+    )
+
     cleanup = () ->
       $scope.paid = parseInt $scope.defPaid
       $scope.discount = parseInt $scope.defDiscount
       $scope.invalid = false
+
     cleanup()
 
     $scope.cancel = () ->
@@ -37,6 +53,7 @@ angular.module 'perkkx.directives', []
     $scope.validate = () ->
         $scope.invalid or
           ($scope.paid > 0 and $scope.discount > 0)
+
     $scope.submit = () ->
       res =
         if $scope.invalid
@@ -46,8 +63,14 @@ angular.module 'perkkx.directives', []
           paid: $scope.paid
           discount: $scope.discount
 
-      res.submitted_on = parseInt( Date.now() / 1000 )
-      res.cID = $scope.submitObj.cID
+      res.submitted_on = parseInt( Date.now() )
+      if $scope.dealOptsCheck()   # extraodinary case
+        res.used_on = $scope.submitObj.used_on
+        # add the correct cID according to the radio button selected
+        res.cID = $scope.selectedOpt.cID
+      else
+        res.cID = $scope.submitObj.cID      # Normal cases
+
       res.rcode = $scope.submitObj.rcode
       res.userID = $scope.submitObj.userID
       $scope.submitFunc res

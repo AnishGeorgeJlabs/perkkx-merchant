@@ -11,7 +11,7 @@ angular.module 'perkkx.controllers', []
     if $scope.badges.hasOwnProperty(key) && num >= 0
       $scope.badges[key] = num
 
-.controller 'PendingCtrl', ($log, $scope, pxApiConnect) ->
+.controller 'PendingCtrl', ($log, $scope, pxApiConnect, $ionicScrollDelegate) ->
   $scope.data =
     rcode: ""
     resultCode: ""
@@ -35,13 +35,11 @@ angular.module 'perkkx.controllers', []
 
   $scope.checkCode = () ->
     rcode = $scope.data.rcode
-    $log.debug "rcode: #{rcode}"
     if rcode.length == 8
       $scope.state.isLoading = true
       pxApiConnect.apiCheckValid(rcode, $scope.callback)
     else
       clearState()
-      $log.debug "else part"
 
 
   $scope.callback = (data) ->
@@ -57,6 +55,7 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     $scope.state.isLoading = true
+    $ionicScrollDelegate.scrollTop()
     pxApiConnect.apiSubmit(data)
     .finally () ->
       clearState()

@@ -69,13 +69,13 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function() {
-          return $log.debug("Post successfull");
+        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function(data) {
+          return $log.debug("Post done: " + (JSON.stringify(data)));
         });
         return res;
       },
       apiCheckValid: function(code, callback) {
-        return $http.get("" + pxApiEndpoints.checkValid + code).success(function(data, status) {
+        return $http.get(pxApiEndpoints.checkValid + "?rcode=" + code + "&vendor_id=" + vendor_id).success(function(data, status) {
           $log.debug("Response: " + data);
           return callback(data);
         });

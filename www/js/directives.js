@@ -27,11 +27,22 @@
           return attr.slider = 'true';
         }
       },
-      controller: function($scope, pxDateCheck) {
+      controller: function($scope, pxDateCheck, $log) {
         var cleanup;
         $scope.sliderCheck = function() {
           return $scope.slider && pxDateCheck($scope.submitObj.used_on);
         };
+        $scope.dealOptsCheck = function() {
+          return $scope.submitObj.hasOwnProperty('dealOpts');
+        };
+        $scope.selectedOpt = {};
+        $scope.$watch(function() {
+          return $scope.submitObj;
+        }, function() {
+          if ($scope.dealOptsCheck()) {
+            return $scope.selectedOpt = $scope.submitObj.dealOpts[0];
+          }
+        });
         cleanup = function() {
           $scope.paid = parseInt($scope.defPaid);
           $scope.discount = parseInt($scope.defDiscount);
@@ -54,8 +65,13 @@
             paid: $scope.paid,
             discount: $scope.discount
           };
-          res.submitted_on = parseInt(Date.now() / 1000);
-          res.cID = $scope.submitObj.cID;
+          res.submitted_on = parseInt(Date.now());
+          if ($scope.dealOptsCheck()) {
+            res.used_on = $scope.submitObj.used_on;
+            res.cID = $scope.selectedOpt.cID;
+          } else {
+            res.cID = $scope.submitObj.cID;
+          }
           res.rcode = $scope.submitObj.rcode;
           res.userID = $scope.submitObj.userID;
           return $scope.submitFunc(res);
