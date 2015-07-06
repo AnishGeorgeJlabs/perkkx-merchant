@@ -17,3 +17,16 @@ input.reset-field { padding-right: 20px; }
   margin: 0px;
   color: #bbb;
 }
+
+/*
+.button.button-icon.input-button {
+  position: absolute;
+  right: 0;
+  top: 10px;
+  color: #bbb;
+} */
+.button.button-icon.input-button {
+  position: absolute;
+  top: 20px;
+  color: #bbb;
+}

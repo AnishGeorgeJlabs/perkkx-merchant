@@ -4,10 +4,23 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('perkkx', ['ionic', 'perkkx.controllers', 'perkkx.services', 'perkkx.directives', 'perkkx.eDirs'])
+angular.module('perkkx', ['ionic', 'perkkx.controllers', 'perkkx.services', 'perkkx.constants', 'perkkx.directives'])
 
-.run(function($ionicPlatform) {
+.run(function($ionicPlatform, $ionicPopup) {
   $ionicPlatform.ready(function() {
+    if(window.Connection) {
+      if(navigator.connection.type == Connection.NONE) {
+        $ionicPopup.confirm({
+          title: "Internet Disconnected",
+          content: "Perkkx needs an active internet connection to work, please check your connection and relaunch the application"
+        })
+        .then(function(result) {
+          if(!result) {
+            ionic.Platform.exitApp();
+          }
+        });
+      }
+    }
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)
     if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {

@@ -13,93 +13,58 @@
         return $scope.badges[key] = num;
       }
     };
-  }).controller('AuxCtrl', function($scope, $log) {
-    $scope.code = "";
-    return $scope.clearCode = function() {
-      return $scope.code = "";
-    };
   }).controller('PendingCtrl', function($log, $scope, pxApiConnect) {
-    $scope.rcode = "";
-    $scope.clearRcode = function(rcode) {
-      return rcode = "";
+    var clearState;
+    $scope.data = {
+      rcode: "",
+      resultCode: ""
     };
-    $scope.resultCode = {};
-    $scope.load = false;
-    $scope.result = false;
-    $scope.error = false;
-    $scope.billshow = false;
-    $scope.toggleBill = function() {
-      return $scope.billshow = !$scope.billshow;
+    $scope.state = {
+      isLoading: false,
+      isError: false,
+      haveResult: false,
+      billshow: false
     };
-    $scope.get = function(code) {
-      $log.debug("rcode : " + code);
-      if (code.length === 8) {
-        $log.debug("yeahh");
-        $scope.load = true;
-        return pxApiConnect.apiCheckValid(code, $scope.callback);
+    clearState = function() {
+      $scope.state.isLoading = false;
+      $scope.state.isError = false;
+      $scope.state.haveResult = false;
+      return $scope.state.billshow = false;
+    };
+    $scope.clearInput = function() {
+      $log.debug('clearing');
+      clearState();
+      return $scope.data.rcode = "";
+    };
+    $scope.checkCode = function() {
+      var rcode;
+      rcode = $scope.data.rcode;
+      $log.debug("rcode: " + rcode);
+      if (rcode.length === 8) {
+        $scope.state.isLoading = true;
+        return pxApiConnect.apiCheckValid(rcode, $scope.callback);
       } else {
-        $scope.result = false;
-        $scope.error = false;
-        $scope.billshow = false;
-        return $log.debug("else part, " + $scope.billshow);
+        clearState();
+        return $log.debug("else part");
       }
     };
     $scope.callback = function(data) {
-      $scope.load = false;
+      $scope.state.isLoading = false;
       $log.debug("data : " + (JSON.stringify(data)));
       if (data.valid) {
-        $scope.resultCode = data.data;
-        return $scope.result = true;
+        $scope.data.resultCode = data.data;
+        return $scope.state.haveResult = true;
       } else {
         $log.debug("else part");
-        return $scope.error = true;
+        return $scope.state.isError = true;
       }
     };
     return $scope.submit = function(data) {
-      $scope.load = true;
+      $scope.state.isLoading = true;
       return pxApiConnect.apiSubmit(data)["finally"](function() {
-        $scope.billshow = false;
-        $scope.error = false;
-        $scope.result = false;
-        return $scope.load = false;
+        return clearState();
       });
     };
-
-    /*
-    $scope.load = () ->
-      $ionicLoading.show(
-        template: "Loading..."
-        hideOnStateChange: true
-      )
-     */
-
-    /*
-    $scope.codes = []
-    pxApiConnect.setCallBack 'pending', (data, more) ->
-      if more
-        $scope.codes.push obj for obj in data
-      else $scope.codes = data
-    
-    $scope.initGet = () -> pxApiConnect.apiGet 'pending'
-    
-    $scope.initGet()
-    
-    $scope.refresh = () ->
-      $scope.initGet()
-      .finally () ->
-        $scope.$broadcast('scroll.refreshComplete')
-    
-    $scope.loadMore = () ->
-      res = pxApiConnect.apiMore 'pending'
-      if res.more
-        res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
-      else
-        $scope.$broadcast('scroll.infiniteScrollComplete')
-    
-    $scope.submit = (data) ->
-      pxApiConnect.apiSubmit(data)
-      .finally () -> $scope.initGet()
-     */
   }).controller('UsedCtrl', function($scope, pxApiConnect) {
     $scope.codes = [];
     pxApiConnect.setCallBack('used', function(data, more) {
@@ -221,46 +186,16 @@
       });
     };
   }).controller('TestCtrl', function($scope) {
-    return console.log("Initialised Test");
+    console.log("Initialised Test");
+    $scope.data = {
+      code: ""
+    };
+    $scope.hello = function() {
+      return alert($scope.data.code);
+    };
+    return $scope.clear = function() {
+      return $scope.data.code = "";
+    };
   });
-
-
-  /*
-  .controller 'PendingCtrl', ($scope, pxApiConnect) ->
-    $scope.pcodes = []
-    $scope.submit = (obj) ->
-  .controller 'UsedCtrl', ($scope, pxApiConnect) ->
-    $scope.ucodes = []
-    $scope.submit = (obj) ->
-  .controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
-    $scope.ecodes = []
-    $scope.submit = (obj) ->
-  .controller 'DisputeCtrl', ($scope, pxApiConnect) ->
-    $scope.dcodes = []
-    $scope.submit = (obj) ->
-   */
-
-
-  /*
-  .controller 'TabCtrl', ($scope, pxApiConnect) ->
-    $scope.data = []
-  
-    $scope.setCallBack = (key) ->
-      pxApiConnect.setCallBack key, (data, more) ->
-        if more
-          $scope.data.push obj for obj in data
-        else $scope.data = data
-  
-    $scope.initGet = (key) -> pxApiConnect.getApi key
-    $scope.refresh = (key) ->
-      $scope.initGet key
-      .finally () ->
-        $scope.$broadcast 'scroll.refreshComplete'
-    $scope.loadMore = (key) ->
-      $scope.initGet key
-      .finally () ->
-        $scope.$broadcast 'scroll.infiniteScrollComplete'
-    $scope.submit = (obj) -> pxApiConnect.apiSubmit(obj)
-   */
 
 }).call(this);
