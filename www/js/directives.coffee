@@ -22,7 +22,7 @@ angular.module 'perkkx.directives', []
     # attr.defaultDiscount = '0' if not attr.defaultDiscount
     attr.slider = 'true' if not attr.slider
 
-  controller: ($scope, pxDateCheck, $log) ->
+  controller: ($scope, pxDateCheck, $log, $ionicPopup) ->
 
     $scope.sliderCheck = () ->
       $scope.slider and pxDateCheck $scope.submitObj.used_on
@@ -51,8 +51,16 @@ angular.module 'perkkx.directives', []
       $scope.formshow = false
 
     $scope.validate = () ->
-        $scope.invalid or
+        result = $scope.invalid or
           ($scope.paid > 0 and $scope.discount > 0)
+
+        $ionicPopup.alert({
+          title: 'Unable to submit'
+          template: 'The bill values you entered are invalid'
+          okType: 'button-positive button-small button-clear'
+        }) if not result
+
+        result
 
     $scope.submit = () ->
       res =

@@ -27,7 +27,7 @@
           return attr.slider = 'true';
         }
       },
-      controller: function($scope, pxDateCheck, $log) {
+      controller: function($scope, pxDateCheck, $log, $ionicPopup) {
         var cleanup;
         $scope.sliderCheck = function() {
           return $scope.slider && pxDateCheck($scope.submitObj.used_on);
@@ -54,7 +54,16 @@
           return $scope.formshow = false;
         };
         $scope.validate = function() {
-          return $scope.invalid || ($scope.paid > 0 && $scope.discount > 0);
+          var result;
+          result = $scope.invalid || ($scope.paid > 0 && $scope.discount > 0);
+          if (!result) {
+            $ionicPopup.alert({
+              title: 'Unable to submit',
+              template: 'The bill values you entered are invalid',
+              okType: 'button-positive button-small button-clear'
+            });
+          }
+          return result;
         };
         return $scope.submit = function() {
           var res;
