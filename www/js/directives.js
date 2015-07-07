@@ -40,7 +40,7 @@
           return $scope.submitObj;
         }, function() {
           if ($scope.dealOptsCheck()) {
-            return $scope.selectedOpt = $scope.submitObj.dealOpts[0];
+            return $scope.selectedOpt = $scope.submitObj.dealOpts[$scope.submitObj.selectedIndex];
           }
         });
         cleanup = function() {

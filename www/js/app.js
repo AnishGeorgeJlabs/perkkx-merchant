@@ -71,15 +71,6 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
         }
       }
     })
-  .state('tab.expired', {
-    url: '/expired',
-    views: {
-      'tab-expired': {
-        templateUrl: 'templates/tab-expired.html',
-        controller: 'ExpiredCtrl'
-      }
-    }
-  })
   .state('tab.dispute', {
     url: '/dispute',
     views: {
@@ -89,6 +80,16 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
       }
     }
   });
+      /*
+      .state('tab.expired', {
+        url: '/expired',
+        views: {
+          'tab-expired': {
+            templateUrl: 'templates/tab-expired.html',
+            controller: 'ExpiredCtrl'
+          }
+        }
+      }) */
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/pending');

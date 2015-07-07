@@ -36,7 +36,7 @@ angular.module 'perkkx.directives', []
       () -> $scope.submitObj,
       () ->
         if $scope.dealOptsCheck()
-          $scope.selectedOpt = $scope.submitObj.dealOpts[0]
+          $scope.selectedOpt = $scope.submitObj.dealOpts[$scope.submitObj.selectedIndex]
     )
 
     cleanup = () ->
