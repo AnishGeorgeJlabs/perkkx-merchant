@@ -6,7 +6,7 @@
       rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0);
       return moment() > rDate;
     };
-  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, vendor_id) {
+  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, vendor_id, $cordovaToast) {
     var callbacks, refreshData, res, urls;
     urls = {
       pending: pxApiEndpoints.get + "/pending/" + vendor_id,
@@ -70,7 +70,7 @@
       },
       apiSubmit: function(data) {
         res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function(data) {
-          return $log.debug("Post done: " + (JSON.stringify(data)));
+          return $cordovaToast.show("Bill submitted successfully", "short", "center");
         });
         return res;
       },

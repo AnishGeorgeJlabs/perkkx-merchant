@@ -8,7 +8,7 @@ angular.module 'perkkx.directives', []
     hExpiry: '=expiry'
     hBill: '=bill'
 
-.directive 'pxBillForm', (pxDateCheck) ->
+.directive 'pxBillForm', () ->
   restrict: 'E'
   scope:
     submitFunc: '=submitFunc'
@@ -22,7 +22,7 @@ angular.module 'perkkx.directives', []
     # attr.defaultDiscount = '0' if not attr.defaultDiscount
     attr.slider = 'true' if not attr.slider
 
-  controller: ($scope, pxDateCheck, $log, $ionicPopup) ->
+  controller: ($scope, pxDateCheck, $log, $ionicPopup, $cordovaToast) ->
 
     $scope.sliderCheck = () ->
       $scope.slider and pxDateCheck $scope.submitObj.used_on
@@ -81,5 +81,6 @@ angular.module 'perkkx.directives', []
 
       res.rcode = $scope.submitObj.rcode
       res.userID = $scope.submitObj.userID
+      cleanup()
       $scope.submitFunc res
   templateUrl: 'directives/bill-form.html'

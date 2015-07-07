@@ -11,7 +11,7 @@
         hBill: '=bill'
       }
     };
-  }).directive('pxBillForm', function(pxDateCheck) {
+  }).directive('pxBillForm', function() {
     return {
       restrict: 'E',
       scope: {
@@ -27,7 +27,7 @@
           return attr.slider = 'true';
         }
       },
-      controller: function($scope, pxDateCheck, $log, $ionicPopup) {
+      controller: function($scope, pxDateCheck, $log, $ionicPopup, $cordovaToast) {
         var cleanup;
         $scope.sliderCheck = function() {
           return $scope.slider && pxDateCheck($scope.submitObj.used_on);
@@ -83,6 +83,7 @@
           }
           res.rcode = $scope.submitObj.rcode;
           res.userID = $scope.submitObj.userID;
+          cleanup();
           return $scope.submitFunc(res);
         };
       },

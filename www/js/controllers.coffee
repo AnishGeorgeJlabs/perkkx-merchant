@@ -2,14 +2,17 @@ angular.module 'perkkx.controllers', []
 .controller 'BadgeCtrl', ($scope) ->
   console.log "initialized BadgeCtrl"
   $scope.badges =
-    pending: 0
     used: 0
-    expired: 0
+    expired: -10
     disputed: 0
 
-  $scope.updateBadge = (key, num) ->
-    if $scope.badges.hasOwnProperty(key) && num >= 0
-      $scope.badges[key] = num
+  # Update the badge by the difference from old to new
+  # $scope.updateBadge = (key, newNum) ->
+  #   if $scope.badges.hasOwnProperty(key) && newNum >= 0
+  #     $scope.badges[key] = newNum - $scope.badges[key]
+
+  # $scope.updateAllBadges = (obj) ->
+  #   $scope.updateBadge k, v for own k, v of obj
 
 .controller 'PendingCtrl', ($log, $scope, pxApiConnect, $ionicScrollDelegate) ->
   $scope.data =
@@ -58,7 +61,8 @@ angular.module 'perkkx.controllers', []
     $ionicScrollDelegate.scrollTop()
     pxApiConnect.apiSubmit(data)
     .finally () ->
-      clearState()
+      $scope.clearInput()   # also clears state
+      # TODO: add toast
 
 
 .controller 'UsedCtrl', ($scope, pxApiConnect) ->

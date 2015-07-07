@@ -4,7 +4,7 @@
 // 'starter.services' is found in services.js
 // 'starter.controllers' is found in controllers.js
 
-angular.module('perkkx', ['ionic', 'perkkx.controllers', 'perkkx.services', 'perkkx.constants', 'perkkx.directives'])
+angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.services', 'perkkx.constants', 'perkkx.directives'])
 
 .run(function($ionicPlatform, $ionicPopup) {
   $ionicPlatform.ready(function() {

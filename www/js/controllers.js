@@ -2,16 +2,10 @@
 (function() {
   angular.module('perkkx.controllers', []).controller('BadgeCtrl', function($scope) {
     console.log("initialized BadgeCtrl");
-    $scope.badges = {
-      pending: 0,
+    return $scope.badges = {
       used: 0,
-      expired: 0,
+      expired: -10,
       disputed: 0
-    };
-    return $scope.updateBadge = function(key, num) {
-      if ($scope.badges.hasOwnProperty(key) && num >= 0) {
-        return $scope.badges[key] = num;
-      }
     };
   }).controller('PendingCtrl', function($log, $scope, pxApiConnect, $ionicScrollDelegate) {
     var clearState;
@@ -61,7 +55,7 @@
       $scope.state.isLoading = true;
       $ionicScrollDelegate.scrollTop();
       return pxApiConnect.apiSubmit(data)["finally"](function() {
-        return clearState();
+        return $scope.clearInput();
       });
     };
   }).controller('UsedCtrl', function($scope, pxApiConnect) {

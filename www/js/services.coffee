@@ -5,7 +5,7 @@ angular.module 'perkkx.services', []
     return moment() > rDate
 
 
-.factory 'pxApiConnect', ($http, $log, pxApiEndpoints, vendor_id) ->
+.factory 'pxApiConnect', ($http, $log, pxApiEndpoints, vendor_id, $cordovaToast) ->
   urls =
     pending: "#{pxApiEndpoints.get}/pending/#{vendor_id}"
     used: "#{pxApiEndpoints.get}/used/#{vendor_id}"
@@ -49,7 +49,7 @@ angular.module 'perkkx.services', []
     apiSubmit: (data) ->
       res = $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
       .success (data) ->
-        $log.debug "Post done: #{JSON.stringify(data)}"
+        $cordovaToast.show "Bill submitted successfully", "short", "center"
       res
 
     apiCheckValid: (code, callback) ->
