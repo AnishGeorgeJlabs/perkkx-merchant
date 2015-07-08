@@ -7,11 +7,9 @@ angular.module 'perkkx.controllers', []
     used: 0
     disputed: 0
 
-  updateBadge = (key, newNum) ->
-    $scope.badges[key] = newNum - $scope.badges[key]
 
   callback = (obj) ->
-    updateBadge k, v for own k, v of obj
+    $scope.setBadge k, v for own k, v of obj
   # --------------------------- #
 
   # ----Watched by children---- #
@@ -82,13 +80,15 @@ angular.module 'perkkx.controllers', []
       $scope.clearInput()   # also clears state
       $scope.$parent.updateAll()
       $scope.$parent.refreshUsed = true
+      $scope.$parent.refreshDisputed = true
 
 
   # -------- Watchers ------------- #
   # JUST to get the input size limit working
   $scope.$watch(
     () -> $scope.data.rcode
-    (old_val, new_val) -> $scope.data.rcode == old_val if new_val.length > 8
+    (new_val, old_val) ->
+      $scope.data.rcode = old_val if new_val.length > 8
   )
 
 
@@ -124,7 +124,8 @@ angular.module 'perkkx.controllers', []
   # ---- Watchers -------- #
   $scope.$watch(
     () -> $scope.$parent.refreshUsed
-    (oldVal, newVal) ->
+    (newVal, oldVal) ->
+      $log.debug "refresh used checking"
       $scope.initGet() if newVal
       $scope.$parent.refreshUsed = true
       $scope.$parent.refreshDisputed = true
@@ -161,7 +162,8 @@ angular.module 'perkkx.controllers', []
   # ---- Watchers -------- #
   $scope.$watch(
     () -> $scope.$parent.refreshDisputed
-    (oldVal, newVal) ->
+    (newVal, oldVal) ->
+      $log.debug "refresh disputed checking"
       $scope.initGet() if newVal
       $scope.$parent.refreshDisputed = false
   )

@@ -3,14 +3,11 @@
   var hasProp = {}.hasOwnProperty;
 
   angular.module('perkkx.controllers', []).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log) {
-    var callback, updateBadge;
+    var callback;
     $log.info("initialized BadgeCtrl");
     $scope.badges = {
       used: 0,
       disputed: 0
-    };
-    updateBadge = function(key, newNum) {
-      return $scope.badges[key] = newNum - $scope.badges[key];
     };
     callback = function(obj) {
       var k, results, v;
@@ -18,7 +15,7 @@
       for (k in obj) {
         if (!hasProp.call(obj, k)) continue;
         v = obj[k];
-        results.push(updateBadge(k, v));
+        results.push($scope.setBadge(k, v));
       }
       return results;
     };
@@ -83,14 +80,15 @@
       return pxApiConnect.apiSubmit(data)["finally"](function() {
         $scope.clearInput();
         $scope.$parent.updateAll();
-        return $scope.$parent.refreshUsed = true;
+        $scope.$parent.refreshUsed = true;
+        return $scope.$parent.refreshDisputed = true;
       });
     };
     return $scope.$watch(function() {
       return $scope.data.rcode;
-    }, function(old_val, new_val) {
+    }, function(new_val, old_val) {
       if (new_val.length > 8) {
-        return $scope.data.rcode === old_val;
+        return $scope.data.rcode = old_val;
       }
     });
   }).controller('UsedCtrl', function($scope, pxApiConnect, $log) {
@@ -136,7 +134,8 @@
     };
     return $scope.$watch(function() {
       return $scope.$parent.refreshUsed;
-    }, function(oldVal, newVal) {
+    }, function(newVal, oldVal) {
+      $log.debug("refresh used checking");
       if (newVal) {
         $scope.initGet();
       }
@@ -186,7 +185,8 @@
     };
     return $scope.$watch(function() {
       return $scope.$parent.refreshDisputed;
-    }, function(oldVal, newVal) {
+    }, function(newVal, oldVal) {
+      $log.debug("refresh disputed checking");
       if (newVal) {
         $scope.initGet();
       }
