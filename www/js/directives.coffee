@@ -17,12 +17,14 @@ angular.module 'perkkx.directives', []
     defPaid: '=defaultPaid'
     defDiscount: '=defaultDiscount'
     slider: '=slider'
+    scrollBack: '=scrollBack'
   compile: (elem, attr) ->
     # attr.defaultPaid = '0' if not attr.defaultPaid
     # attr.defaultDiscount = '0' if not attr.defaultDiscount
     attr.slider = 'true' if not attr.slider
+    attr.scrollBack = 'false' if not attr.scrollBack
 
-  controller: ($scope, pxDateCheck, $log, $ionicPopup, $cordovaToast) ->
+  controller: ($scope, pxDateCheck, $log, $ionicPopup, $ionicScrollDelegate) ->
 
     $scope.sliderCheck = () ->
       $scope.slider and pxDateCheck $scope.submitObj.used_on
@@ -49,8 +51,9 @@ angular.module 'perkkx.directives', []
     cleanup()
 
     $scope.cancel = () ->
-      cleanup()
       $scope.formshow = false
+      $ionicScrollDelegate.scrollTop() if $scope.scrollBack
+      cleanup()
 
     $scope.validate = () ->
         result = $scope.invalid or
@@ -65,6 +68,9 @@ angular.module 'perkkx.directives', []
         result
 
     $scope.submit = () ->
+      $scope.formshow = false
+      $ionicScrollDelegate.scrollTop() if $scope.scrollBack
+
       res =
         if $scope.invalid
           status: 'expired'

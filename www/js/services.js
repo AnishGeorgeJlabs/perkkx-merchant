@@ -81,6 +81,14 @@
         });
       }
     };
+  }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, vendor_id) {
+    var res, url;
+    url = pxApiEndpoints.badge + "/" + vendor_id;
+    return res = {
+      update: function() {
+        return $http.get(url);
+      }
+    };
   });
 
 }).call(this);

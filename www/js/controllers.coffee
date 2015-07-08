@@ -1,18 +1,35 @@
 angular.module 'perkkx.controllers', []
-.controller 'BadgeCtrl', ($scope) ->
-  console.log "initialized BadgeCtrl"
+.controller 'BadgeCtrl', ($scope, pxBadgeProvider, $log) ->
+  $log.info "initialized BadgeCtrl"
+
+  # --- Private --------------- #
   $scope.badges =
     used: 0
-    expired: -10
     disputed: 0
 
-  # Update the badge by the difference from old to new
-  # $scope.updateBadge = (key, newNum) ->
-  #   if $scope.badges.hasOwnProperty(key) && newNum >= 0
-  #     $scope.badges[key] = newNum - $scope.badges[key]
+  updateBadge = (key, newNum) ->
+    $scope.badges[key] = newNum - $scope.badges[key]
 
-  # $scope.updateAllBadges = (obj) ->
-  #   $scope.updateBadge k, v for own k, v of obj
+  callback = (obj) ->
+    updateBadge k, v for own k, v of obj
+  # --------------------------- #
+
+  # ----Watched by children---- #
+  $scope.refreshUsed = false
+  $scope.refreshDisputed = false
+  # --------------------------- #
+
+  $scope.setBadge = (key, num) ->
+    $scope.badges[key] = num
+
+  $scope.updateAll = () ->
+    pxBadgeProvider.update().success (data) ->
+      callback(data)
+
+  $scope.updateAll()
+
+
+
 
 .controller 'PendingCtrl', ($log, $scope, pxApiConnect, $ionicScrollDelegate) ->
   $scope.data =
@@ -36,11 +53,6 @@ angular.module 'perkkx.controllers', []
     clearState()
     $scope.data.rcode = ""
 
-  # JUST to get the input size limit working
-  $scope.$watch(
-    () -> $scope.data.rcode
-    (old_val, new_val) -> $scope.data.rcode == old_val if new_val.length > 8
-  )
 
   $scope.checkCode = () ->
     rcode = $scope.data.rcode
@@ -64,21 +76,32 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     $scope.state.isLoading = true
-    $ionicScrollDelegate.scrollTop()
+    $log.debug "submitting data: #{data}"
     pxApiConnect.apiSubmit(data)
     .finally () ->
       $scope.clearInput()   # also clears state
-      # TODO: add toast
+      $scope.$parent.updateAll()
+      $scope.$parent.refreshUsed = true
 
 
-.controller 'UsedCtrl', ($scope, pxApiConnect) ->
+  # -------- Watchers ------------- #
+  # JUST to get the input size limit working
+  $scope.$watch(
+    () -> $scope.data.rcode
+    (old_val, new_val) -> $scope.data.rcode == old_val if new_val.length > 8
+  )
+
+
+.controller 'UsedCtrl', ($scope, pxApiConnect, $log) ->
   $scope.codes = []
   pxApiConnect.setCallBack 'used', (data, more) ->
     if more
       $scope.codes.push obj for obj in data
     else $scope.codes = data
 
-  $scope.initGet = () -> pxApiConnect.apiGet 'used'
+  $scope.initGet = () ->
+    $log.debug "Init get for used called"
+    pxApiConnect.apiGet 'used'
 
   $scope.initGet()
 
@@ -98,34 +121,17 @@ angular.module 'perkkx.controllers', []
     pxApiConnect.apiSubmit(data)
     .finally () -> $scope.initGet()
 
-.controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
-  $scope.codes = []
-  pxApiConnect.setCallBack 'expired', (data, more) ->
-    if more
-      $scope.codes.push obj for obj in data
-    else $scope.codes = data
+  # ---- Watchers -------- #
+  $scope.$watch(
+    () -> $scope.$parent.refreshUsed
+    (oldVal, newVal) ->
+      $scope.initGet() if newVal
+      $scope.$parent.refreshUsed = true
+      $scope.$parent.refreshDisputed = true
+  )
 
-  $scope.initGet = () -> pxApiConnect.apiGet 'expired'
-
-  $scope.initGet()
-
-  $scope.refresh = () ->
-    $scope.initGet()
-    .finally () ->
-      $scope.$broadcast('scroll.refreshComplete')
-
-  $scope.loadMore = () ->
-    res = pxApiConnect.apiMore 'expired'
-    if res.more
-      res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
-    else
-      $scope.$broadcast('scroll.infiniteScrollComplete')
-
-  $scope.submit = (data) ->
-    pxApiConnect.apiSubmit(data)
-    .finally () -> $scope.initGet()
-
-.controller 'DisputeCtrl', ($scope, pxApiConnect) ->
+.controller 'DisputeCtrl', ($log, $scope, pxApiConnect) ->
+  $log.debug "Initialised Dispute ctrl"
   $scope.codes = []
   pxApiConnect.setCallBack 'disputed', (data, more) ->
     if more
@@ -152,6 +158,14 @@ angular.module 'perkkx.controllers', []
     pxApiConnect.apiSubmit(data)
     .finally () -> $scope.initGet()
 
+  # ---- Watchers -------- #
+  $scope.$watch(
+    () -> $scope.$parent.refreshDisputed
+    (oldVal, newVal) ->
+      $scope.initGet() if newVal
+      $scope.$parent.refreshDisputed = false
+  )
+
 
 .controller 'TestCtrl', ($scope) ->
   console.log "Initialised Test"
@@ -160,3 +174,31 @@ angular.module 'perkkx.controllers', []
   }
   $scope.hello = () -> alert $scope.data.code
   $scope.clear = () -> $scope.data.code = ""
+###
+.controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
+  $scope.codes = []
+  pxApiConnect.setCallBack 'expired', (data, more) ->
+    if more
+      $scope.codes.push obj for obj in data
+    else $scope.codes = data
+
+  $scope.initGet = () -> pxApiConnect.apiGet 'expired'
+
+  $scope.initGet()
+
+  $scope.refresh = () ->
+    $scope.initGet()
+    .finally () ->
+      $scope.$broadcast('scroll.refreshComplete')
+
+  $scope.loadMore = () ->
+    res = pxApiConnect.apiMore 'expired'
+    if res.more
+      res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
+    else
+      $scope.$broadcast('scroll.infiniteScrollComplete')
+
+  $scope.submit = (data) ->
+    pxApiConnect.apiSubmit(data)
+    .finally () -> $scope.initGet()
+###

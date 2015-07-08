@@ -20,14 +20,18 @@
         submitObj: '=submitObj',
         defPaid: '=defaultPaid',
         defDiscount: '=defaultDiscount',
-        slider: '=slider'
+        slider: '=slider',
+        scrollBack: '=scrollBack'
       },
       compile: function(elem, attr) {
         if (!attr.slider) {
-          return attr.slider = 'true';
+          attr.slider = 'true';
+        }
+        if (!attr.scrollBack) {
+          return attr.scrollBack = 'false';
         }
       },
-      controller: function($scope, pxDateCheck, $log, $ionicPopup, $cordovaToast) {
+      controller: function($scope, pxDateCheck, $log, $ionicPopup, $ionicScrollDelegate) {
         var cleanup;
         $scope.sliderCheck = function() {
           return $scope.slider && pxDateCheck($scope.submitObj.used_on);
@@ -52,8 +56,11 @@
         };
         cleanup();
         $scope.cancel = function() {
-          cleanup();
-          return $scope.formshow = false;
+          $scope.formshow = false;
+          if ($scope.scrollBack) {
+            $ionicScrollDelegate.scrollTop();
+          }
+          return cleanup();
         };
         $scope.validate = function() {
           var result;
@@ -69,6 +76,10 @@
         };
         return $scope.submit = function() {
           var res;
+          $scope.formshow = false;
+          if ($scope.scrollBack) {
+            $ionicScrollDelegate.scrollTop();
+          }
           res = $scope.invalid ? {
             status: 'expired'
           } : {

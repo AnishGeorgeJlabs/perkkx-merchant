@@ -58,4 +58,10 @@ angular.module 'perkkx.services', []
          $log.debug "Response: #{data}"
          callback(data)
 
+.factory 'pxBadgeProvider', ($http, $log, pxApiEndpoints, vendor_id) ->
+  url = "#{pxApiEndpoints.badge}/#{vendor_id}"
+
+  return res =
+    update: () -> return $http.get url
+
 

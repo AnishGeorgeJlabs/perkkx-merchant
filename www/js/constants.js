@@ -4,9 +4,10 @@
     checkValid: 'http://45.55.72.208/perkkx/merchantapp/validate',
     post: 'http://45.55.72.208/perkkx/merchantapp/submit',
     postProxy: 'http://localhost:8100/submit',
-    get: 'http://45.55.72.208/perkkx/merchantapp'
+    get: 'http://45.55.72.208/perkkx/merchantapp',
+    badge: 'http://45.55.72.208/perkkx/merchantapp/count'
   }).constant('pxApiEndpointso', {
-    checkValid: 'http://localhost:8100/lvalidate?rcode=',
+    checkValid: 'http://localhost:8100/lvalidate',
     post: 'http://localhost:8100/lsubmit',
     postProxy: 'http://localhost:8100/lsubmit',
     get: 'http://localhost:8100/merchantapp'
