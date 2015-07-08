@@ -12,6 +12,10 @@
             <h2>{{ coupon.deal }}</h2>
         </div>
     </div>
+    <p style="font-style:italic" ng-if="!coupon.hasOwnProperty('deal')">
+        <i class="icon ion-ios-checkmark padding-right balanced"> </i>
+        Verified User
+    </p>
 </div>
 <div class='item item-text-wrap' ng-if="hRedeem || hExpiry || hBill">
     <div class="row">
