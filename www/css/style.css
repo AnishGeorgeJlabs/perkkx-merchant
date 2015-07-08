@@ -34,6 +34,9 @@ input.reset-field { padding-right: 20px; }
   color: red;
 }
 
+.platform-android .bar-custom{
+  top: 93px;
+}
 /*
 .perkkx-logo {
   margin-top: 8px;
