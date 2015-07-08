@@ -1,6 +1,7 @@
 angular.module 'perkkx.controllers', []
 .controller 'BadgeCtrl', ($scope, pxBadgeProvider, $log) ->
   $log.info "initialized BadgeCtrl"
+  pxBadgeProvider.setUpdater($scope.updateAll)
 
   # --- Private --------------- #
   $scope.badges =
@@ -20,12 +21,12 @@ angular.module 'perkkx.controllers', []
   $scope.setBadge = (key, num) ->
     $scope.badges[key] = num
 
-  $scope.updateAll = () ->
+  pxBadgeProvider.setUpdater () ->
+    $log.debug "update AALL"
     pxBadgeProvider.update().success (data) ->
       callback(data)
 
-  $scope.updateAll()
-
+  pxBadgeProvider.refresh()
 
 
 
@@ -78,7 +79,7 @@ angular.module 'perkkx.controllers', []
     pxApiConnect.apiSubmit(data)
     .finally () ->
       $scope.clearInput()   # also clears state
-      $scope.$parent.updateAll()
+      #$scope.$parent.updateAll()
       pxBadgeProvider.refresh()
       #$scope.$parent.refreshUsed = true
       #$scope.$parent.refreshDisputed = true
@@ -121,7 +122,9 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    .finally () -> pxBadgeProvider.refresh()
+    .finally () ->
+      #$scope.$parent.updateAll()
+      pxBadgeProvider.refresh()
 
   # # ---- Watchers -------- #
   # $scope.$watch(
@@ -141,7 +144,9 @@ angular.module 'perkkx.controllers', []
       $scope.codes.push obj for obj in data
     else $scope.codes = data
 
-  pxBadgeProvider.setCallBack 'disputed', () -> initGet()
+  pxBadgeProvider.setCallBack 'disputed', () ->
+    $log.debug "pxBadge for disputed"
+    $scope.initGet()
 
   $scope.initGet = () -> pxApiConnect.apiGet 'disputed'
 
@@ -161,7 +166,9 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    .finally () -> pxBadgeProvider.refresh()
+    .finally () ->
+      #$scope.$parent.updateAll()
+      pxBadgeProvider.refresh()
 
 
 ###

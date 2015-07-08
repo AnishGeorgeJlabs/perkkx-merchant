@@ -62,6 +62,7 @@ angular.module 'perkkx.services', []
   url = "#{pxApiEndpoints.badge}/#{vendor_id}"
 
   callbacks = {}
+  updater = {}
 
   res =
     update: () -> return $http.get url
@@ -69,7 +70,13 @@ angular.module 'perkkx.services', []
     setCallBack: (key, receiver) ->
       callbacks[key] = receiver
 
+    setUpdater: (receiver) ->
+      updater = receiver
+
     refresh: () ->
       v() for k, v of callbacks
+      updater()
+
+    updateAll: () -> updater()
 
 

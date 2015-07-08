@@ -82,9 +82,10 @@
       }
     };
   }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, vendor_id) {
-    var callbacks, res, url;
+    var callbacks, res, updater, url;
     url = pxApiEndpoints.badge + "/" + vendor_id;
     callbacks = {};
+    updater = {};
     return res = {
       update: function() {
         return $http.get(url);
@@ -92,14 +93,19 @@
       setCallBack: function(key, receiver) {
         return callbacks[key] = receiver;
       },
+      setUpdater: function(receiver) {
+        return updater = receiver;
+      },
       refresh: function() {
-        var k, results, v;
-        results = [];
+        var k, v;
         for (k in callbacks) {
           v = callbacks[k];
-          results.push(v());
+          v();
         }
-        return results;
+        return updater();
+      },
+      updateAll: function() {
+        return updater();
       }
     };
   });

@@ -5,6 +5,7 @@
   angular.module('perkkx.controllers', []).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log) {
     var callback;
     $log.info("initialized BadgeCtrl");
+    pxBadgeProvider.setUpdater($scope.updateAll);
     $scope.badges = {
       used: 0,
       disputed: 0
@@ -22,12 +23,13 @@
     $scope.setBadge = function(key, num) {
       return $scope.badges[key] = num;
     };
-    $scope.updateAll = function() {
+    pxBadgeProvider.setUpdater(function() {
+      $log.debug("update AALL");
       return pxBadgeProvider.update().success(function(data) {
         return callback(data);
       });
-    };
-    return $scope.updateAll();
+    });
+    return pxBadgeProvider.refresh();
   }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
     var clearState;
     $scope.data = {
@@ -77,7 +79,6 @@
       $log.debug("submitting data: " + data);
       return pxApiConnect.apiSubmit(data)["finally"](function() {
         $scope.clearInput();
-        $scope.$parent.updateAll();
         return pxBadgeProvider.refresh();
       });
     };
@@ -149,7 +150,8 @@
       }
     });
     pxBadgeProvider.setCallBack('disputed', function() {
-      return initGet();
+      $log.debug("pxBadge for disputed");
+      return $scope.initGet();
     });
     $scope.initGet = function() {
       return pxApiConnect.apiGet('disputed');
