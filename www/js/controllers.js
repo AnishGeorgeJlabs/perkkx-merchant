@@ -19,8 +19,6 @@
       }
       return results;
     };
-    $scope.refreshUsed = false;
-    $scope.refreshDisputed = false;
     $scope.setBadge = function(key, num) {
       return $scope.badges[key] = num;
     };
@@ -30,7 +28,7 @@
       });
     };
     return $scope.updateAll();
-  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, $ionicScrollDelegate) {
+  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
     var clearState;
     $scope.data = {
       rcode: "",
@@ -80,8 +78,7 @@
       return pxApiConnect.apiSubmit(data)["finally"](function() {
         $scope.clearInput();
         $scope.$parent.updateAll();
-        $scope.$parent.refreshUsed = true;
-        return $scope.$parent.refreshDisputed = true;
+        return pxBadgeProvider.refresh();
       });
     };
     return $scope.$watch(function() {
@@ -91,7 +88,7 @@
         return $scope.data.rcode = old_val;
       }
     });
-  }).controller('UsedCtrl', function($scope, pxApiConnect, $log) {
+  }).controller('UsedCtrl', function($scope, pxApiConnect, $log, pxBadgeProvider) {
     $scope.codes = [];
     pxApiConnect.setCallBack('used', function(data, more) {
       var i, len, obj, results;
@@ -105,6 +102,9 @@
       } else {
         return $scope.codes = data;
       }
+    });
+    pxBadgeProvider.setCallBack('used', function() {
+      return $scope.initGet();
     });
     $scope.initGet = function() {
       $log.debug("Init get for used called");
@@ -127,22 +127,12 @@
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       }
     };
-    $scope.submit = function(data) {
+    return $scope.submit = function(data) {
       return pxApiConnect.apiSubmit(data)["finally"](function() {
-        return $scope.initGet();
+        return pxBadgeProvider.refresh();
       });
     };
-    return $scope.$watch(function() {
-      return $scope.$parent.refreshUsed;
-    }, function(newVal, oldVal) {
-      $log.debug("refresh used checking");
-      if (newVal) {
-        $scope.initGet();
-      }
-      $scope.$parent.refreshUsed = true;
-      return $scope.$parent.refreshDisputed = true;
-    });
-  }).controller('DisputeCtrl', function($log, $scope, pxApiConnect) {
+  }).controller('DisputeCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
     $log.debug("Initialised Dispute ctrl");
     $scope.codes = [];
     pxApiConnect.setCallBack('disputed', function(data, more) {
@@ -157,6 +147,9 @@
       } else {
         return $scope.codes = data;
       }
+    });
+    pxBadgeProvider.setCallBack('disputed', function() {
+      return initGet();
     });
     $scope.initGet = function() {
       return pxApiConnect.apiGet('disputed');
@@ -178,30 +171,10 @@
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       }
     };
-    $scope.submit = function(data) {
+    return $scope.submit = function(data) {
       return pxApiConnect.apiSubmit(data)["finally"](function() {
-        return $scope.initGet();
+        return pxBadgeProvider.refresh();
       });
-    };
-    return $scope.$watch(function() {
-      return $scope.$parent.refreshDisputed;
-    }, function(newVal, oldVal) {
-      $log.debug("refresh disputed checking");
-      if (newVal) {
-        $scope.initGet();
-      }
-      return $scope.$parent.refreshDisputed = false;
-    });
-  }).controller('TestCtrl', function($scope) {
-    console.log("Initialised Test");
-    $scope.data = {
-      code: ""
-    };
-    $scope.hello = function() {
-      return alert($scope.data.code);
-    };
-    return $scope.clear = function() {
-      return $scope.data.code = "";
     };
   });
 

@@ -12,10 +12,10 @@ angular.module 'perkkx.controllers', []
     $scope.setBadge k, v for own k, v of obj
   # --------------------------- #
 
-  # ----Watched by children---- #
-  $scope.refreshUsed = false
-  $scope.refreshDisputed = false
-  # --------------------------- #
+  # # ----Watched by children---- #
+  # $scope.refreshUsed = false
+  # $scope.refreshDisputed = false
+  # # --------------------------- #
 
   $scope.setBadge = (key, num) ->
     $scope.badges[key] = num
@@ -29,7 +29,7 @@ angular.module 'perkkx.controllers', []
 
 
 
-.controller 'PendingCtrl', ($log, $scope, pxApiConnect, $ionicScrollDelegate) ->
+.controller 'PendingCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
   $scope.data =
     rcode: ""
     resultCode: ""
@@ -79,8 +79,9 @@ angular.module 'perkkx.controllers', []
     .finally () ->
       $scope.clearInput()   # also clears state
       $scope.$parent.updateAll()
-      $scope.$parent.refreshUsed = true
-      $scope.$parent.refreshDisputed = true
+      pxBadgeProvider.refresh()
+      #$scope.$parent.refreshUsed = true
+      #$scope.$parent.refreshDisputed = true
 
 
   # -------- Watchers ------------- #
@@ -92,12 +93,13 @@ angular.module 'perkkx.controllers', []
   )
 
 
-.controller 'UsedCtrl', ($scope, pxApiConnect, $log) ->
+.controller 'UsedCtrl', ($scope, pxApiConnect, $log, pxBadgeProvider) ->
   $scope.codes = []
   pxApiConnect.setCallBack 'used', (data, more) ->
     if more
       $scope.codes.push obj for obj in data
     else $scope.codes = data
+  pxBadgeProvider.setCallBack 'used', () -> $scope.initGet()
 
   $scope.initGet = () ->
     $log.debug "Init get for used called"
@@ -119,25 +121,27 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    .finally () -> $scope.initGet()
+    .finally () -> pxBadgeProvider.refresh()
 
-  # ---- Watchers -------- #
-  $scope.$watch(
-    () -> $scope.$parent.refreshUsed
-    (newVal, oldVal) ->
-      $log.debug "refresh used checking"
-      $scope.initGet() if newVal
-      $scope.$parent.refreshUsed = true
-      $scope.$parent.refreshDisputed = true
-  )
+  # # ---- Watchers -------- #
+  # $scope.$watch(
+  #   () -> $scope.$parent.refreshUsed
+  #   (newVal, oldVal) ->
+  #     $log.debug "refresh used checking"
+  #     $scope.initGet() if newVal
+  #     $scope.$parent.refreshUsed = true
+  #     $scope.$parent.refreshDisputed = true
+  # )
 
-.controller 'DisputeCtrl', ($log, $scope, pxApiConnect) ->
+.controller 'DisputeCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
   $log.debug "Initialised Dispute ctrl"
   $scope.codes = []
   pxApiConnect.setCallBack 'disputed', (data, more) ->
     if more
       $scope.codes.push obj for obj in data
     else $scope.codes = data
+
+  pxBadgeProvider.setCallBack 'disputed', () -> initGet()
 
   $scope.initGet = () -> pxApiConnect.apiGet 'disputed'
 
@@ -157,25 +161,9 @@ angular.module 'perkkx.controllers', []
 
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
-    .finally () -> $scope.initGet()
-
-  # ---- Watchers -------- #
-  $scope.$watch(
-    () -> $scope.$parent.refreshDisputed
-    (newVal, oldVal) ->
-      $log.debug "refresh disputed checking"
-      $scope.initGet() if newVal
-      $scope.$parent.refreshDisputed = false
-  )
+    .finally () -> pxBadgeProvider.refresh()
 
 
-.controller 'TestCtrl', ($scope) ->
-  console.log "Initialised Test"
-  $scope.data = {
-    code: ""
-  }
-  $scope.hello = () -> alert $scope.data.code
-  $scope.clear = () -> $scope.data.code = ""
 ###
 .controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
   $scope.codes = []

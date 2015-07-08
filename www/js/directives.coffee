@@ -89,9 +89,12 @@ angular.module 'perkkx.directives', []
         $log.debug("no dealOpts")
         res.cID = $scope.submitObj.cID      # Normal cases
 
-      res.orig_cID = $scope.submitObj.cID
+      if $scope.submitObj.hasOwnProperty('cID')
+        res.orig_cID = $scope.submitObj.cID
       res.rcode = $scope.submitObj.rcode
       res.userID = $scope.submitObj.rcode[0...6]
+
+      $log.debug "submitting, #{$scope.submitObj.cID} #{JSON.stringify(res)}"
       cleanup()
       $scope.submitFunc res
   templateUrl: 'directives/bill-form.html'
