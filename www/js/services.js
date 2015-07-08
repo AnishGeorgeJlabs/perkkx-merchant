@@ -69,7 +69,7 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function(data) {
+        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function(data) {
           return $cordovaToast.show("Bill submitted successfully", "short", "center");
         });
         return res;

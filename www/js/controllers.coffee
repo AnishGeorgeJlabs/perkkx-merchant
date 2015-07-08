@@ -36,6 +36,12 @@ angular.module 'perkkx.controllers', []
     clearState()
     $scope.data.rcode = ""
 
+  # JUST to get the input size limit working
+  $scope.$watch(
+    () -> $scope.data.rcode
+    (old_val, new_val) -> $scope.data.rcode == old_val if new_val.length > 8
+  )
+
   $scope.checkCode = () ->
     rcode = $scope.data.rcode
     if rcode.length == 8

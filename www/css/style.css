@@ -30,9 +30,13 @@ input.reset-field { padding-right: 20px; }
   top: 20px;
   color: #bbb;
 }
+.px-text-warning {
+  color: red;
+}
 
-.title-image {
+/*
+.perkkx-logo {
   margin-top: 8px;
   margin-bottom: 10px;
   height: 30px;
-}
+} */

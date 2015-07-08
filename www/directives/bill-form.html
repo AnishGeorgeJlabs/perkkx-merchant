@@ -12,7 +12,7 @@
         <p class="text-center padding-top">Please select the deal</p>
         <div class="list list-inset">
             <ion-radio type="radio" ng-repeat="opt in submitObj.dealOpts"
-                       ng-model="selectedOpt"
+                       ng-model="data.selectedOpt"
                        ng-value="opt">
                 <p>{{opt.deal}}</p>
             </ion-radio>

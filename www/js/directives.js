@@ -35,12 +35,14 @@
         $scope.dealOptsCheck = function() {
           return $scope.submitObj.hasOwnProperty('dealOpts');
         };
-        $scope.selectedOpt = {};
+        $scope.data = {
+          selectedOpt: {}
+        };
         $scope.$watch(function() {
           return $scope.submitObj;
         }, function() {
           if ($scope.dealOptsCheck()) {
-            return $scope.selectedOpt = $scope.submitObj.dealOpts[$scope.submitObj.selectedIndex];
+            return $scope.data.selectedOpt = $scope.submitObj.dealOpts[$scope.submitObj.selectedIndex];
           }
         });
         cleanup = function() {
@@ -76,13 +78,15 @@
           };
           res.submitted_on = parseInt(Date.now());
           if ($scope.dealOptsCheck()) {
+            $log.debug("submitting for bill " + (JSON.stringify($scope.data.selectedOpt)));
             res.used_on = $scope.submitObj.used_on;
-            res.cID = $scope.selectedOpt.cID;
+            res.cID = $scope.data.selectedOpt.cID;
           } else {
+            $log.debug("no dealOpts");
             res.cID = $scope.submitObj.cID;
           }
           res.rcode = $scope.submitObj.rcode;
-          res.userID = $scope.submitObj.userID;
+          res.userID = $scope.submitObj.rcode.slice(0, 6);
           cleanup();
           return $scope.submitFunc(res);
         };

@@ -1,15 +1,16 @@
-<ion-view view-title="<img class='title-image' src='img/header.png'>">
+<ion-view view-title="<img class='padding-top' src='img/header.png'>">
     <ion-content class='has-header'>
         <ion-refresher
                 pulling-text="Pull to refresh"
                 on-refresh="refresh()">
         </ion-refresher>
         <ion-list>
-            <div class="card" ng-repeat="code in codes"
+            <div class="list list-inset" ng-repeat="code in codes"
                 ng-init="formshow = false" >
                 <div ng-click='formshow = !formshow'>
                     <px-coupon
                         redeem='true'
+                        expiry="true"
                         coupon='code'>
                     </px-coupon>
                 </div>

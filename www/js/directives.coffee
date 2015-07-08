@@ -30,13 +30,15 @@ angular.module 'perkkx.directives', []
     $scope.dealOptsCheck = () ->
       $scope.submitObj.hasOwnProperty('dealOpts')
 
-    $scope.selectedOpt = {}
+    $scope.data = {
+      selectedOpt: {}
+    }
 
     $scope.$watch(
       () -> $scope.submitObj,
       () ->
         if $scope.dealOptsCheck()
-          $scope.selectedOpt = $scope.submitObj.dealOpts[$scope.submitObj.selectedIndex]
+          $scope.data.selectedOpt = $scope.submitObj.dealOpts[$scope.submitObj.selectedIndex]
     )
 
     cleanup = () ->
@@ -73,14 +75,16 @@ angular.module 'perkkx.directives', []
 
       res.submitted_on = parseInt( Date.now() )
       if $scope.dealOptsCheck()   # extraodinary case
+        $log.debug("submitting for bill #{JSON.stringify($scope.data.selectedOpt)}")
         res.used_on = $scope.submitObj.used_on
         # add the correct cID according to the radio button selected
-        res.cID = $scope.selectedOpt.cID
+        res.cID = $scope.data.selectedOpt.cID
       else
+        $log.debug("no dealOpts")
         res.cID = $scope.submitObj.cID      # Normal cases
 
       res.rcode = $scope.submitObj.rcode
-      res.userID = $scope.submitObj.userID
+      res.userID = $scope.submitObj.rcode[0...6]
       cleanup()
       $scope.submitFunc res
   templateUrl: 'directives/bill-form.html'

@@ -1,11 +1,11 @@
-<ion-view view-title="<img class='title-image' src='img/header.png'>">
+<ion-view view-title="<img class='padding-top' src='img/header.png'>">
     <ion-content>
         <ion-refresher
               pulling-text="Pull to refresh"
               on-refresh="refresh()">
         </ion-refresher>
         <ion-list>
-            <div class="card" ng-repeat="code in codes"
+            <div class="list list-inset" ng-repeat="code in codes"
                 ng-init="formshow = false; detailshow = false" >
                 <div ng-click="detailshow = formshow ? detailshow : !detailshow">
                     <px-coupon coupon='code'
@@ -48,7 +48,7 @@
         </ion-list>
         <ion-infinite-scroll
                 on-infinite="loadMore()"
-                distance="1%">
+                distance="10%">
         </ion-infinite-scroll>
     </ion-content>
 </ion-view>

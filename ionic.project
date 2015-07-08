@@ -18,5 +18,13 @@
       "path": "/lvalidate",
       "proxyUrl": "http://localhost:8000/perkkx/merchantapp/validate"
     }
+  ],
+  "gulpStartupTasks": [
+    "sass",
+    "watch"
+  ],
+  "watchPatterns": [
+    "www/**/*",
+    "!www/lib/**/*"
   ]
 }

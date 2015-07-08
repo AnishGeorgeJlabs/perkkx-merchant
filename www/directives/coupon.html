@@ -3,8 +3,8 @@
         <div class="col-90">
             <h1>{{ coupon.rcode | uppercase }}</h1>
         </div>
-        <div class="col">
-            <i class="icon ion-arrow-down-b"></i>
+        <div class="col padding-top">
+            <i class="icon ion-arrow-down-b dark"></i>
         </div>
     </div>
     <div class="row" ng-if="coupon.hasOwnProperty('deal')">
@@ -14,7 +14,11 @@
     </div>
 </div>
 <div class='item item-text-wrap' ng-if="hRedeem || hExpiry || hBill">
-    <p ng-if='hRedeem'>Redeemed on {{ coupon.used_on | date }}</p>
-    <p ng-if='hExpiry'>Expiry - {{ coupon.expiry | date }}</p>
-    <p ng-if='hBill'>Bill submitted on {{ coupon.submitted_on | date }}</p>
+    <div class="row">
+        <div class="col-100">
+            <p ng-if='hRedeem'>Redeemed on {{ coupon.used_on | date }}</p>
+            <p ng-if='hExpiry' style="color:darkred">Valid till {{ coupon.expiry | date }}</p>
+            <p ng-if='hBill' style="color:darkgreen">Bill submitted on {{ coupon.submitted_on | date }}</p>
+        </div>
+    </div>
 </div>

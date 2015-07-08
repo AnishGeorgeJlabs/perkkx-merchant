@@ -30,6 +30,13 @@
       clearState();
       return $scope.data.rcode = "";
     };
+    $scope.$watch(function() {
+      return $scope.data.rcode;
+    }, function(old_val, new_val) {
+      if (new_val.length > 8) {
+        return $scope.data.rcode === old_val;
+      }
+    });
     $scope.checkCode = function() {
       var rcode;
       rcode = $scope.data.rcode;
