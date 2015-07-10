@@ -28,3 +28,9 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 .px-smaller-text {
   font-size: small;
 }
+
+.px-header-img {
+  padding-top: 1px;
+  height: $bar-height - 2;
+  padding-bottom: 1px;
+}
