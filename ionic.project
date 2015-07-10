@@ -17,6 +17,10 @@
     {
       "path": "/lvalidate",
       "proxyUrl": "http://localhost:8000/perkkx/merchantapp/validate"
+    },
+    {
+      "path": "/lcount",
+      "proxyUrl": "http://localhost:8000/perkkx/merchantapp/count"
     }
   ],
   "gulpStartupTasks": [
