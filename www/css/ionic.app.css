@@ -7692,3 +7692,6 @@ a.button {
 
 .px-offer {
   font-weight: bold; }
+
+.px-bill-detail {
+  padding-left: 0px !important; }
