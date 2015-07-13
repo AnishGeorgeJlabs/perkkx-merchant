@@ -1,13 +1,7 @@
-<div class="list" ng-show="formshow">
+<div class="item list list-borderless" ng-show="formshow">
     <ion-toggle ng-show='sliderCheck()' ng-model="invalid" toggle-class="toggle-assertive">Did not use service</ion-toggle>
-    <label class="item item-input" ng-hide="invalid">
-        <span class="input-label">Paid amount : </span>
-        <input type="tel" ng-model="paid" placeholder="Enter bill amount">
-    </label>
-    <label class="item item-input" ng-hide="invalid">
-        <span class="input-label">Discount : </span>
-        <input type="tel" ng-model="discount" placeholder="Enter discount">
-    </label>
+
+    <!--
     <div class="item" ng-if="dealOptsCheck()">
         <p class="text-center padding-top">Please select the deal</p>
         <div class="list list-inset">
@@ -18,8 +12,45 @@
             </ion-radio>
         </div>
     </div>
+    -->
+    <div class="item list list-borderless px-bill-input item-divider"
+         ng-if="dealOptsCheck()">
+        <div class="item item-text-wrap">
+            <p><strong>Please Select the deal</strong></p>
+        </div>
+        <ion-radio type="radio" ng-repeat="opt in submitObj.dealOpts"
+                   ng-model="data.selectedOpt"
+                   ng-value="opt">
+            <p>{{opt.deal}}</p>
+        </ion-radio>
+    </div>
+
+    <div class="item list list-borderless px-bill-input item-divider">
+        <div class="item item-text-wrap">
+            <p><strong>Please Enter bill details</strong></p>
+        </div>
+        <label class="item item-input" ng-hide="invalid">
+            <span class="input-label">Paid amount : </span>
+            <input type="tel" ng-model="paid" placeholder="Enter bill amount">
+        </label>
+        <label class="item item-input" ng-hide="invalid">
+            <span class="input-label">Discount : </span>
+            <input type="tel" ng-model="discount" placeholder="Enter discount">
+        </label>
+    </div>
+
+
+    <!--
     <div class="item button-bar">
         <button ng-click="cancel()" class="button button-light">Cancel</button>
         <button ng-click="validate() && submit()" class="button button-positive">Submit</button>
+    </div> -->
+    <div class="item row">
+        <div class="col">
+            <button ng-click="cancel()" class="button button-block button-light">Cancel</button>
+        </div>
+        <div class="col">
+            <button ng-click="validate() && submit()" class="button button-block button-positive">Submit</button>
+        </div>
     </div>
 </div>

@@ -24,7 +24,7 @@
     </div>
 
 </div>
-<div class="item item-text-wrap">
+<div class="item item-text-wrap" ng-if="hRedeem || hExpiry || hBill">
     <div ng-if='hRedeem' class="row px-smaller-text">
         Redeemed on {{ coupon.used_on | date }}
     </div>

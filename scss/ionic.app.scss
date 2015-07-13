@@ -22,11 +22,11 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 .px-small-text {
-  font-size: 1em;
+  font-size: 1em !important;
 }
 
 .px-smaller-text {
-  font-size: small;
+  font-size: small !important;
 }
 
 .px-header-img {
@@ -46,4 +46,12 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 .px-bill-detail {
   padding-left: 0px !important;
+}
+
+.px-invalid-message {
+  color: $assertive !important;
+}
+
+.px-bill-input {
+  padding-left: 5px !important;
 }
