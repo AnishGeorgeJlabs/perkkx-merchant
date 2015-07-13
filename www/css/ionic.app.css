@@ -7687,7 +7687,8 @@ a.button {
   padding-bottom: 1px; }
 
 .px-deal {
-  padding-top: 10px !important; }
+  padding-top: 10px !important;
+  padding-left: 6px !important; }
 
 .px-offer {
   font-weight: bold; }

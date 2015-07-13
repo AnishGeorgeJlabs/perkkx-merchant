@@ -10,20 +10,21 @@
 
     <div class="row px-deal" ng-if="coupon.hasOwnProperty('deal')">
         <div class="col-100">
-            <span class="px-offer" ng-if="coupon.offer">{{coupon.offer}} :</span>
-            <span class="px-offer" ng-if="!coupon.offer">Offer :</span>
+            <span class="px-offer" ng-if="coupon.offer">{{coupon.offer}}: </span>
+            <span class="px-offer" ng-if="!coupon.offer">Offer: </span>
             <span>{{ coupon.deal }}</span>
         </div>
     </div>
 
     <div class="row" ng-if="!coupon.hasOwnProperty('deal')">
         <div class="col-100">
-            <i class="icon ion-ios-checkmark padding-right balanced"> </i>
+            <i class="icon ion-ios-checkmark padding-right balanced"></i>
             Verified User
         </div>
     </div>
 
 </div>
+<!--
 <div class="item list item-text-wrap padding-left padding-top padding-bottom" ng-if="hRedeem || hExpiry || hBill">
     <div ng-if='hRedeem' class="padding-left px-smaller-text">
         Redeemed on {{ coupon.used_on | date }}
@@ -31,7 +32,19 @@
     <div ng-if='hExpiry' class="padding-left px-smaller-text assertive">
         Valid till {{ coupon.expiry | date }}
     </div>
-    <div ng-if="hBill" class="padding-left px-smaller-text balanced">
+    <div ng-if="hBill" class="padding-left px-smaller-text">
+        Bill submitted on {{ coupon.submitted_on | date}}
+    </div>
+</div>
+-->
+<div class="item item-text-wrap">
+    <div ng-if='hRedeem' class="row px-smaller-text">
+        Redeemed on {{ coupon.used_on | date }}
+    </div>
+    <div ng-if='hExpiry' class="row px-smaller-text assertive">
+        Valid till {{ coupon.expiry | date }}
+    </div>
+    <div ng-if="hBill" class="row px-smaller-text">
         Bill submitted on {{ coupon.submitted_on | date}}
     </div>
 </div>
