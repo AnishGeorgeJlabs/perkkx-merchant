@@ -1,12 +1,24 @@
 <ion-view view-title="<img class='px-header-img' src='img/header.png'> ">
     <ion-content>
         <div class="list">
-            <div class="row item">
+            <div class="row item padding-top">
+                <!--
                 <div class="col-90">
                     <label class="item-input item-floating-label">
-                    <span class="input-label icon ion-search placeholder-icon">
-                        Redeem code
-                    </span>
+                        <span class="input-label icon ion-search placeholder-icon">
+                            Redeem code
+                        </span>
+                        <input type="text"
+                               size="8"
+                               maxlength="8"
+                               ng-model='data.rcode' ng-change='checkCode()'
+                               placeholder="Enter redeem code"
+                                />
+                        </label>
+                </div> -->
+                <div class="col-90">
+                    <label class="item-input">
+                        <i class="icon ion-search placeholder-icon"> </i>
                         <input type="text"
                                size="8"
                                maxlength="8"
@@ -15,10 +27,10 @@
                                 />
                     </label>
                 </div>
-                <div class="col">
+                <div class="col-10">
                     <button ng-click="clearInput()"
                             ng-show="data.rcode.length"
-                            class="input-button button button-icon ion-close">
+                            class="input-button button button-small button-icon ion-close">
                     </button>
                 </div>
             </div>
