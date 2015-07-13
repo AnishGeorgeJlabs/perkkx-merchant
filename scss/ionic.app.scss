@@ -21,3 +21,16 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 // Include all of Ionic
 @import "www/lib/ionic/scss/ionic";
 
+.px-small-text {
+  font-size: 1em;
+}
+
+.px-smaller-text {
+  font-size: small;
+}
+
+.px-header-img {
+  padding-top: 1px;
+  height: 42px;
+  padding-bottom: 1px;
+}

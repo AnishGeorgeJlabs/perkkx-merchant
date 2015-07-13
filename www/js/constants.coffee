@@ -11,6 +11,7 @@ angular.module 'perkkx.constants', []
     post: 'http://localhost:8100/lsubmit',    # Actual Post api
     postProxy: 'http://localhost:8100/lsubmit',    # Actual Post api
     get: 'http://localhost:8100/merchantapp'     # Add pending and all that
+    badge: 'http://localhost:8100/lcount'       # add vendor id
 
 .constant 'vendor_id', 1
 

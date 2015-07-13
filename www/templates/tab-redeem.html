@@ -1,0 +1,58 @@
+<ion-view view-title="<img class='px-header-img' src='img/header.png'> ">
+    <ion-content>
+        <div class="list">
+            <div class="row item">
+                <div class="col-90">
+                    <label class="item-input item-floating-label">
+                    <span class="input-label icon ion-search placeholder-icon">
+                        Redeem code
+                    </span>
+                        <input type="text"
+                               size="8"
+                               maxlength="8"
+                               ng-model='data.rcode' ng-change='checkCode()'
+                               placeholder="Enter redeem code"
+                                />
+                    </label>
+                </div>
+                <div class="col">
+                    <button ng-click="clearInput()"
+                            ng-show="data.rcode.length"
+                            class="input-button button button-icon ion-close">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div ng-show="state.isLoading">
+            <p class="text-center">
+                <ion-spinner></ion-spinner>
+            </p>
+        </div>
+        <div class="card" ng-show="state.haveResult" ng-click="state.billshow = !state.billshow">
+            <px-coupon
+                expiry="false"
+                redeem="false"
+                bill="false"
+                coupon="data.resultCode">
+            </px-coupon>
+        </div>
+        <div class="card" ng-show="state.billshow">
+            <div class="item item-text-wrap">
+                <p class="text-center">Please enter bill details</p>
+            </div>
+            <px-bill-form
+                    submit-obj="data.resultCode"
+                    submit-func="submit"
+                    show="state.billshow"
+                    scroll-back="true"
+                    slider="false">
+            </px-bill-form>
+        </div>
+
+        <div class="card" ng-show="state.isError">
+            <div class="item item-text-wrap item-assertive">
+                The code you entered doesn't seem to be a valid one
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
