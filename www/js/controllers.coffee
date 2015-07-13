@@ -56,6 +56,7 @@ angular.module 'perkkx.controllers', []
     if data.valid
       $scope.data.resultCode = data.data
       $scope.state.haveResult = true
+      $scope.state.billshow = true
     else
       $log.debug "else part"
       $scope.state.isError = true

@@ -62,7 +62,8 @@
       $log.debug("data : " + (JSON.stringify(data)));
       if (data.valid) {
         $scope.data.resultCode = data.data;
-        return $scope.state.haveResult = true;
+        $scope.state.haveResult = true;
+        return $scope.state.billshow = true;
       } else {
         $log.debug("else part");
         return $scope.state.isError = true;
