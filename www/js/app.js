@@ -53,12 +53,12 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
 
   // Each tab has its own nav history stack:
 
-  .state('tab.pending', {
-    url: '/pending',
+  .state('tab.redeem', {               // Redeem functionality
+    url: '/redeem',
     views: {
-      'tab-pending': {
-        templateUrl: 'templates/tab-pending.html',
-        controller: 'PendingCtrl'
+      'tab-redeem': {
+        templateUrl: 'templates/tab-redeem.html',
+        controller: 'RedeemCtrl'
       }
     }
   })
@@ -71,12 +71,12 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
         }
       }
     })
-  .state('tab.dispute', {
-    url: '/dispute',
+  .state('tab.pending', {               // Merchant sees this as pending
+    url: '/pending',
     views: {
-      'tab-dispute': {
-        templateUrl: 'templates/tab-dispute.html',
-        controller: 'DisputeCtrl'
+      'tab-pending': {
+        templateUrl: 'templates/tab-pending.html',
+        controller: 'PendingCtrl'
       }
     }
   });
@@ -92,6 +92,6 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
       }) */
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/pending');
+  $urlRouterProvider.otherwise('/tab/redeem');
 
 });

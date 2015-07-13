@@ -3,8 +3,12 @@
   var hasProp = {}.hasOwnProperty;
 
   angular.module('perkkx.controllers', []).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log) {
+
+    /*
+      This controller is used by the abstract tabs route,
+      handles badges and and all
+     */
     var callback;
-    $log.info("initialized BadgeCtrl");
     pxBadgeProvider.setUpdater($scope.updateAll);
     $scope.badges = {
       used: 0,
@@ -30,8 +34,13 @@
       });
     });
     return pxBadgeProvider.refresh();
-  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
-    var clearState;
+  }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
+
+    /*
+      Controller for the first tab,
+      used to search for the coupon and showing the deal
+     */
+    var callback, clearState;
     $scope.data = {
       rcode: "",
       resultCode: ""
@@ -48,6 +57,17 @@
       $scope.state.haveResult = false;
       return $scope.state.billshow = false;
     };
+    callback = function(data) {
+      $scope.state.isLoading = false;
+      $log.debug("data : " + (JSON.stringify(data)));
+      if (data.valid) {
+        $scope.data.resultCode = data.data;
+        return $scope.state.haveResult = true;
+      } else {
+        $log.debug("else part");
+        return $scope.state.isError = true;
+      }
+    };
     $scope.clearInput = function() {
       $log.debug('clearing');
       clearState();
@@ -58,20 +78,9 @@
       rcode = $scope.data.rcode;
       if (rcode.length === 8) {
         $scope.state.isLoading = true;
-        return pxApiConnect.apiCheckValid(rcode, $scope.callback);
+        return pxApiConnect.apiCheckValid(rcode, callback);
       } else {
         return clearState();
-      }
-    };
-    $scope.callback = function(data) {
-      $scope.state.isLoading = false;
-      $log.debug("data : " + (JSON.stringify(data)));
-      if (data.valid) {
-        $scope.data.resultCode = data.data;
-        return $scope.state.haveResult = true;
-      } else {
-        $log.debug("else part");
-        return $scope.state.isError = true;
       }
     };
     $scope.submit = function(data) {
@@ -90,28 +99,16 @@
       }
     });
   }).controller('UsedCtrl', function($scope, pxApiConnect, $log, pxBadgeProvider) {
+
+    /*
+      Controller for tab 2,
+      Shows the used codes
+     */
     $scope.codes = [];
-    pxApiConnect.setCallBack('used', function(data, more) {
-      var i, len, obj, results;
-      if (more) {
-        results = [];
-        for (i = 0, len = data.length; i < len; i++) {
-          obj = data[i];
-          results.push($scope.codes.push(obj));
-        }
-        return results;
-      } else {
-        return $scope.codes = data;
-      }
-    });
-    pxBadgeProvider.setCallBack('used', function() {
-      return $scope.initGet();
-    });
     $scope.initGet = function() {
       $log.debug("Init get for used called");
       return pxApiConnect.apiGet('used');
     };
-    $scope.initGet();
     $scope.refresh = function() {
       return $scope.initGet()["finally"](function() {
         return $scope.$broadcast('scroll.refreshComplete');
@@ -128,14 +125,59 @@
         return $scope.$broadcast('scroll.infiniteScrollComplete');
       }
     };
-    return $scope.submit = function(data) {
+    $scope.submit = function(data) {
       return pxApiConnect.apiSubmit(data)["finally"](function() {
         return pxBadgeProvider.refresh();
       });
     };
-  }).controller('DisputeCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
-    $log.debug("Initialised Dispute ctrl");
+    pxApiConnect.setCallBack('used', function(data, more) {
+      var i, len, obj, results;
+      if (more) {
+        results = [];
+        for (i = 0, len = data.length; i < len; i++) {
+          obj = data[i];
+          results.push($scope.codes.push(obj));
+        }
+        return results;
+      } else {
+        return $scope.codes = data;
+      }
+    });
+    pxBadgeProvider.setCallBack('used', function() {
+      return $scope.initGet();
+    });
+    return $scope.initGet();
+  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
+
+    /*
+      Last tab, used to show pending codes,
+      NOTE: pending codes are actually disputed codes
+     */
     $scope.codes = [];
+    $scope.initGet = function() {
+      return pxApiConnect.apiGet('disputed');
+    };
+    $scope.refresh = function() {
+      return $scope.initGet()["finally"](function() {
+        return $scope.$broadcast('scroll.refreshComplete');
+      });
+    };
+    $scope.loadMore = function() {
+      var res;
+      res = pxApiConnect.apiMore('disputed');
+      if (res.more) {
+        return res.future["finally"](function() {
+          return $scope.$broadcast('scroll.infiniteScrollComplete');
+        });
+      } else {
+        return $scope.$broadcast('scroll.infiniteScrollComplete');
+      }
+    };
+    $scope.submit = function(data) {
+      return pxApiConnect.apiSubmit(data)["finally"](function() {
+        return pxBadgeProvider.refresh();
+      });
+    };
     pxApiConnect.setCallBack('disputed', function(data, more) {
       var i, len, obj, results;
       if (more) {
@@ -153,61 +195,7 @@
       $log.debug("pxBadge for disputed");
       return $scope.initGet();
     });
-    $scope.initGet = function() {
-      return pxApiConnect.apiGet('disputed');
-    };
-    $scope.initGet();
-    $scope.refresh = function() {
-      return $scope.initGet()["finally"](function() {
-        return $scope.$broadcast('scroll.refreshComplete');
-      });
-    };
-    $scope.loadMore = function() {
-      var res;
-      res = pxApiConnect.apiMore('disputed');
-      if (res.more) {
-        return res.future["finally"](function() {
-          return $scope.$broadcast('scroll.infiniteScrollComplete');
-        });
-      } else {
-        return $scope.$broadcast('scroll.infiniteScrollComplete');
-      }
-    };
-    return $scope.submit = function(data) {
-      return pxApiConnect.apiSubmit(data)["finally"](function() {
-        return pxBadgeProvider.refresh();
-      });
-    };
+    return $scope.initGet();
   });
-
-
-  /*
-  .controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
-    $scope.codes = []
-    pxApiConnect.setCallBack 'expired', (data, more) ->
-      if more
-        $scope.codes.push obj for obj in data
-      else $scope.codes = data
-  
-    $scope.initGet = () -> pxApiConnect.apiGet 'expired'
-  
-    $scope.initGet()
-  
-    $scope.refresh = () ->
-      $scope.initGet()
-      .finally () ->
-        $scope.$broadcast('scroll.refreshComplete')
-  
-    $scope.loadMore = () ->
-      res = pxApiConnect.apiMore 'expired'
-      if res.more
-        res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
-      else
-        $scope.$broadcast('scroll.infiniteScrollComplete')
-  
-    $scope.submit = (data) ->
-      pxApiConnect.apiSubmit(data)
-      .finally () -> $scope.initGet()
-   */
 
 }).call(this);

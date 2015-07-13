@@ -1,58 +1,43 @@
-<ion-view view-title="<img class='px-header-img' src='img/header.png'> ">
-    <ion-content>
-        <div class="list">
-            <div class="row item">
-                <div class="col-90">
-                    <label class="item-input item-floating-label">
-                    <span class="input-label icon ion-search placeholder-icon">
-                        Redeem code
-                    </span>
-                        <input type="text"
-                               size="8"
-                               maxlength="8"
-                               ng-model='data.rcode' ng-change='checkCode()'
-                               placeholder="Enter redeem code"
-                                />
-                    </label>
-                </div>
-                <div class="col">
-                    <button ng-click="clearInput()"
-                            ng-show="data.rcode.length"
-                            class="input-button button button-icon ion-close">
-                    </button>
+<ion-view view-title="<img class='px-header-img' src='img/header.png'>">
+    <!--
+    <ion-header-bar align-title="left" class="bar-stable bar-subheader padding-left padding-top bar-custom">
+        <p class="title dark">These users have rated the experience at your store. Please enter the bill details
+        in case they have visited</p>
+    </ion-header-bar> -->
+    <ion-content class='has-header'>
+        <ion-refresher
+                pulling-text="Pull to refresh"
+                on-refresh="refresh()">
+        </ion-refresher>
+        <ion-list>
+            <div class="list list-inset list-borderless" ng-if="codes.length">
+                <div class="item item-text-wrap text-center px-small-text">
+                    These users have rated the experience at your store. Please enter the bill details in case
+                    they have visited
                 </div>
             </div>
-        </div>
-        <div ng-show="state.isLoading">
-            <p class="text-center">
-                <ion-spinner></ion-spinner>
-            </p>
-        </div>
-        <div class="card" ng-show="state.haveResult" ng-click="state.billshow = !state.billshow">
-            <px-coupon
-                expiry="false"
-                redeem="false"
-                bill="false"
-                coupon="data.resultCode">
-            </px-coupon>
-        </div>
-        <div class="card" ng-show="state.billshow">
-            <div class="item item-text-wrap">
-                <p class="text-center">Please enter bill details</p>
+            <div class="list list-inset" ng-repeat="code in codes"
+                ng-init="formshow = false" >
+                <div ng-click='formshow = !formshow'>
+                    <px-coupon
+                        redeem='true'
+                        expiry="true"
+                        coupon='code'>
+                    </px-coupon>
+                </div>
+                <div ng-show="formshow">
+                    <px-bill-form
+                            submit-obj='code'
+                            submit-func='submit'
+                            show='formshow'
+                            slider='false'>
+                    </px-bill-form>
+                </div>
             </div>
-            <px-bill-form
-                    submit-obj="data.resultCode"
-                    submit-func="submit"
-                    show="state.billshow"
-                    scroll-back="true"
-                    slider="false">
-            </px-bill-form>
-        </div>
-
-        <div class="card" ng-show="state.isError">
-            <div class="item item-text-wrap item-assertive">
-                The code you entered doesn't seem to be a valid one
-            </div>
-        </div>
+        </ion-list>
+        <ion-infinite-scroll
+              on-infinite="loadMore()"
+              distance="1%">
+        </ion-infinite-scroll>
     </ion-content>
 </ion-view>

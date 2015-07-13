@@ -1,6 +1,9 @@
 angular.module 'perkkx.controllers', []
 .controller 'BadgeCtrl', ($scope, pxBadgeProvider, $log) ->
-  $log.info "initialized BadgeCtrl"
+  ###
+    This controller is used by the abstract tabs route,
+    handles badges and and all
+  ###
   pxBadgeProvider.setUpdater($scope.updateAll)
 
   # --- Private --------------- #
@@ -8,15 +11,9 @@ angular.module 'perkkx.controllers', []
     used: 0
     disputed: 0
 
-
   callback = (obj) ->
     $scope.setBadge k, v for own k, v of obj
   # --------------------------- #
-
-  # # ----Watched by children---- #
-  # $scope.refreshUsed = false
-  # $scope.refreshDisputed = false
-  # # --------------------------- #
 
   $scope.setBadge = (key, num) ->
     $scope.badges[key] = num
@@ -30,7 +27,12 @@ angular.module 'perkkx.controllers', []
 
 
 
-.controller 'PendingCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
+.controller 'RedeemCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
+  ###
+    Controller for the first tab,
+    used to search for the coupon and showing the deal
+  ###
+  # ---------- data ------------------------- #
   $scope.data =
     rcode: ""
     resultCode: ""
@@ -41,28 +43,14 @@ angular.module 'perkkx.controllers', []
     haveResult: false
     billshow: false
 
+  # ----------- private methods ------------- #
   clearState = () ->
     $scope.state.isLoading = false
     $scope.state.isError = false
     $scope.state.haveResult = false
     $scope.state.billshow = false
 
-  $scope.clearInput = () ->
-    $log.debug 'clearing'
-    clearState()
-    $scope.data.rcode = ""
-
-
-  $scope.checkCode = () ->
-    rcode = $scope.data.rcode
-    if rcode.length == 8
-      $scope.state.isLoading = true
-      pxApiConnect.apiCheckValid(rcode, $scope.callback)
-    else
-      clearState()
-
-
-  $scope.callback = (data) ->
+  callback = (data) ->
     $scope.state.isLoading = false
     $log.debug "data : #{JSON.stringify(data)}"
     if data.valid
@@ -71,7 +59,20 @@ angular.module 'perkkx.controllers', []
     else
       $log.debug "else part"
       $scope.state.isError = true
+  # ----------------------------------------- #
 
+  $scope.clearInput = () ->
+    $log.debug 'clearing'
+    clearState()
+    $scope.data.rcode = ""
+
+  $scope.checkCode = () ->
+    rcode = $scope.data.rcode
+    if rcode.length == 8
+      $scope.state.isLoading = true
+      pxApiConnect.apiCheckValid(rcode, callback)
+    else
+      clearState()
 
   $scope.submit = (data) ->
     $scope.state.isLoading = true
@@ -79,10 +80,7 @@ angular.module 'perkkx.controllers', []
     pxApiConnect.apiSubmit(data)
     .finally () ->
       $scope.clearInput()   # also clears state
-      #$scope.$parent.updateAll()
       pxBadgeProvider.refresh()
-      #$scope.$parent.refreshUsed = true
-      #$scope.$parent.refreshDisputed = true
 
 
   # -------- Watchers ------------- #
@@ -95,62 +93,57 @@ angular.module 'perkkx.controllers', []
 
 
 .controller 'UsedCtrl', ($scope, pxApiConnect, $log, pxBadgeProvider) ->
-  $scope.codes = []
-  pxApiConnect.setCallBack 'used', (data, more) ->
-    if more
-      $scope.codes.push obj for obj in data
-    else $scope.codes = data
-  pxBadgeProvider.setCallBack 'used', () -> $scope.initGet()
+  ###
+    Controller for tab 2,
+    Shows the used codes
+  ###
+  # ------------ Data ------------------------------- #
+  $scope.codes = []                                           # NOTE: not using 2-way binding
 
-  $scope.initGet = () ->
+  # ------------ Methods ---------------------------- #
+  $scope.initGet = () ->                                      # Basic GET operation
     $log.debug "Init get for used called"
     pxApiConnect.apiGet 'used'
 
-  $scope.initGet()
-
-  $scope.refresh = () ->
+  $scope.refresh = () ->                                      # For refreshing
     $scope.initGet()
     .finally () ->
       $scope.$broadcast('scroll.refreshComplete')
 
-  $scope.loadMore = () ->
+  $scope.loadMore = () ->                                     # For inifite scroll
     res = pxApiConnect.apiMore 'used'
     if res.more
       res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
     else
       $scope.$broadcast('scroll.infiniteScrollComplete')
 
-  $scope.submit = (data) ->
+  $scope.submit = (data) ->                                   # Data submission for bill
     pxApiConnect.apiSubmit(data)
     .finally () ->
-      #$scope.$parent.updateAll()
       pxBadgeProvider.refresh()
 
-  # # ---- Watchers -------- #
-  # $scope.$watch(
-  #   () -> $scope.$parent.refreshUsed
-  #   (newVal, oldVal) ->
-  #     $log.debug "refresh used checking"
-  #     $scope.initGet() if newVal
-  #     $scope.$parent.refreshUsed = true
-  #     $scope.$parent.refreshDisputed = true
-  # )
-
-.controller 'DisputeCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
-  $log.debug "Initialised Dispute ctrl"
-  $scope.codes = []
-  pxApiConnect.setCallBack 'disputed', (data, more) ->
+  # ----------- Setup ------------------------------- #
+  pxApiConnect.setCallBack 'used', (data, more) ->            # Setup the callback for GETing the data
     if more
       $scope.codes.push obj for obj in data
     else $scope.codes = data
 
-  pxBadgeProvider.setCallBack 'disputed', () ->
-    $log.debug "pxBadge for disputed"
-    $scope.initGet()
+  pxBadgeProvider.setCallBack 'used', () -> $scope.initGet()  # Setup callback for using badge provider, deprecated
 
+  $scope.initGet()                                            # All's done, so lets GET the data on initialisation
+
+
+
+.controller 'PendingCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
+  ###
+    Last tab, used to show pending codes,
+    NOTE: pending codes are actually disputed codes
+  ###
+  # ------------ Data ------------------------------- #
+  $scope.codes = []
+
+  # ------------ Methods --------------------------- #
   $scope.initGet = () -> pxApiConnect.apiGet 'disputed'
-
-  $scope.initGet()
 
   $scope.refresh = () ->
     $scope.initGet()
@@ -167,35 +160,16 @@ angular.module 'perkkx.controllers', []
   $scope.submit = (data) ->
     pxApiConnect.apiSubmit(data)
     .finally () ->
-      #$scope.$parent.updateAll()
       pxBadgeProvider.refresh()
 
-
-###
-.controller 'ExpiredCtrl', ($scope, pxApiConnect) ->
-  $scope.codes = []
-  pxApiConnect.setCallBack 'expired', (data, more) ->
+  # ------------ Setup ----------------------------- #
+  pxApiConnect.setCallBack 'disputed', (data, more) ->
     if more
       $scope.codes.push obj for obj in data
     else $scope.codes = data
 
-  $scope.initGet = () -> pxApiConnect.apiGet 'expired'
+  pxBadgeProvider.setCallBack 'disputed', () ->
+    $log.debug "pxBadge for disputed"
+    $scope.initGet()
 
   $scope.initGet()
-
-  $scope.refresh = () ->
-    $scope.initGet()
-    .finally () ->
-      $scope.$broadcast('scroll.refreshComplete')
-
-  $scope.loadMore = () ->
-    res = pxApiConnect.apiMore 'expired'
-    if res.more
-      res.future.finally () -> $scope.$broadcast('scroll.infiniteScrollComplete')
-    else
-      $scope.$broadcast('scroll.infiniteScrollComplete')
-
-  $scope.submit = (data) ->
-    pxApiConnect.apiSubmit(data)
-    .finally () -> $scope.initGet()
-###

@@ -9,8 +9,8 @@ navigation history that also transitions its views in and out.
   <ion-tab title="Redeem"
         icon-off="ion-ios-pricetags-outline"
         icon-on="ion-ios-pricetags"
-        href="#/tab/pending">
-    <ion-nav-view name="tab-pending"></ion-nav-view>
+        href="#/tab/redeem">
+    <ion-nav-view name="tab-redeem"></ion-nav-view>
   </ion-tab>
 
   <!-- Used Tab -->
@@ -21,26 +21,14 @@ navigation history that also transitions its views in and out.
     <ion-nav-view name="tab-used"></ion-nav-view>
   </ion-tab>
 
-  <!-- Expired Tab --> <!--
-  <ion-tab title="Expired" 
-        icon-off="ion-trash-a" 
-        icon-on="ion-trash-a" 
-        ng-controller="BadgeCtrl" 
-        badge="badges.expired"
-        on-deselect='updateBadge("expired", 0)'
-        on-select="initGet()"
-        href="#/tab/expired">
-    <ion-nav-view name="tab-expired"></ion-nav-view>
-  </ion-tab> -->
-
-    <!-- Disputed tab, a.k.a pending for the merchant -->
+<!-- Disputed tab, a.k.a pending for the merchant -->
   <ion-tab title="Pending"
         icon-off="ion-ios-timer-outline"
         icon-on="ion-ios-timer"
         badge="badges.disputed"
         badge-style="badge-assertive"
-        href="#/tab/dispute">
-    <ion-nav-view name="tab-dispute"></ion-nav-view>
+        href="#/tab/pending">
+    <ion-nav-view name="tab-pending"></ion-nav-view>
   </ion-tab>
 
 
