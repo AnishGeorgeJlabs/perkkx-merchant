@@ -79,12 +79,17 @@ i.px-icon {
   padding-top: 5px !important;
 }
 
+$tab-redeem: #dc4b39 !default;
+$tab-used: #00a651 !default;
+$tab-pending: #f8943d !default;
+
 .tab-item {
   color: $dark;
   &.tab-item-active,
   &.active,
   &.activated {
-    color: #dc4b39;
+    color: $tab-redeem;
+    border-color: $tab-redeem !important;
   }
 }
 .tab-item+.tab-item  {
@@ -92,7 +97,8 @@ i.px-icon {
   &.tab-item-active,
   &.active,
   &.activated {
-    color: #00a651;
+    color: $tab-used;
+    border-color: $tab-used !important;
   }
 
 }
@@ -101,7 +107,8 @@ i.px-icon {
   &.tab-item-active,
   &.active,
   &.activated {
-    color: #f8943d;
+    color: $tab-pending;
+    border-color: $tab-pending !important;
   }
 }
 .px-cancel-button {

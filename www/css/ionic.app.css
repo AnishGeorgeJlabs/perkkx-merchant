@@ -7725,17 +7725,20 @@ i.px-icon {
 .tab-item {
   color: #444; }
   .tab-item.tab-item-active, .tab-item.active, .tab-item.activated {
-    color: #dc4b39; }
+    color: #dc4b39;
+    border-color: #dc4b39 !important; }
 
 .tab-item + .tab-item {
   color: #444; }
   .tab-item + .tab-item.tab-item-active, .tab-item + .tab-item.active, .tab-item + .tab-item.activated {
-    color: #00a651; }
+    color: #00a651;
+    border-color: #00a651 !important; }
 
 .tab-item + .tab-item + .tab-item {
   color: #444; }
   .tab-item + .tab-item + .tab-item.tab-item-active, .tab-item + .tab-item + .tab-item.active, .tab-item + .tab-item + .tab-item.activated {
-    color: #f8943d; }
+    color: #f8943d;
+    border-color: #f8943d !important; }
 
 .px-cancel-button {
   background: #ebebeb !important;
