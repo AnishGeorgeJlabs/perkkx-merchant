@@ -55,3 +55,26 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 .px-bill-input {
   padding-left: 5px !important;
 }
+
+.px-item-content {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.px-button-gutter {
+  padding: 0px 7px 0px 7px !important;
+}
+
+.px-button-bar {
+  padding-left: 16px !important;
+  padding-right: 0px !important;
+  padding-top: 0px !important;
+}
+i.px-icon {
+  font-size: 20px !important;
+}
+.px-verified {
+  font-style: italic !important;
+  color: $balanced;
+  padding-top: 5px !important;
+}

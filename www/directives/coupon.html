@@ -16,15 +16,15 @@
         </div>
     </div>
 
-    <div class="row" ng-if="!coupon.hasOwnProperty('deal')">
+    <div class="row px-verified" ng-if="!coupon.hasOwnProperty('deal')">
         <div class="col-100">
-            <i class="icon ion-ios-checkmark padding-right balanced"></i>
-            Verified User
+            <i class="icon ion-ios-checkmark padding-right balanced px-icon"></i>
+            Verified Coupon
         </div>
     </div>
 
 </div>
-<div class="item item-text-wrap" ng-if="hRedeem || hExpiry || hBill">
+<div class="item item-text-wrap px-item-content" ng-if="hRedeem || hExpiry || hBill">
     <div ng-if='hRedeem' class="row px-smaller-text">
         Redeemed on {{ coupon.used_on | date }}
     </div>

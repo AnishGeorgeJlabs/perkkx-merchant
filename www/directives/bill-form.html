@@ -30,9 +30,11 @@
             <p><strong>Please Enter bill details</strong></p>
         </div>
         <label class="item item-input" ng-hide="invalid">
+            <span class="input-label">Amount: </span>
             <input type="tel" ng-model="paid" placeholder="Enter bill amount">
         </label>
         <label class="item item-input" ng-hide="invalid">
+            <span class="input-label">Discount: </span>
             <input type="tel" ng-model="discount" placeholder="Enter discount">
         </label>
     </div>
@@ -59,11 +61,11 @@
         <button ng-click="cancel()" class="button button-light">Cancel</button>
         <button ng-click="validate() && submit()" class="button button-positive">Submit</button>
     </div> -->
-    <div class="item row">
-        <div class="col">
+    <div class="item row padding-right px-button-bar">
+        <div class="col px-button-gutter">
             <button ng-click="cancel()" class="button button-block button-light">Cancel</button>
         </div>
-        <div class="col">
+        <div class="col px-button-gutter">
             <button ng-click="validate() && submit()" class="button button-block button-positive">Submit</button>
         </div>
     </div>
