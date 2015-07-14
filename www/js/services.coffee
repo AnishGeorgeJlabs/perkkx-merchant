@@ -61,6 +61,10 @@ angular.module 'perkkx.services', []
          $log.debug "Response: #{data}"
          callback(data)
 
+    apiLogin: (data) ->   # Also for password change
+       $http.post "#{pxApiEndpoints.signup}", data    # We return the promise so that pxUserCred can handle it accordingly
+
+
 .factory 'pxBadgeProvider', ($http, $log, pxApiEndpoints, vendor_id) ->
   # Simple factory for badge work
   url = "#{pxApiEndpoints.badge}/#{vendor_id}"
@@ -83,4 +87,34 @@ angular.module 'perkkx.services', []
 
     updateAll: () -> updater()
 
+.factory 'pxUserCred', ($window, pxApiConnect) ->
+  storeCred = (user, pass) ->
+    obj =
+      vendor_id: user          # Not sure if it is vendor_id or username
+      password: pass
+    $window.localstorage['perkkx_creds'] = JSON.stringify(obj)
 
+  getCred = () ->
+    JSON.parse($window.localstorage['perkkx_creds'] || {})
+
+  userLogin = (user, pass) ->
+    pxApiConnect.apiLogin({mode: "login", vendor_id: user, password: pass})
+
+  changePassword = (user, pass) ->
+    pxApiConnect.apiLogin({mode: "change_pass", vendor_id: user, password: pass})
+
+  res =
+    confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false
+      d = getCred()
+      if d.hasOwnProperty('vendor_id')
+        userLogin(d.vendor_id, d.password).success (data) ->
+          callback(data.result)
+      else
+        callback(false)
+
+    login: (user, pass) ->        # Do a login taking things from the login page
+    # TODO, logout and stuff
+
+  ### NOTES
+    We can use confirmCreds and wait to clear the splash screen
+  ###

@@ -79,6 +79,9 @@
           $log.debug("Response: " + data);
           return callback(data);
         });
+      },
+      apiLogin: function(data) {
+        return $http.post("" + pxApiEndpoints.signup, data);
       }
     };
   }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, vendor_id) {
@@ -108,6 +111,51 @@
         return updater();
       }
     };
+  }).factory('pxUserCred', function($window, pxApiConnect) {
+    var changePassword, getCred, res, storeCred, userLogin;
+    storeCred = function(user, pass) {
+      var obj;
+      obj = {
+        vendor_id: user,
+        password: pass
+      };
+      return $window.localstorage['perkkx_creds'] = JSON.stringify(obj);
+    };
+    getCred = function() {
+      return JSON.parse($window.localstorage['perkkx_creds'] || {});
+    };
+    userLogin = function(user, pass) {
+      return pxApiConnect.apiLogin({
+        mode: "login",
+        vendor_id: user,
+        password: pass
+      });
+    };
+    changePassword = function(user, pass) {
+      return pxApiConnect.apiLogin({
+        mode: "change_pass",
+        vendor_id: user,
+        password: pass
+      });
+    };
+    return res = {
+      confirmCreds: function(callback) {
+        var d;
+        d = getCred();
+        if (d.hasOwnProperty('vendor_id')) {
+          return userLogin(d.vendor_id, d.password).success(function(data) {
+            return callback(data.result);
+          });
+        } else {
+          return callback(false);
+        }
+      },
+      login: function(user, pass) {}
+    };
+
+    /* NOTES
+      We can use confirmCreds and wait to clear the splash screen
+     */
   });
 
 }).call(this);
