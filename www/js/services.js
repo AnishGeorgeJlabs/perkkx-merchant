@@ -6,84 +6,6 @@
       rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0);
       return moment() > rDate;
     };
-  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, vendor_id, $cordovaToast) {
-    var callbacks, refreshData, res, urls;
-    urls = {
-      pending: pxApiEndpoints.get + "/pending/" + vendor_id,
-      used: pxApiEndpoints.get + "/used/" + vendor_id,
-      expired: pxApiEndpoints.get + "/expired/" + vendor_id,
-      disputed: pxApiEndpoints.get + "/disputed/" + vendor_id
-    };
-    callbacks = {};
-    refreshData = {
-      pending: {
-        total: 0,
-        page: 0
-      },
-      used: {
-        total: 0,
-        page: 0
-      },
-      expired: {
-        total: 0,
-        page: 0
-      },
-      disputed: {
-        total: 0,
-        page: 0
-      }
-    };
-    return res = {
-      setCallBack: function(key, receiver) {
-        return callbacks[key] = receiver;
-      },
-      apiGet: function(key) {
-        console.log("GET for " + key);
-        res = $http.get(urls[key]).success(function(sdata) {
-          if (!sdata.error) {
-            refreshData[key].total = sdata.total_pages;
-            refreshData[key].page = sdata.page;
-            return callbacks[key](sdata.data, false);
-          } else {
-            return console.log("Got error for GET: " + key + ": " + sdata);
-          }
-        });
-        return res;
-      },
-      apiMore: function(key) {
-        if (refreshData[key].page < refreshData[key].total) {
-          refreshData[key].page += 1;
-          res = $http.get(urls[key] + "?page=" + refreshData[key].page).success(function(sdata) {
-            if (!sdata.error) {
-              return callbacks[key](sdata.data, true);
-            }
-          });
-          return {
-            more: true,
-            future: res
-          };
-        } else {
-          return {
-            more: false
-          };
-        }
-      },
-      apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function(data) {
-          return $cordovaToast.show("Bill submitted successfully", "short", "center");
-        });
-        return res;
-      },
-      apiCheckValid: function(code, callback) {
-        return $http.get(pxApiEndpoints.checkValid + "?rcode=" + code + "&vendor_id=" + vendor_id).success(function(data, status) {
-          $log.debug("Response: " + data);
-          return callback(data);
-        });
-      },
-      apiLogin: function(data) {
-        return $http.post("" + pxApiEndpoints.signup, data);
-      }
-    };
   }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, vendor_id) {
     var callbacks, res, updater, url;
     url = pxApiEndpoints.badge + "/" + vendor_id;
@@ -111,8 +33,84 @@
         return updater();
       }
     };
-  }).factory('pxUserCred', function($window, pxApiConnect) {
-    var changePassword, getCred, res, storeCred, userLogin;
+  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) {
+    var callbacks, refreshData, res, urls, vendor_id;
+    vendor_id = pxUserCred.vendor_id;
+    urls = {
+      pending: pxApiEndpoints.get + "/pending/",
+      used: pxApiEndpoints.get + "/used/",
+      expired: pxApiEndpoints.get + "/expired/",
+      disputed: pxApiEndpoints.get + "/disputed/"
+    };
+    callbacks = {};
+    refreshData = {
+      pending: {
+        total: 0,
+        page: 0
+      },
+      used: {
+        total: 0,
+        page: 0
+      },
+      expired: {
+        total: 0,
+        page: 0
+      },
+      disputed: {
+        total: 0,
+        page: 0
+      }
+    };
+    return res = {
+      setCallBack: function(key, receiver) {
+        return callbacks[key] = receiver;
+      },
+      apiGet: function(key) {
+        console.log("GET for " + key);
+        res = $http.get(urls[key] + vendor_id()).success(function(sdata) {
+          if (!sdata.error) {
+            refreshData[key].total = sdata.total_pages;
+            refreshData[key].page = sdata.page;
+            return callbacks[key](sdata.data, false);
+          } else {
+            return console.log("Got error for GET: " + key + ": " + sdata);
+          }
+        });
+        return res;
+      },
+      apiMore: function(key) {
+        if (refreshData[key].page < refreshData[key].total) {
+          refreshData[key].page += 1;
+          res = $http.get("" + urls[key] + (vendor_id()) + "?page=" + refreshData[key].page).success(function(sdata) {
+            if (!sdata.error) {
+              return callbacks[key](sdata.data, true);
+            }
+          });
+          return {
+            more: true,
+            future: res
+          };
+        } else {
+          return {
+            more: false
+          };
+        }
+      },
+      apiSubmit: function(data) {
+        res = $http.post(pxApiEndpoints.post + "/" + (vendor_id()), data).success(function(data) {
+          return $cordovaToast.show("Bill submitted successfully", "short", "center");
+        });
+        return res;
+      },
+      apiCheckValid: function(code, callback) {
+        return $http.get(pxApiEndpoints.checkValid + "?rcode=" + code + "&vendor_id=" + (vendor_id())).success(function(data, status) {
+          $log.debug("Response: " + data);
+          return callback(data);
+        });
+      }
+    };
+  }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
+    var changePassword, getCred, res, storeCred, userLogin, vendor_id_mem;
     storeCred = function(user, pass) {
       var obj;
       obj = {
@@ -121,21 +119,23 @@
       };
       return $window.localstorage['perkkx_creds'] = JSON.stringify(obj);
     };
+    vendor_id_mem = 0;
     getCred = function() {
       return JSON.parse($window.localstorage['perkkx_creds'] || {});
     };
     userLogin = function(user, pass) {
-      return pxApiConnect.apiLogin({
+      return $http.post(pxApiEndpoints.login, {
         mode: "login",
         vendor_id: user,
         password: pass
       });
     };
-    changePassword = function(user, pass) {
-      return pxApiConnect.apiLogin({
+    changePassword = function(user, pass, pass_old) {
+      return $http.post(pxApiEndpoints.login, {
         mode: "change_pass",
         vendor_id: user,
-        password: pass
+        password: pass,
+        password_old: pass_old
       });
     };
     return res = {
@@ -144,17 +144,31 @@
         d = getCred();
         if (d.hasOwnProperty('vendor_id')) {
           return userLogin(d.vendor_id, d.password).success(function(data) {
-            return callback(data.result);
+            callback(data.result);
+            vendor_id_mem = d.vendor_id;
+            return $log.info("Got login data: " + JSON.stringify(data));
           });
         } else {
           return callback(false);
         }
       },
-      login: function(user, pass) {}
+      login: function(user, pass, callback) {
+        return userLogin(user, pass).success(function(data) {
+          if (data.result) {
+            storeCred(user, pass);
+            vendor_id_mem = user;
+          }
+          return callback(data.result);
+        });
+      },
+      vendor_id: function() {
+        return vendor_id_mem;
+      }
     };
 
     /* NOTES
       We can use confirmCreds and wait to clear the splash screen
+      any kind of loading spinners to be handled by the callback functions
      */
   });
 
