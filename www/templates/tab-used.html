@@ -1,4 +1,4 @@
-<ion-view view-title="<img class='px-header-img' src='img/header.png'>">
+<ion-view view-title="<img class='px-header-img' src='img/perkkx_lgo.svg'>">
     <ion-content>
         <ion-refresher
               pulling-text="Pull to refresh"
@@ -13,14 +13,14 @@
                         bill='true'>
                     </px-coupon>
                 </div>
-                <div ng-show='detailshow' class='item item-text-wrap'>
+                <div ng-show='detailshow' class='item item-text-wrap px-small-text px-item-content'>
                     <div class='row'>
-                        <div class='col col-50'><p>Paid Amount: <p></div>
-                        <div class='col'><p><strong>Rs. {{ code.paid }}</strong><p></div>
+                        <div class='col col-50 px-bill-detail'>Paid Amount:</div>
+                        <div class='col'><strong>Rs. {{ code.paid }}</strong></div>
                     </div>
                     <div class='row'>
-                        <div class='col col-50'><p>Discount Amount: <p></div>
-                        <div class='col'><p><strong>Rs. {{ code.discount }}</strong><p></div>
+                        <div class='col col-50 px-bill-detail'>Discount Amount: </div>
+                        <div class='col'><strong>Rs. {{ code.discount }}</strong></div>
                     </div>
                     <!-- Disabled form for now -->
                     <!--

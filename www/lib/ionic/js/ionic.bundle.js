@@ -53568,7 +53568,7 @@ IonicModule
       '<label class="item item-radio">' +
         '<input type="radio" name="radio-group">' +
         '<div class="item-content disable-pointer-events" ng-transclude></div>' +
-        '<i class="radio-icon disable-pointer-events icon ion-checkmark"></i>' +
+        '<i class="radio-icon disable-pointer-events icon ion-checkmark-circled"></i>' +
       '</label>',
 
     compile: function(element, attr) {

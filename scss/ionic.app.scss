@@ -22,15 +22,96 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 @import "www/lib/ionic/scss/ionic";
 
 .px-small-text {
-  font-size: 1em;
+  font-size: 1em !important;
 }
 
 .px-smaller-text {
-  font-size: small;
+  font-size: small !important;
 }
 
 .px-header-img {
   padding-top: 1px;
   height: 42px;
   padding-bottom: 1px;
+}
+
+.px-deal {
+  padding-top: 10px !important;
+  padding-left: 6px !important;
+}
+
+.px-offer {
+  font-weight: bold;
+}
+
+.px-bill-detail {
+  padding-left: 0px !important;
+}
+
+.px-invalid-message {
+  color: $assertive !important;
+}
+
+.px-bill-input {
+  padding-left: 5px !important;
+}
+
+.px-item-content {
+  padding-top: 5px !important;
+  padding-bottom: 5px !important;
+}
+
+.px-button-gutter {
+  padding: 0px 7px 0px 7px !important;
+}
+
+.px-button-bar {
+  padding-left: 16px !important;
+  padding-right: 0px !important;
+  padding-top: 0px !important;
+}
+i.px-icon {
+  font-size: 20px !important;
+}
+.px-verified {
+  font-style: italic !important;
+  color: $balanced;
+  padding-top: 5px !important;
+}
+
+$tab-redeem: #dc4b39 !default;
+$tab-used: #00a651 !default;
+$tab-pending: #f8943d !default;
+
+.tab-item {
+  color: $dark;
+  &.tab-item-active,
+  &.active,
+  &.activated {
+    color: $tab-redeem;
+    border-color: $tab-redeem !important;
+  }
+}
+.tab-item+.tab-item  {
+  color: $dark;
+  &.tab-item-active,
+  &.active,
+  &.activated {
+    color: $tab-used;
+    border-color: $tab-used !important;
+  }
+
+}
+.tab-item+.tab-item+.tab-item  {
+  color: $dark;
+  &.tab-item-active,
+  &.active,
+  &.activated {
+    color: $tab-pending;
+    border-color: $tab-pending !important;
+  }
+}
+.px-cancel-button {
+  background: #ebebeb !important;
+  color: #8c9098 !important;
 }
