@@ -6,29 +6,29 @@ angular.module 'perkkx.services', []
     rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0)
     return moment() > rDate
 
-.factory 'pxBadgeProvider', ($http, $log, pxApiEndpoints, vendor_id) ->
+.factory 'pxBadgeProvider', ($http, $log, pxApiEndpoints, pxUserCred) ->
 # Simple factory for badge work
-  url = "#{pxApiEndpoints.badge}/#{vendor_id}"
 
-  callbacks = {}
-  updater = {}
+  vendor_id = 0
+  pxUserCred.register (id) ->
+    vendor_id = id
+
+  callbacks = []
+  updater = (obj) ->
+
+  update = () -> return $http.get "#{pxApiEndpoints.badge}/#{vendor_id}"
 
   res =
-    update: () -> return $http.get url
 
-    setCallBack: (key, receiver) ->
-      callbacks[key] = receiver
+    register: (receiver) ->
+      callbacks.push(receiver)
 
     setUpdater: (receiver) ->
       updater = receiver
 
     refresh: () ->
-      v() for k, v of callbacks
-      updater()
-
-    updateAll: () -> updater()
-
-
+      call() for call in callbacks
+      update().success (obj) -> updater(obj)
 
 .factory 'pxApiConnect', ($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) ->
   # Api connection for the main get and post methods
@@ -78,8 +78,9 @@ angular.module 'perkkx.services', []
       else {more: false}
 
     apiSubmit: (data) ->                  # submit bill info
-      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id}", data       # TODO: change
+      res = $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
       .success (data) ->
+        $log.info "Bill submitted successfully: "+JSON.stringify(data)
         $cordovaToast.show "Bill submitted successfully", "short", "center"
       res
 
@@ -99,8 +100,8 @@ angular.module 'perkkx.services', []
       password: pass
     $window.localStorage['perkkx_creds'] = JSON.stringify(obj)
 
-
   callbacks = []
+  isLoggedIn = false
 
   getCred = () ->
     d = $window.localStorage['perkkx_creds']
@@ -111,6 +112,7 @@ angular.module 'perkkx.services', []
   announce = () ->
     d = getCred()
     if d.hasOwnProperty('vendor_id')
+      isLoggedIn = true
       call(d.vendor_id, d.vendor_name) for call in callbacks
 
   userLogin = (user, pass) ->
@@ -143,6 +145,9 @@ angular.module 'perkkx.services', []
 
     logout: () ->
       delete $window.localStorage['perkkx_creds']
+      isLoggedIn = false
+
+    isLoggedIn: () -> isLoggedIn
 
   ### NOTES
     We can use confirmCreds and wait to clear the splash screen

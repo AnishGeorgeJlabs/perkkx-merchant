@@ -37,12 +37,7 @@ angular.module 'perkkx.controllers', []
         $scope.data.password = ''
 
 
-
-
-
-.controller 'MainCtrl', ($scope, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) ->
-  pxBadgeProvider.setUpdater($scope.updateAll)
-
+.controller 'MainCtrl', ($scope, $state, pxUserCred, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) ->
   # --- Private --------------- #
   $scope.badges =
     used: 0
@@ -61,13 +56,17 @@ angular.module 'perkkx.controllers', []
 
 
   # --------- Setup ----------- #
-  pxBadgeProvider.setUpdater () ->
-    pxBadgeProvider.update().success (data) ->
-      callback(data)
+  pxBadgeProvider.setUpdater callback
 
   pxBadgeProvider.refresh()
 
-
+  ###
+  $scope.checkLogin = () ->
+    $log.debug "checking login"
+    if not pxUserCred.isLoggedIn()
+      $log.debug "not logged in"
+      $state.go('login')
+  ###
 
 .controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate, $window) ->
 
@@ -194,7 +193,8 @@ angular.module 'perkkx.controllers', []
       $scope.codes.push obj for obj in data
     else $scope.codes = data
 
-  pxBadgeProvider.setCallBack 'used', () -> $scope.initGet()  # Setup callback for using badge provider, deprecated
+  pxBadgeProvider.register () ->
+    $scope.initGet()  # Setup callback for using badge provider, deprecated
 
   pxUserCred.register () ->
     $scope.initGet()                                          # All's done, so lets GET the data on initialisation
@@ -235,8 +235,7 @@ angular.module 'perkkx.controllers', []
       $scope.codes.push obj for obj in data
     else $scope.codes = data
 
-  pxBadgeProvider.setCallBack 'disputed', () ->
-    $log.debug "pxBadge for disputed"
+  pxBadgeProvider.register () ->
     $scope.initGet()
 
   pxUserCred.register () ->

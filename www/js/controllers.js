@@ -42,9 +42,8 @@
         }
       });
     };
-  }).controller('MainCtrl', function($scope, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) {
+  }).controller('MainCtrl', function($scope, $state, pxUserCred, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) {
     var callback;
-    pxBadgeProvider.setUpdater($scope.updateAll);
     $scope.badges = {
       used: 0,
       disputed: 0
@@ -65,12 +64,16 @@
     $scope.menu = function() {
       return $ionicSideMenuDelegate.toggleLeft();
     };
-    pxBadgeProvider.setUpdater(function() {
-      return pxBadgeProvider.update().success(function(data) {
-        return callback(data);
-      });
-    });
+    pxBadgeProvider.setUpdater(callback);
     return pxBadgeProvider.refresh();
+
+    /*
+    $scope.checkLogin = () ->
+      $log.debug "checking login"
+      if not pxUserCred.isLoggedIn()
+        $log.debug "not logged in"
+        $state.go('login')
+     */
   }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate, $window) {
     $scope.state = {
       registered: false
@@ -201,7 +204,7 @@
         return $scope.codes = data;
       }
     });
-    pxBadgeProvider.setCallBack('used', function() {
+    pxBadgeProvider.register(function() {
       return $scope.initGet();
     });
     return pxUserCred.register(function() {
@@ -251,8 +254,7 @@
         return $scope.codes = data;
       }
     });
-    pxBadgeProvider.setCallBack('disputed', function() {
-      $log.debug("pxBadge for disputed");
+    pxBadgeProvider.register(function() {
       return $scope.initGet();
     });
     return pxUserCred.register(function() {

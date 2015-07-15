@@ -18,6 +18,6 @@
     postProxy: 'http://localhost:8100/lsubmit',
     get: 'http://localhost:8100/merchantapp',
     badge: 'http://localhost:8100/lcount'
-  }).constant('vendor_id', 1);
+  });
 
 }).call(this);

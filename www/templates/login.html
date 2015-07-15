@@ -2,10 +2,12 @@
     <ion-content class="has-header padding" scroll="false">
         <div class="list list-inset" ng-if="state.loginPage">
             <label class="item item-input">
-                <input type="tel" placeholder="Vendor ID" ng-model="data.vendor_id">
+                <span class="input-label">Username</span>
+                <input type="tel" placeholder="Enter username" ng-model="data.vendor_id">
             </label>
             <label class="item item-input">
-                <input type="password" placeholder="Password" ng-model="data.password">
+                <span class="input-label">Password</span>
+                <input type="password" placeholder="Enter password" ng-model="data.password">
             </label>
             <button class="item button button-block button-positive" ng-click="submit()">Login</button>
         </div>

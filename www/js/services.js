@@ -6,31 +6,33 @@
       rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0);
       return moment() > rDate;
     };
-  }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, vendor_id) {
-    var callbacks, res, updater, url;
-    url = pxApiEndpoints.badge + "/" + vendor_id;
-    callbacks = {};
-    updater = {};
+  }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, pxUserCred) {
+    var callbacks, res, update, updater, vendor_id;
+    vendor_id = 0;
+    pxUserCred.register(function(id) {
+      return vendor_id = id;
+    });
+    callbacks = [];
+    updater = function(obj) {};
+    update = function() {
+      return $http.get(pxApiEndpoints.badge + "/" + vendor_id);
+    };
     return res = {
-      update: function() {
-        return $http.get(url);
-      },
-      setCallBack: function(key, receiver) {
-        return callbacks[key] = receiver;
+      register: function(receiver) {
+        return callbacks.push(receiver);
       },
       setUpdater: function(receiver) {
         return updater = receiver;
       },
       refresh: function() {
-        var k, v;
-        for (k in callbacks) {
-          v = callbacks[k];
-          v();
+        var call, i, len;
+        for (i = 0, len = callbacks.length; i < len; i++) {
+          call = callbacks[i];
+          call();
         }
-        return updater();
-      },
-      updateAll: function() {
-        return updater();
+        return update().success(function(obj) {
+          return updater(obj);
+        });
       }
     };
   }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) {
@@ -100,7 +102,8 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function(data) {
+        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function(data) {
+          $log.info("Bill submitted successfully: " + JSON.stringify(data));
           return $cordovaToast.show("Bill submitted successfully", "short", "center");
         });
         return res;
@@ -113,7 +116,7 @@
       }
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
-    var announce, callbacks, changePassword, getCred, res, storeCred, userLogin;
+    var announce, callbacks, changePassword, getCred, isLoggedIn, res, storeCred, userLogin;
     $log.info("pxUserInitialized");
     storeCred = function(vendor, id, pass) {
       var obj;
@@ -125,6 +128,7 @@
       return $window.localStorage['perkkx_creds'] = JSON.stringify(obj);
     };
     callbacks = [];
+    isLoggedIn = false;
     getCred = function() {
       var d;
       d = $window.localStorage['perkkx_creds'];
@@ -138,6 +142,7 @@
       var call, d, i, len, results;
       d = getCred();
       if (d.hasOwnProperty('vendor_id')) {
+        isLoggedIn = true;
         results = [];
         for (i = 0, len = callbacks.length; i < len; i++) {
           call = callbacks[i];
@@ -189,7 +194,11 @@
         return announce();
       },
       logout: function() {
-        return delete $window.localStorage['perkkx_creds'];
+        delete $window.localStorage['perkkx_creds'];
+        return isLoggedIn = false;
+      },
+      isLoggedIn: function() {
+        return isLoggedIn;
       }
     };
 
