@@ -143,7 +143,6 @@ angular.module 'perkkx.services', []
 
     logout: () ->
       delete $window.localStorage['perkkx_creds']
-      alert "wow"
 
   ### NOTES
     We can use confirmCreds and wait to clear the splash screen

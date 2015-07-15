@@ -189,8 +189,7 @@
         return announce();
       },
       logout: function() {
-        delete $window.localStorage['perkkx_creds'];
-        return alert("wow");
+        return delete $window.localStorage['perkkx_creds'];
       }
     };
 
