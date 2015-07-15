@@ -89,7 +89,6 @@
       $scope.state.registered = false;
       $ionicSideMenuDelegate.toggleLeft(false);
       pxUserCred.logout();
-      $window.location.reload(true);
       return $state.go('login');
     };
   }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
