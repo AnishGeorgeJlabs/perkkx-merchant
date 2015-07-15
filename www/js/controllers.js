@@ -156,7 +156,7 @@
         return $scope.data.rcode = old_val;
       }
     });
-  }).controller('UsedCtrl', function($scope, pxApiConnect, $log, pxBadgeProvider) {
+  }).controller('UsedCtrl', function($scope, pxApiConnect, $log, pxBadgeProvider, pxUserCred) {
 
     /*
       Controller for tab 2,
@@ -204,8 +204,10 @@
     pxBadgeProvider.setCallBack('used', function() {
       return $scope.initGet();
     });
-    return $scope.initGet();
-  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
+    return pxUserCred.register(function() {
+      return $scope.initGet();
+    });
+  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider, pxUserCred) {
 
     /*
       Last tab, used to show pending codes,
@@ -253,7 +255,9 @@
       $log.debug("pxBadge for disputed");
       return $scope.initGet();
     });
-    return $scope.initGet();
+    return pxUserCred.register(function() {
+      return $scope.initGet();
+    });
   });
 
 }).call(this);

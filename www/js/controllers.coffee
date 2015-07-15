@@ -89,7 +89,6 @@ angular.module 'perkkx.controllers', []
     $scope.state.registered = false
     $ionicSideMenuDelegate.toggleLeft(false)
     pxUserCred.logout()
-    #$window.location.reload(true)    DOES not work
     $state.go('login')
 
 
@@ -159,7 +158,7 @@ angular.module 'perkkx.controllers', []
   )
 
 
-.controller 'UsedCtrl', ($scope, pxApiConnect, $log, pxBadgeProvider) ->
+.controller 'UsedCtrl', ($scope, pxApiConnect, $log, pxBadgeProvider, pxUserCred) ->
   ###
     Controller for tab 2,
     Shows the used codes
@@ -197,11 +196,12 @@ angular.module 'perkkx.controllers', []
 
   pxBadgeProvider.setCallBack 'used', () -> $scope.initGet()  # Setup callback for using badge provider, deprecated
 
-  $scope.initGet()                                            # All's done, so lets GET the data on initialisation
+  pxUserCred.register () ->
+    $scope.initGet()                                          # All's done, so lets GET the data on initialisation
 
 
 
-.controller 'PendingCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
+.controller 'PendingCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider, pxUserCred) ->
   ###
     Last tab, used to show pending codes,
     NOTE: pending codes are actually disputed codes
@@ -239,4 +239,5 @@ angular.module 'perkkx.controllers', []
     $log.debug "pxBadge for disputed"
     $scope.initGet()
 
-  $scope.initGet()
+  pxUserCred.register () ->
+    $scope.initGet()

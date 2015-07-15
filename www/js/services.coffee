@@ -114,7 +114,7 @@ angular.module 'perkkx.services', []
       call(d.vendor_id, d.vendor_name) for call in callbacks
 
   userLogin = (user, pass) ->
-    $http.post pxApiEndpoints.login, {mode: "login", vendor_id: parseInt(user), password: pass}      # Just to be safe
+    $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: parseInt(user), password: pass}      # Just to be safe
 
   changePassword = (user, pass, pass_old) ->
     $http.post pxApiEndpoints.login, {mode: "change_pass", vendor_id: parseInt(user), password: pass, password_old: pass_old}

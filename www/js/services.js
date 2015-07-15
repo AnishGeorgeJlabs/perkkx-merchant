@@ -147,7 +147,7 @@
       }
     };
     userLogin = function(user, pass) {
-      return $http.post(pxApiEndpoints.login, {
+      return $http.post(pxApiEndpoints.loginProxy, {
         mode: "login",
         vendor_id: parseInt(user),
         password: pass
