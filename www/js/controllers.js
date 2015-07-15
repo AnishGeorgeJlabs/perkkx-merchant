@@ -40,11 +40,22 @@
         }
       });
     };
-  }).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log) {
+  }).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log, $rootScope) {
 
     /*
       This controller is used by the abstract tabs route,
       handles badges and and all
+     */
+
+    /*
+    $rootScope.rightButtons = [
+      {
+        text: 'Blah'
+        type: 'button-positive'
+        content: '<i class="icon ion-navicon"></i>'
+        click: () -> alert "Bluuuu"
+      }
+    ]
      */
     var callback;
     pxBadgeProvider.setUpdater($scope.updateAll);

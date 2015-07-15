@@ -37,10 +37,20 @@ angular.module 'perkkx.controllers', []
 
 
 
-.controller 'BadgeCtrl', ($scope, pxBadgeProvider, $log) ->
+.controller 'BadgeCtrl', ($scope, pxBadgeProvider, $log, $rootScope) ->
   ###
     This controller is used by the abstract tabs route,
     handles badges and and all
+  ###
+  ###
+  $rootScope.rightButtons = [
+    {
+      text: 'Blah'
+      type: 'button-positive'
+      content: '<i class="icon ion-navicon"></i>'
+      click: () -> alert "Bluuuu"
+    }
+  ]
   ###
   pxBadgeProvider.setUpdater($scope.updateAll)
 
