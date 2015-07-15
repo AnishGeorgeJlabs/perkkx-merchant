@@ -1,8 +1,8 @@
 angular.module 'perkkx.controllers', []
 .controller 'LoginCtrl', ($scope, $state, pxUserCred, $log) ->
   $scope.data =
-    vendor_id: 1
-    password: 'abc'
+    vendor_id: 0
+    password: ''
     error: ""
 
   $scope.state =
@@ -26,10 +26,10 @@ angular.module 'perkkx.controllers', []
       if not res
         $scope.state.error = true
         $scope.state.loginPage = true
-        if res.error
-          $scope.date.error = "Login failed"
+        if not res.hasOwnProperty('error')
+          $scope.data.error = "Login failed"
         else
-          $scope.date.error = "Server error: "+res.error
+          $scope.data.error = "Server error: "+res.error
       else
         $state.go('tab.redeem')
 

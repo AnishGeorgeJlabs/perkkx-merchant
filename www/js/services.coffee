@@ -106,10 +106,10 @@ angular.module 'perkkx.services', []
     else return {}
 
   userLogin = (user, pass) ->
-    $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: user, password: pass}
+    $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: parseInt(user), password: pass}      # Just to be safe
 
   changePassword = (user, pass, pass_old) ->
-    $http.post pxApiEndpoints.login, {mode: "change_pass", vendor_id: user, password: pass, password_old: pass_old}
+    $http.post pxApiEndpoints.login, {mode: "change_pass", vendor_id: parseInt(user), password: pass, password_old: pass_old}
 
   res =
     confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false

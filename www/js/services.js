@@ -135,14 +135,14 @@
     userLogin = function(user, pass) {
       return $http.post(pxApiEndpoints.loginProxy, {
         mode: "login",
-        vendor_id: user,
+        vendor_id: parseInt(user),
         password: pass
       });
     };
     changePassword = function(user, pass, pass_old) {
       return $http.post(pxApiEndpoints.login, {
         mode: "change_pass",
-        vendor_id: user,
+        vendor_id: parseInt(user),
         password: pass,
         password_old: pass_old
       });

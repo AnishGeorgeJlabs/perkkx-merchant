@@ -76,8 +76,8 @@ angular.module 'perkkx.directives', []
           status: 'expired'
         else
           status: 'used'
-          paid: $scope.paid
-          discount: $scope.discount
+          paid: parseInt($scope.paid)
+          discount: parseInt($scope.discount)
 
       res.submitted_on = parseInt( Date.now() )
       if $scope.dealOptsCheck()   # extraodinary case

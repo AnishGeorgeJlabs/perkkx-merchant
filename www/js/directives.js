@@ -84,8 +84,8 @@
             status: 'expired'
           } : {
             status: 'used',
-            paid: $scope.paid,
-            discount: $scope.discount
+            paid: parseInt($scope.paid),
+            discount: parseInt($scope.discount)
           };
           res.submitted_on = parseInt(Date.now());
           if ($scope.dealOptsCheck()) {
