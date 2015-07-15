@@ -40,23 +40,7 @@
         }
       });
     };
-  }).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log, $rootScope) {
-
-    /*
-      This controller is used by the abstract tabs route,
-      handles badges and and all
-     */
-
-    /*
-    $rootScope.rightButtons = [
-      {
-        text: 'Blah'
-        type: 'button-positive'
-        content: '<i class="icon ion-navicon"></i>'
-        click: () -> alert "Bluuuu"
-      }
-    ]
-     */
+  }).controller('MainCtrl', function($scope, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) {
     var callback;
     pxBadgeProvider.setUpdater($scope.updateAll);
     $scope.badges = {
@@ -76,13 +60,19 @@
     $scope.setBadge = function(key, num) {
       return $scope.badges[key] = num;
     };
+    $scope.menu = function() {
+      return $ionicSideMenuDelegate.toggleLeft();
+    };
     pxBadgeProvider.setUpdater(function() {
-      $log.debug("update AALL");
       return pxBadgeProvider.update().success(function(data) {
         return callback(data);
       });
     });
     return pxBadgeProvider.refresh();
+  }).controller('SideBarCtrl', function($scope, pxUserCred) {
+    return $scope.data = {
+      title: "Perkkx"
+    };
   }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
 
     /*

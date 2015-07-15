@@ -37,21 +37,7 @@ angular.module 'perkkx.controllers', []
 
 
 
-.controller 'BadgeCtrl', ($scope, pxBadgeProvider, $log, $rootScope) ->
-  ###
-    This controller is used by the abstract tabs route,
-    handles badges and and all
-  ###
-  ###
-  $rootScope.rightButtons = [
-    {
-      text: 'Blah'
-      type: 'button-positive'
-      content: '<i class="icon ion-navicon"></i>'
-      click: () -> alert "Bluuuu"
-    }
-  ]
-  ###
+.controller 'MainCtrl', ($scope, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) ->
   pxBadgeProvider.setUpdater($scope.updateAll)
 
   # --- Private --------------- #
@@ -63,15 +49,26 @@ angular.module 'perkkx.controllers', []
     $scope.setBadge k, v for own k, v of obj
   # --------------------------- #
 
+  # ------- Methods ----------- #
   $scope.setBadge = (key, num) ->
     $scope.badges[key] = num
 
+  $scope.menu = () ->
+    $ionicSideMenuDelegate.toggleLeft()
+
+
+  # --------- Setup ----------- #
   pxBadgeProvider.setUpdater () ->
-    $log.debug "update AALL"
     pxBadgeProvider.update().success (data) ->
       callback(data)
 
   pxBadgeProvider.refresh()
+
+
+
+.controller 'SideBarCtrl', ($scope, pxUserCred) ->
+  $scope.data =
+    title: "Perkkx"
 
 
 
