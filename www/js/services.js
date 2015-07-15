@@ -35,7 +35,10 @@
     };
   }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) {
     var callbacks, refreshData, res, urls, vendor_id;
-    vendor_id = pxUserCred.vendor_id;
+    vendor_id = 0;
+    pxUserCred.register(function(id, name) {
+      return vendor_id = parseInt(id);
+    });
     urls = {
       pending: pxApiEndpoints.get + "/pending/",
       used: pxApiEndpoints.get + "/used/",
@@ -67,7 +70,7 @@
       },
       apiGet: function(key) {
         console.log("GET for " + key);
-        res = $http.get(urls[key] + vendor_id()).success(function(sdata) {
+        res = $http.get(urls[key] + vendor_id).success(function(sdata) {
           if (!sdata.error) {
             refreshData[key].total = sdata.total_pages;
             refreshData[key].page = sdata.page;
@@ -81,7 +84,7 @@
       apiMore: function(key) {
         if (refreshData[key].page < refreshData[key].total) {
           refreshData[key].page += 1;
-          res = $http.get("" + urls[key] + (vendor_id()) + "?page=" + refreshData[key].page).success(function(sdata) {
+          res = $http.get("" + urls[key] + vendor_id + "?page=" + refreshData[key].page).success(function(sdata) {
             if (!sdata.error) {
               return callbacks[key](sdata.data, true);
             }
@@ -97,20 +100,20 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.post + "/" + (vendor_id()), data).success(function(data) {
+        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function(data) {
           return $cordovaToast.show("Bill submitted successfully", "short", "center");
         });
         return res;
       },
       apiCheckValid: function(code, callback) {
-        return $http.get(pxApiEndpoints.checkValid + "?rcode=" + code + "&vendor_id=" + (vendor_id())).success(function(data, status) {
+        return $http.get(pxApiEndpoints.checkValid + "?rcode=" + code + "&vendor_id=" + vendor_id).success(function(data, status) {
           $log.debug("Response: " + data);
           return callback(data);
         });
       }
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
-    var changePassword, getCred, res, set_mem, storeCred, userLogin, vendor_id_mem, vendor_name_mem;
+    var announce, callbacks, changePassword, getCred, res, storeCred, userLogin;
     $log.info("pxUserInitialized");
     storeCred = function(vendor, id, pass) {
       var obj;
@@ -121,8 +124,7 @@
       };
       return $window.localStorage['perkkx_creds'] = JSON.stringify(obj);
     };
-    vendor_id_mem = 1;
-    vendor_name_mem = '';
+    callbacks = [];
     getCred = function() {
       var d;
       d = $window.localStorage['perkkx_creds'];
@@ -132,9 +134,17 @@
         return {};
       }
     };
-    set_mem = function(a, b) {
-      vendor_id_mem = a;
-      return vendor_name_mem = b;
+    announce = function() {
+      var call, d, i, len, results;
+      d = getCred();
+      if (d.hasOwnProperty('vendor_id')) {
+        results = [];
+        for (i = 0, len = callbacks.length; i < len; i++) {
+          call = callbacks[i];
+          results.push(call(d.vendor_id, d.vendor_name));
+        }
+        return results;
+      }
     };
     userLogin = function(user, pass) {
       return $http.post(pxApiEndpoints.loginProxy, {
@@ -158,7 +168,7 @@
         if (d.hasOwnProperty('vendor_id')) {
           return userLogin(d.vendor_id, d.password).success(function(data) {
             callback(data.result);
-            set_mem(d.vendor_id, d.vendor_name);
+            announce();
             return $log.info("Got login data: " + JSON.stringify(data));
           });
         } else {
@@ -169,16 +179,18 @@
         return userLogin(id, pass).success(function(data) {
           if (data.result) {
             storeCred(data.vendor_name, id, pass);
-            set_mem(id, data.vendor_name);
+            announce();
           }
           return callback(data.result);
         });
       },
-      vendor_id: function() {
-        return vendor_id_mem;
+      register: function(receiver) {
+        callbacks.push(receiver);
+        return announce();
       },
-      vendor_name: function() {
-        return vendor_name_mem;
+      logout: function() {
+        delete $window.localStorage['perkkx_creds'];
+        return alert("wow");
       }
     };
 

@@ -116,6 +116,33 @@ $tab-pending: #f8943d !default;
   color: #8c9098 !important;
 }
 
+/*Set the background to transparent for ion-item*/
+.dark-bg .item, .list{
+  background-color: transparent !important;
+  border: none;
+  color: #F0F1F1;
+}
+
+/*Changes the border for the last item*/
+/*.dark-bg .item:last-child {
+  border-bottom: 1px solid #333333;
+} */
+
+/*Ion-item adds item-complex and an inner div, .item-content*/
+/* this needs to be transparent too, but doesnt need borders*/
+.dark-bg .item-complex .item-content, .dark-bg .item-radio .item-content {
+  background-color: transparent;
+}
+
+
+/*Just makes the type white*/
+.dark-bg h2,
+.dark-bg h3,
+.dark-bg p,
+.dark-bg a {
+  color: #F0F1F1;
+}
+
 /* Not good
 ion-content.px-center {
   display: -webkit-box;

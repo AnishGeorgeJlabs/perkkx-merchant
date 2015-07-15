@@ -33,7 +33,10 @@ angular.module 'perkkx.services', []
 .factory 'pxApiConnect', ($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) ->
   # Api connection for the main get and post methods
 
-  vendor_id = pxUserCred.vendor_id    # A function
+  vendor_id = 0
+  pxUserCred.register (id, name) ->
+    vendor_id = parseInt(id)    # just to be safe
+
   urls =
     pending: "#{pxApiEndpoints.get}/pending/"
     used: "#{pxApiEndpoints.get}/used/"
@@ -54,7 +57,7 @@ angular.module 'perkkx.services', []
 
     apiGet: (key) ->                    # Get data
       console.log "GET for #{key}"
-      res = $http.get urls[key] + vendor_id()
+      res = $http.get urls[key] + vendor_id
       .success (sdata) ->
         if not sdata.error
           refreshData[key].total = sdata.total_pages      # Total # of pages
@@ -67,7 +70,7 @@ angular.module 'perkkx.services', []
     apiMore: (key) ->                    # for infinite scroll, get more data
       if refreshData[key].page < refreshData[key].total
         refreshData[key].page += 1
-        res = $http.get "#{urls[key]}#{vendor_id()}?page=#{refreshData[key].page}"
+        res = $http.get "#{urls[key]}#{vendor_id}?page=#{refreshData[key].page}"
         .success (sdata) ->
           if not sdata.error
             callbacks[key](sdata.data, true)     # refresh
@@ -75,13 +78,13 @@ angular.module 'perkkx.services', []
       else {more: false}
 
     apiSubmit: (data) ->                  # submit bill info
-      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id()}", data       # TODO: change
+      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id}", data       # TODO: change
       .success (data) ->
         $cordovaToast.show "Bill submitted successfully", "short", "center"
       res
 
     apiCheckValid: (code, callback) ->    # for redeem tab, check if a ginen rcode is valid
-       $http.get "#{pxApiEndpoints.checkValid}?rcode=#{code}&vendor_id=#{vendor_id()}"
+       $http.get "#{pxApiEndpoints.checkValid}?rcode=#{code}&vendor_id=#{vendor_id}"
        .success (data, status) ->
          $log.debug "Response: #{data}"
          callback(data)
@@ -96,9 +99,8 @@ angular.module 'perkkx.services', []
       password: pass
     $window.localStorage['perkkx_creds'] = JSON.stringify(obj)
 
-  vendor_id_mem = 1            # in memory vendor_id constant
-  vendor_name_mem = ''
-  #loggedIn = false
+
+  callbacks = []
 
   getCred = () ->
     d = $window.localStorage['perkkx_creds']
@@ -106,9 +108,10 @@ angular.module 'perkkx.services', []
       return JSON.parse(d)
     else return {}
 
-  set_mem = (a, b) ->
-    vendor_id_mem = a
-    vendor_name_mem = b
+  announce = () ->
+    d = getCred()
+    if d.hasOwnProperty('vendor_id')
+      call(d.vendor_id, d.vendor_name) for call in callbacks
 
   userLogin = (user, pass) ->
     $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: parseInt(user), password: pass}      # Just to be safe
@@ -122,7 +125,7 @@ angular.module 'perkkx.services', []
       if d.hasOwnProperty('vendor_id')
         userLogin(d.vendor_id, d.password).success (data) ->
           callback(data.result)
-          set_mem(d.vendor_id, d.vendor_name)
+          announce()
           $log.info "Got login data: "+JSON.stringify(data)
       else
         callback(false)
@@ -131,12 +134,16 @@ angular.module 'perkkx.services', []
       userLogin(id, pass).success (data) ->
         if data.result
           storeCred(data.vendor_name, id, pass)
-          set_mem(id, data.vendor_name)
+          announce()
         callback(data.result)
 
-    vendor_id: () -> vendor_id_mem
-    vendor_name: () -> vendor_name_mem
+    register: (receiver) ->       # Will take vendor_id, and vendor_name
+      callbacks.push(receiver)
+      announce()
 
+    logout: () ->
+      delete $window.localStorage['perkkx_creds']
+      alert "wow"
 
   ### NOTES
     We can use confirmCreds and wait to clear the splash screen

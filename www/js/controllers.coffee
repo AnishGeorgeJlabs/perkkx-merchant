@@ -33,6 +33,9 @@ angular.module 'perkkx.controllers', []
           $scope.data.error = "Server error: "+res.error
       else
         $state.go('tab.redeem')
+        $scope.data.vendor_id = null
+        $scope.data.password = ''
+
 
 
 
@@ -66,10 +69,27 @@ angular.module 'perkkx.controllers', []
 
 
 
-.controller 'SideBarCtrl', ($scope, pxUserCred) ->
+.controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate) ->
+
+  $scope.state =
+    registered: false
+
   $scope.data =
     title: "Perkkx"
+    vendor_id: ''
+    vendor_name: ''
 
+  pxUserCred.register (id, name) ->
+    $scope.data.vendor_id = id
+    $scope.data.vendor_name = name
+    $scope.state.registered = true
+
+
+  $scope.logout = () ->
+    $scope.state.registered = false
+    $ionicSideMenuDelegate.toggleLeft(false)
+    pxUserCred.logout()
+    $state.go('login')
 
 
 .controller 'RedeemCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->

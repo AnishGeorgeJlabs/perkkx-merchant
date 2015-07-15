@@ -43,6 +43,29 @@
         <header class="bar bar-dark bar-header">
           <h1 class="title">{{ data.title }}</h1>
         </header>
+        <ion-content class="dark-bg has-header">
+          <div class="list list-inset list-borderless" ng-if="state.registered">
+            <div class="item item-text-wrap">
+              This application is registered to <strong>{{ data.vendor_name }}</strong>
+            </div>
+            <div class="item item-text-wrap">
+              Vendor ID: <strong>{{ data.vendor_id }}</strong>
+            </div>
+          </div>
+
+          <div class="list list-inset list-borderless" ng-if="state.registered">
+            <a class="item item-icon-left" ng-click="logout()" href="#">
+              <i class="icon ion-log-out"></i>
+              Logout
+            </a>
+          </div>
+
+          <div class="list list-inset" ng-if="!state.registered">
+            <div class="item item-text-wrap">
+              Please login to perkkx to start using the app
+            </div>
+          </div>
+        </ion-content>
       </ion-side-menu>
 
 
