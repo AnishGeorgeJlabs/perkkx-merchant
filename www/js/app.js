@@ -63,14 +63,14 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
     }
   })
   .state('tab.used', {
-      url: '/used',
-      views: {
-        'tab-used': {
-          templateUrl: 'templates/tab-used.html',
-          controller: 'UsedCtrl'
-        }
+    url: '/used',
+    views: {
+      'tab-used': {
+        templateUrl: 'templates/tab-used.html',
+        controller: 'UsedCtrl'
       }
-    })
+    }
+  })
   .state('tab.pending', {               // Merchant sees this as pending
     url: '/pending',
     views: {
@@ -79,6 +79,11 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
         controller: 'PendingCtrl'
       }
     }
+  })
+  .state('login', {
+    url: '/login',
+    templateUrl: 'templates/login.html',
+    controller: 'LoginCtrl'
   });
       /*
       .state('tab.expired', {
@@ -92,6 +97,6 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
       }) */
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/redeem');
+  $urlRouterProvider.otherwise('/login');
 
 });

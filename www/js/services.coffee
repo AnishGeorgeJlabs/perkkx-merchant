@@ -88,19 +88,25 @@ angular.module 'perkkx.services', []
 
 
 .factory 'pxUserCred', ($window, $http, pxApiEndpoints, $log) ->
-  storeCred = (user, pass) ->
+  $log.info "pxUserInitialized"
+  storeCred = (vendor, id, pass) ->
     obj =
-      vendor_id: user          # Not sure if it is vendor_id or username
+      vendor_name: vendor
+      vendor_id: id          # Not sure if it is vendor_id or username
       password: pass
-    $window.localstorage['perkkx_creds'] = JSON.stringify(obj)
+    $window.localStorage['perkkx_creds'] = JSON.stringify(obj)
 
-  vendor_id_mem = 0            # in memory vendor_id
+  vendor_id_mem = 1            # in memory vendor_id constant
+  loggedIn = false
 
   getCred = () ->
-    JSON.parse($window.localstorage['perkkx_creds'] || {})
+    d = $window.localStorage['perkkx_creds']
+    if d
+      return JSON.parse(d)
+    else return {}
 
   userLogin = (user, pass) ->
-    $http.post pxApiEndpoints.login, {mode: "login", vendor_id: user, password: pass}
+    $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: user, password: pass}
 
   changePassword = (user, pass, pass_old) ->
     $http.post pxApiEndpoints.login, {mode: "change_pass", vendor_id: user, password: pass, password_old: pass_old}
@@ -116,14 +122,15 @@ angular.module 'perkkx.services', []
       else
         callback(false)
 
-    login: (user, pass, callback) ->        # Do a login taking things from the login page
-      userLogin(user, pass).success (data) ->
+    login: (id, pass, callback) ->        # Do a login taking things from the login page
+      userLogin(id, pass).success (data) ->
         if data.result
-          storeCred(user, pass)
-          vendor_id_mem = user
+          storeCred(data.vendor_name, id, pass)
+          vendor_id_mem = id
         callback(data.result)
 
     vendor_id: () -> vendor_id_mem
+    status: () -> loggedIn
 
   ### NOTES
     We can use confirmCreds and wait to clear the splash screen

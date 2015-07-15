@@ -7,6 +7,10 @@
       "proxyUrl": "http://45.55.72.208/perkkx/merchantapp/submit"
     },
     {
+      "path": "/login",
+      "proxyUrl": "http://45.55.72.208/perkkx/merchantapp/login"
+    },
+    {
       "path": "/merchantapp",
       "proxyUrl": "http://localhost:8000/perkkx/merchantapp"
     },

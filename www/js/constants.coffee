@@ -6,7 +6,8 @@ angular.module 'perkkx.constants', []
     postProxy: 'http://localhost:8100/submit'                 # Proxy for ionic serve
     get: "#{baseUrl}"     # Add pending and all that
     badge: "#{baseUrl}/count"       # add vendor id
-    login: "#{baseUrl}/signup"
+    login: "#{baseUrl}/login"
+    loginProxy: "http://localhost:8100/login"
 
 .constant 'pxApiEndpointso',   # TODO
     checkValid: 'http://localhost:8100/lvalidate',

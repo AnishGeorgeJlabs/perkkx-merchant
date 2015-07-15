@@ -2,7 +2,44 @@
 (function() {
   var hasProp = {}.hasOwnProperty;
 
-  angular.module('perkkx.controllers', []).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log) {
+  angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log) {
+    $scope.data = {
+      vendor_id: 1,
+      password: 'abc',
+      error: ""
+    };
+    $scope.state = {
+      isLoading: true,
+      loginPage: false,
+      error: false
+    };
+    pxUserCred.confirmCreds(function(res) {
+      $log.info("got result for confirmation as : " + res);
+      $scope.state.isLoading = false;
+      if (!res) {
+        return $scope.state.loginPage = true;
+      } else {
+        return $state.go('tab.redeem');
+      }
+    });
+    return $scope.submit = function() {
+      $scope.state.isLoading = true;
+      return pxUserCred.login($scope.data.vendor_id, $scope.data.password, function(res) {
+        $scope.state.isLoading = false;
+        if (!res) {
+          $scope.state.error = true;
+          $scope.state.loginPage = true;
+          if (res.error) {
+            return $scope.date.error = "Login failed";
+          } else {
+            return $scope.date.error = "Server error: " + res.error;
+          }
+        } else {
+          return $state.go('tab.redeem');
+        }
+      });
+    };
+  }).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log) {
 
     /*
       This controller is used by the abstract tabs route,

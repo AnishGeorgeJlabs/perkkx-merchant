@@ -110,21 +110,30 @@
       }
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
-    var changePassword, getCred, res, storeCred, userLogin, vendor_id_mem;
-    storeCred = function(user, pass) {
+    var changePassword, getCred, loggedIn, res, storeCred, userLogin, vendor_id_mem;
+    $log.info("pxUserInitialized");
+    storeCred = function(vendor, id, pass) {
       var obj;
       obj = {
-        vendor_id: user,
+        vendor_name: vendor,
+        vendor_id: id,
         password: pass
       };
-      return $window.localstorage['perkkx_creds'] = JSON.stringify(obj);
+      return $window.localStorage['perkkx_creds'] = JSON.stringify(obj);
     };
-    vendor_id_mem = 0;
+    vendor_id_mem = 1;
+    loggedIn = false;
     getCred = function() {
-      return JSON.parse($window.localstorage['perkkx_creds'] || {});
+      var d;
+      d = $window.localStorage['perkkx_creds'];
+      if (d) {
+        return JSON.parse(d);
+      } else {
+        return {};
+      }
     };
     userLogin = function(user, pass) {
-      return $http.post(pxApiEndpoints.login, {
+      return $http.post(pxApiEndpoints.loginProxy, {
         mode: "login",
         vendor_id: user,
         password: pass
@@ -152,17 +161,20 @@
           return callback(false);
         }
       },
-      login: function(user, pass, callback) {
-        return userLogin(user, pass).success(function(data) {
+      login: function(id, pass, callback) {
+        return userLogin(id, pass).success(function(data) {
           if (data.result) {
-            storeCred(user, pass);
-            vendor_id_mem = user;
+            storeCred(data.vendor_name, id, pass);
+            vendor_id_mem = id;
           }
           return callback(data.result);
         });
       },
       vendor_id: function() {
         return vendor_id_mem;
+      },
+      status: function() {
+        return loggedIn;
       }
     };
 

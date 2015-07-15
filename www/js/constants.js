@@ -10,7 +10,8 @@
     postProxy: 'http://localhost:8100/submit',
     get: "" + baseUrl,
     badge: baseUrl + "/count",
-    login: baseUrl + "/signup"
+    login: baseUrl + "/login",
+    loginProxy: "http://localhost:8100/login"
   }).constant('pxApiEndpointso', {
     checkValid: 'http://localhost:8100/lvalidate',
     post: 'http://localhost:8100/lsubmit',
