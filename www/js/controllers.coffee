@@ -58,7 +58,8 @@ angular.module 'perkkx.controllers', []
   # --------- Setup ----------- #
   pxBadgeProvider.setUpdater callback
 
-  pxBadgeProvider.refresh()
+  pxUserCred.register () ->
+    pxBadgeProvider.refresh()
 
   ###
   $scope.checkLogin = () ->

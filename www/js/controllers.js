@@ -65,7 +65,9 @@
       return $ionicSideMenuDelegate.toggleLeft();
     };
     pxBadgeProvider.setUpdater(callback);
-    return pxBadgeProvider.refresh();
+    return pxUserCred.register(function() {
+      return pxBadgeProvider.refresh();
+    });
 
     /*
     $scope.checkLogin = () ->
