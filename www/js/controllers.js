@@ -71,7 +71,7 @@
       });
     });
     return pxBadgeProvider.refresh();
-  }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
+  }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate, $window) {
     $scope.state = {
       registered: false
     };
