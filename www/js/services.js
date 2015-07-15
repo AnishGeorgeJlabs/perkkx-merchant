@@ -110,7 +110,7 @@
       }
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
-    var changePassword, getCred, loggedIn, res, storeCred, userLogin, vendor_id_mem;
+    var changePassword, getCred, res, set_mem, storeCred, userLogin, vendor_id_mem, vendor_name_mem;
     $log.info("pxUserInitialized");
     storeCred = function(vendor, id, pass) {
       var obj;
@@ -122,7 +122,7 @@
       return $window.localStorage['perkkx_creds'] = JSON.stringify(obj);
     };
     vendor_id_mem = 1;
-    loggedIn = false;
+    vendor_name_mem = '';
     getCred = function() {
       var d;
       d = $window.localStorage['perkkx_creds'];
@@ -132,17 +132,21 @@
         return {};
       }
     };
+    set_mem = function(a, b) {
+      vendor_id_mem = a;
+      return vendor_name_mem = b;
+    };
     userLogin = function(user, pass) {
       return $http.post(pxApiEndpoints.loginProxy, {
         mode: "login",
-        vendor_id: user,
+        vendor_id: parseInt(user),
         password: pass
       });
     };
     changePassword = function(user, pass, pass_old) {
       return $http.post(pxApiEndpoints.login, {
         mode: "change_pass",
-        vendor_id: user,
+        vendor_id: parseInt(user),
         password: pass,
         password_old: pass_old
       });
@@ -154,7 +158,7 @@
         if (d.hasOwnProperty('vendor_id')) {
           return userLogin(d.vendor_id, d.password).success(function(data) {
             callback(data.result);
-            vendor_id_mem = d.vendor_id;
+            set_mem(d.vendor_id, d.vendor_name);
             return $log.info("Got login data: " + JSON.stringify(data));
           });
         } else {
@@ -165,7 +169,7 @@
         return userLogin(id, pass).success(function(data) {
           if (data.result) {
             storeCred(data.vendor_name, id, pass);
-            vendor_id_mem = id;
+            set_mem(id, data.vendor_name);
           }
           return callback(data.result);
         });
@@ -173,8 +177,8 @@
       vendor_id: function() {
         return vendor_id_mem;
       },
-      status: function() {
-        return loggedIn;
+      vendor_name: function() {
+        return vendor_name_mem;
       }
     };
 

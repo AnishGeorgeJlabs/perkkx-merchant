@@ -97,7 +97,8 @@ angular.module 'perkkx.services', []
     $window.localStorage['perkkx_creds'] = JSON.stringify(obj)
 
   vendor_id_mem = 1            # in memory vendor_id constant
-  loggedIn = false
+  vendor_name_mem = ''
+  #loggedIn = false
 
   getCred = () ->
     d = $window.localStorage['perkkx_creds']
@@ -105,11 +106,15 @@ angular.module 'perkkx.services', []
       return JSON.parse(d)
     else return {}
 
+  set_mem = (a, b) ->
+    vendor_id_mem = a
+    vendor_name_mem = b
+
   userLogin = (user, pass) ->
-    $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: user, password: pass}
+    $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: parseInt(user), password: pass}      # Just to be safe
 
   changePassword = (user, pass, pass_old) ->
-    $http.post pxApiEndpoints.login, {mode: "change_pass", vendor_id: user, password: pass, password_old: pass_old}
+    $http.post pxApiEndpoints.login, {mode: "change_pass", vendor_id: parseInt(user), password: pass, password_old: pass_old}
 
   res =
     confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false
@@ -117,7 +122,7 @@ angular.module 'perkkx.services', []
       if d.hasOwnProperty('vendor_id')
         userLogin(d.vendor_id, d.password).success (data) ->
           callback(data.result)
-          vendor_id_mem = d.vendor_id     # OPTIMISTIC
+          set_mem(d.vendor_id, d.vendor_name)
           $log.info "Got login data: "+JSON.stringify(data)
       else
         callback(false)
@@ -126,11 +131,12 @@ angular.module 'perkkx.services', []
       userLogin(id, pass).success (data) ->
         if data.result
           storeCred(data.vendor_name, id, pass)
-          vendor_id_mem = id
+          set_mem(id, data.vendor_name)
         callback(data.result)
 
     vendor_id: () -> vendor_id_mem
-    status: () -> loggedIn
+    vendor_name: () -> vendor_name_mem
+
 
   ### NOTES
     We can use confirmCreds and wait to clear the splash screen

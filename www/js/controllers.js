@@ -4,8 +4,8 @@
 
   angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log) {
     $scope.data = {
-      vendor_id: 1,
-      password: 'abc',
+      vendor_id: null,
+      password: '',
       error: ""
     };
     $scope.state = {
@@ -24,15 +24,16 @@
     });
     return $scope.submit = function() {
       $scope.state.isLoading = true;
+      $scope.state.error = false;
       return pxUserCred.login($scope.data.vendor_id, $scope.data.password, function(res) {
         $scope.state.isLoading = false;
         if (!res) {
           $scope.state.error = true;
           $scope.state.loginPage = true;
-          if (res.error) {
-            return $scope.date.error = "Login failed";
+          if (!res.hasOwnProperty('error')) {
+            return $scope.data.error = "Login failed";
           } else {
-            return $scope.date.error = "Server error: " + res.error;
+            return $scope.data.error = "Server error: " + res.error;
           }
         } else {
           return $state.go('tab.redeem');

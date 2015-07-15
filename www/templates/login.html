@@ -1,0 +1,23 @@
+<ion-view view-title="Login">
+    <ion-content class="padding" scroll="false">
+        <div class="list list-inset" ng-if="state.loginPage">
+            <label class="item item-input">
+                <input type="tel" placeholder="Vendor ID" ng-model="data.vendor_id">
+            </label>
+            <label class="item item-input">
+                <input type="password" placeholder="Password" ng-model="data.password">
+            </label>
+            <button class="item button button-block button-balanced" ng-click="submit()">Login</button>
+        </div>
+        <div ng-show="state.isLoading">
+            <p class="text-center">
+                <ion-spinner></ion-spinner>
+            </p>
+        </div>
+        <div class="list list-inset" ng-if="state.error">
+            <div class="item item-assertive">
+                {{ data.error }}
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
