@@ -69,7 +69,7 @@ angular.module 'perkkx.controllers', []
 
 
 
-.controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate) ->
+.controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate, $window) ->
 
   $scope.state =
     registered: false
@@ -89,6 +89,7 @@ angular.module 'perkkx.controllers', []
     $scope.state.registered = false
     $ionicSideMenuDelegate.toggleLeft(false)
     pxUserCred.logout()
+    $window.location.reload(true)
     $state.go('login')
 
 

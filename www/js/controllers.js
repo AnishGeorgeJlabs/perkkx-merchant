@@ -71,7 +71,7 @@
       });
     });
     return pxBadgeProvider.refresh();
-  }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
+  }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate, $window) {
     $scope.state = {
       registered: false
     };
@@ -89,6 +89,7 @@
       $scope.state.registered = false;
       $ionicSideMenuDelegate.toggleLeft(false);
       pxUserCred.logout();
+      $window.location.reload(true);
       return $state.go('login');
     };
   }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
