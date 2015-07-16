@@ -42,11 +42,14 @@
         }
       });
     };
-  }).controller('MainCtrl', function($scope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) {
+  }).controller('MainCtrl', function($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) {
     var callback;
     $scope.badges = {
       used: 0,
       disputed: 0
+    };
+    $scope.state = {
+      sideBar: false
     };
     callback = function(obj) {
       var k, results, v;
@@ -64,7 +67,15 @@
     $scope.menu = function() {
       return $ionicSideMenuDelegate.toggleLeft();
     };
-    return pxBadgeProvider.setUpdater(callback);
+    pxBadgeProvider.setUpdater(callback);
+    return $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      $log.info("Changing state from " + fromState.name + " to " + toState.name);
+      if (toState.name === 'login' || toState.name === 'change_pass') {
+        return $scope.state.sideBar = false;
+      } else {
+        return $scope.state.sideBar = true;
+      }
+    });
   }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
     $scope.state = {
       registered: false

@@ -37,11 +37,15 @@ angular.module 'perkkx.controllers', []
         $scope.data.password = ''
 
 
-.controller 'MainCtrl', ($scope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) ->
+.controller 'MainCtrl', ($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) ->
+
   # --- Private --------------- #
   $scope.badges =
     used: 0
     disputed: 0
+
+  $scope.state =
+    sideBar: false
 
   callback = (obj) ->
     $scope.setBadge k, v for own k, v of obj
@@ -56,6 +60,14 @@ angular.module 'perkkx.controllers', []
 
   # --------- Setup ----------- #
   pxBadgeProvider.setUpdater callback
+
+  # --------- State checking -- #
+  $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
+    $log.info "Changing state from #{fromState.name} to #{toState.name}"
+    if toState.name == 'login' || toState.name == 'change_pass'
+      $scope.state.sideBar = false
+    else
+      $scope.state.sideBar = true
 
 
 .controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate)->

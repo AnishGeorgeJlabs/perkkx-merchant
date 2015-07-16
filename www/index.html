@@ -40,9 +40,11 @@
       <ion-side-menu
               side="left"
               ng-controller="SideBarCtrl">
+
         <header class="bar bar-dark bar-header dark-border">
           <h1 class="title">{{ data.title }}</h1>
         </header>
+
         <ion-content class="dark-bg has-header">
           <div class="list list-inset list-borderless" ng-if="state.registered">
             <div class="item item-text-wrap">
@@ -66,6 +68,7 @@
             </div>
           </div>
         </ion-content>
+
       </ion-side-menu>
 
 
@@ -74,6 +77,7 @@
         <ion-nav-bar class="bar-stable">
           <ion-nav-buttons side="left">
             <button class="padding-left button button-clear icon ion-navicon"
+                    ng-show="state.sideBar"
                     ng-click="menu()"></button>
           </ion-nav-buttons>
           <ion-nav-back-button>
