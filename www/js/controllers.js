@@ -2,7 +2,7 @@
 (function() {
   var hasProp = {}.hasOwnProperty;
 
-  angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log) {
+  angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log, $cordovaToast) {
     $log.info("initialised login");
     $scope.data = {
       username: '',
@@ -33,20 +33,26 @@
           $scope.state.loginPage = true;
           return $scope.data.error = "Login failed";
         } else {
-          $state.go('tab.redeem');
           $scope.data.username = '';
-          return $scope.data.password = '';
+          $scope.data.password = '';
+          $state.go('tab.redeem');
+          return $cordovaToast.show("Login successfully", "short", "bottom");
         }
       });
     };
-  }).controller('ChangePassCtrl', function($scope, $state, pxUserCred, $log) {
-    var validate;
+  }).controller('ChangePassCtrl', function($scope, $state, pxUserCred, $log, $cordovaToast) {
+    var clear, validate;
     $scope.data = {
       username: '',
       password_old: '',
       password_new: '',
       password_new_rep: '',
       error: ''
+    };
+    clear = function() {
+      $scope.data.password_old = '';
+      $scope.data.password_new = '';
+      return $scope.data.password_new_rep = '';
     };
     $scope.state = {
       error: false,
@@ -58,8 +64,13 @@
     validate = function() {
       return $scope.data.username !== '' && $scope.data.password_old !== '' && $scope.data.password_new !== '' && $scope.data.password_new === $scope.data.password_new_rep;
     };
+    $scope.cancel = function() {
+      clear();
+      return $state.go('tab.redeem');
+    };
     return $scope.submit = function() {
       $scope.state.isLoading = true;
+      $scope.state.error = false;
       if (validate()) {
         return pxUserCred.change_pass($scope.data.username, $scope.data.password_old, $scope.data.password_new, function(res) {
           $scope.state.isLoading = false;
@@ -68,7 +79,9 @@
             return $scope.data.error = "Password change failed";
           } else {
             $scope.state.error = false;
-            return $state.go('login');
+            clear();
+            $state.go('login');
+            return $cordovaToast.show("Password changed successfully, please login", "short", "bottom");
           }
         });
       } else {

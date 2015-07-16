@@ -2,7 +2,7 @@
     <ion-content class="has-header padding" scroll="false">
         <div class="list list-inset list-borderless">
             <div class="item item-image">
-                <img src="img/header.png" class="px-main-logo">
+                <img src="img/main_logo.svg" class="px-main-logo">
             </div>
         </div>
         <div class="list list-inset" ng-if="state.loginPage">
@@ -21,8 +21,8 @@
                 <ion-spinner></ion-spinner>
             </p>
         </div>
-        <div class="list list-inset" ng-if="state.error">
-            <div class="item item-assertive">
+        <div class="list list-inset list-borderless" ng-if="state.error">
+            <div class="item item-text-wrap assertive text-center">
                 {{ data.error }}
             </div>
         </div>

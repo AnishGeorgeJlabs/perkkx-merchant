@@ -2,7 +2,7 @@
     <ion-content class="has-header padding" scroll="false">
         <div class="list list-inset list-borderless">
             <div class="item item-image">
-                <img src="img/header.png" class="px-main-logo">
+                <img src="img/main_logo.svg" class="px-main-logo">
             </div>
         </div>
         <div class="list list-inset">
@@ -22,15 +22,18 @@
                 <span class="input-label">Confirm</span>
                 <input type="password" placeholder="Repeat new password" ng-model="data.password_new_rep">
             </label>
-            <button class="item button button-block button-positive" ng-click="submit()">Submit</button>
+            <div class="item button-bar">
+                <a class="button px-cancel-button" ng-click="cancel()">Cancel</a>
+                <a class="button button-positive" ng-click="submit()">Submit</a>
+            </div>
         </div>
         <div ng-show="state.isLoading">
             <p class="text-center">
                 <ion-spinner></ion-spinner>
             </p>
         </div>
-        <div class="list list-inset" ng-if="state.error">
-            <div class="item item-assertive">
+        <div class="list list-inset list-borderless" ng-if="state.error">
+            <div class="item assertive item-text-wrap">
                 {{ data.error }}
             </div>
         </div>
