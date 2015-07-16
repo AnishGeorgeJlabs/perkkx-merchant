@@ -7682,9 +7682,9 @@ a.button {
   font-size: small !important; }
 
 .px-header-img {
-  padding-top: 1px;
-  height: 42px;
-  padding-bottom: 1px; }
+  padding-top: 6px;
+  height: 40px;
+  padding-bottom: 3px; }
 
 .px-deal {
   padding-top: 10px !important;
