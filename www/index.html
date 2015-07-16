@@ -34,19 +34,61 @@
     <script src="js/directives.js"></script>
   </head>
   <body ng-app="perkkx">
-    <!--
-      The nav bar that will be updated as we navigate between views.
-    -->
-	
-    <ion-nav-bar class="bar-stable">
-      <ion-nav-back-button>
-      </ion-nav-back-button>
-    </ion-nav-bar>
-    <!--
-      The views will be rendered in the <ion-nav-view> directive below
-      Templates are in the /templates folder (but you could also
-      have templates inline in this html file if you'd like).
-    -->
-    <ion-nav-view></ion-nav-view>
+
+    <ion-side-menus ng-controller="MainCtrl">
+
+      <ion-side-menu
+              side="left"
+              ng-controller="SideBarCtrl">
+
+        <header class="bar bar-dark bar-header dark-border">
+          <h1 class="title">{{ data.title }}</h1>
+        </header>
+
+        <ion-content class="dark-bg has-header">
+          <div class="list list-inset list-borderless" ng-if="state.registered">
+            <div class="item item-text-wrap">
+              This application is registered to <strong>{{ data.vendor_name }}</strong>
+            </div>
+            <div class="item item-text-wrap">
+              Logged in as: <strong>{{ data.username }}</strong>
+            </div>
+          </div>
+
+          <div class="list list-inset list-borderless" ng-if="state.registered">
+            <a class="item item-icon-left" ng-click="logout()" href="#">
+              <i class="icon ion-log-out"></i>
+              Logout
+            </a>
+            <a class="item item-icon-left" ng-click="change_pass()" href="#">
+              <i class="icon ion-ios-gear"></i>
+              Change Password
+            </a>
+          </div>
+
+          <div class="list list-inset" ng-if="!state.registered">
+            <div class="item item-text-wrap">
+              Please login to perkkx to start using the app
+            </div>
+          </div>
+        </ion-content>
+
+      </ion-side-menu>
+
+
+      <ion-side-menu-content>
+
+        <ion-nav-bar class="bar-stable">
+          <ion-nav-buttons side="left">
+            <button class="padding-left button button-clear icon ion-navicon"
+                    ng-show="state.sideBar"
+                    ng-click="menu()"></button>
+          </ion-nav-buttons>
+        </ion-nav-bar>
+
+        <ion-nav-view></ion-nav-view>   <!-- Views will be rendered here -->
+
+      </ion-side-menu-content>
+    </ion-side-menus>
   </body>
 </html>

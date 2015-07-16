@@ -2,17 +2,103 @@
 (function() {
   var hasProp = {}.hasOwnProperty;
 
-  angular.module('perkkx.controllers', []).controller('BadgeCtrl', function($scope, pxBadgeProvider, $log) {
-
-    /*
-      This controller is used by the abstract tabs route,
-      handles badges and and all
-     */
+  angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log, $cordovaToast) {
+    $log.info("initialised login");
+    $scope.data = {
+      username: '',
+      password: '',
+      error: ""
+    };
+    $scope.state = {
+      isLoading: true,
+      loginPage: false,
+      error: false
+    };
+    pxUserCred.confirmCreds(function(res) {
+      $log.info("got result for confirmation as : " + res);
+      $scope.state.isLoading = false;
+      if (!res) {
+        return $scope.state.loginPage = true;
+      } else {
+        return $state.go('tab.redeem');
+      }
+    });
+    return $scope.submit = function() {
+      $scope.state.isLoading = true;
+      $scope.state.error = false;
+      return pxUserCred.login($scope.data.username, $scope.data.password, function(res) {
+        $scope.state.isLoading = false;
+        if (!res) {
+          $scope.state.error = true;
+          $scope.state.loginPage = true;
+          return $scope.data.error = "Login failed";
+        } else {
+          $scope.data.username = '';
+          $scope.data.password = '';
+          $state.go('tab.redeem');
+          return $cordovaToast.show("Login successfully", "short", "bottom");
+        }
+      });
+    };
+  }).controller('ChangePassCtrl', function($scope, $state, pxUserCred, $log, $cordovaToast) {
+    var clear, validate;
+    $scope.data = {
+      username: '',
+      password_old: '',
+      password_new: '',
+      password_new_rep: '',
+      error: ''
+    };
+    clear = function() {
+      $scope.data.password_old = '';
+      $scope.data.password_new = '';
+      return $scope.data.password_new_rep = '';
+    };
+    $scope.state = {
+      error: false,
+      isLoading: false
+    };
+    pxUserCred.register(function(id, vname, username) {
+      return $scope.data.username = username;
+    });
+    validate = function() {
+      return $scope.data.username !== '' && $scope.data.password_old !== '' && $scope.data.password_new !== '' && $scope.data.password_new === $scope.data.password_new_rep;
+    };
+    $scope.cancel = function() {
+      clear();
+      return $state.go('tab.redeem');
+    };
+    return $scope.submit = function() {
+      $scope.state.isLoading = true;
+      $scope.state.error = false;
+      if (validate()) {
+        return pxUserCred.change_pass($scope.data.username, $scope.data.password_old, $scope.data.password_new, function(res) {
+          $scope.state.isLoading = false;
+          if (!res) {
+            $scope.state.error = true;
+            return $scope.data.error = "Password change failed";
+          } else {
+            $scope.state.error = false;
+            clear();
+            $state.go('login');
+            return $cordovaToast.show("Password changed successfully, please login", "short", "bottom");
+          }
+        });
+      } else {
+        $scope.state.isLoading = false;
+        $scope.state.error = true;
+        $scope.data.error = "the passwords do not match";
+        return $log.debug("change pass: " + (JSON.stringify($scope.data)));
+      }
+    };
+  }).controller('MainCtrl', function($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) {
     var callback;
-    pxBadgeProvider.setUpdater($scope.updateAll);
     $scope.badges = {
       used: 0,
       disputed: 0
+    };
+    $scope.state = {
+      sideBar: false
     };
     callback = function(obj) {
       var k, results, v;
@@ -27,13 +113,43 @@
     $scope.setBadge = function(key, num) {
       return $scope.badges[key] = num;
     };
-    pxBadgeProvider.setUpdater(function() {
-      $log.debug("update AALL");
-      return pxBadgeProvider.update().success(function(data) {
-        return callback(data);
-      });
+    $scope.menu = function() {
+      return $ionicSideMenuDelegate.toggleLeft();
+    };
+    pxBadgeProvider.setUpdater(callback);
+    return $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+      $log.info("Changing state from " + fromState.name + " to " + toState.name);
+      if (toState.name === 'login' || toState.name === 'change_pass') {
+        return $scope.state.sideBar = false;
+      } else {
+        return $scope.state.sideBar = true;
+      }
     });
-    return pxBadgeProvider.refresh();
+  }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
+    $scope.state = {
+      registered: false
+    };
+    $scope.data = {
+      title: "Perkkx",
+      vendor_id: '',
+      vendor_name: ''
+    };
+    pxUserCred.register(function(id, name, username) {
+      $scope.data.vendor_id = id;
+      $scope.data.vendor_name = name;
+      $scope.data.username = username;
+      return $scope.state.registered = true;
+    });
+    $scope.logout = function() {
+      $scope.state.registered = false;
+      $ionicSideMenuDelegate.toggleLeft(false);
+      pxUserCred.logout();
+      return $state.go('login');
+    };
+    return $scope.change_pass = function() {
+      $ionicSideMenuDelegate.toggleLeft(false);
+      return $state.go('change_pass');
+    };
   }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
 
     /*
@@ -99,7 +215,7 @@
         return $scope.data.rcode = old_val;
       }
     });
-  }).controller('UsedCtrl', function($scope, pxApiConnect, $log, pxBadgeProvider) {
+  }).controller('UsedCtrl', function($scope, pxApiConnect, $log, pxBadgeProvider, pxUserCred) {
 
     /*
       Controller for tab 2,
@@ -144,11 +260,13 @@
         return $scope.codes = data;
       }
     });
-    pxBadgeProvider.setCallBack('used', function() {
+    pxBadgeProvider.register(function() {
       return $scope.initGet();
     });
-    return $scope.initGet();
-  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
+    return pxUserCred.register(function() {
+      return $scope.initGet();
+    });
+  }).controller('PendingCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider, pxUserCred) {
 
     /*
       Last tab, used to show pending codes,
@@ -192,11 +310,12 @@
         return $scope.codes = data;
       }
     });
-    pxBadgeProvider.setCallBack('disputed', function() {
-      $log.debug("pxBadge for disputed");
+    pxBadgeProvider.register(function() {
       return $scope.initGet();
     });
-    return $scope.initGet();
+    return pxUserCred.register(function() {
+      return $scope.initGet();
+    });
   });
 
 }).call(this);

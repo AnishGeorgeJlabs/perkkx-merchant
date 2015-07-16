@@ -7682,9 +7682,12 @@ a.button {
   font-size: small !important; }
 
 .px-header-img {
-  padding-top: 1px;
-  height: 42px;
-  padding-bottom: 1px; }
+  padding-top: 6px;
+  height: 40px;
+  padding-bottom: 3px; }
+
+.px-main-logo {
+  width: 50% !important; }
 
 .px-deal {
   padding-top: 10px !important;
@@ -7743,3 +7746,55 @@ i.px-icon {
 .px-cancel-button {
   background: #ebebeb !important;
   color: #8c9098 !important; }
+
+/*Set the background to transparent for ion-item*/
+.dark-bg .item, .list {
+  background-color: transparent !important;
+  border: none;
+  color: #F0F1F1; }
+
+/*Changes the border for the last item*/
+/*.dark-bg .item:last-child {
+  border-bottom: 1px solid #333333;
+} */
+/*Ion-item adds item-complex and an inner div, .item-content*/
+/* this needs to be transparent too, but doesnt need borders*/
+.dark-bg .item-complex .item-content, .dark-bg .item-radio .item-content {
+  background-color: transparent; }
+
+/*Just makes the type white*/
+.dark-bg h2, .dark-bg h3, .dark-bg p, .dark-bg a {
+  color: #F0F1F1; }
+
+/* Not good
+ion-content.px-center {
+  display: -webkit-box;
+  display: -moz-box;
+  display: -ms-flexbox;
+  display: -webkit-flex;
+  display: flex;
+  -webkit-box-direction: normal;
+  -moz-box-direction: normal;
+  -webkit-box-orient: horizontal;
+  -moz-box-orient: horizontal;
+  -webkit-flex-direction: row;
+  -ms-flex-direction: row;
+  flex-direction: row;
+  -webkit-flex-wrap: nowrap;
+  -ms-flex-wrap: nowrap;
+  flex-wrap: nowrap;
+  -webkit-box-pack: center;
+  -moz-box-pack: center;
+  -webkit-justify-content: center;
+  -ms-flex-pack: center;
+  justify-content: center;
+  -webkit-align-content: stretch;
+  -ms-flex-line-pack: stretch;
+  align-content: stretch;
+  -webkit-box-align: center;
+  -moz-box-align: center;
+  -webkit-align-items: center;
+  -ms-flex-align: center;
+  align-items: center;
+}
+*/

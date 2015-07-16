@@ -6,13 +6,49 @@
       rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0);
       return moment() > rDate;
     };
-  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, vendor_id, $cordovaToast) {
-    var callbacks, refreshData, res, urls;
+  }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, pxUserCred, $ionicScrollDelegate) {
+    var callbacks, res, update, updater, vendor_id;
+    vendor_id = 0;
+    callbacks = [];
+    updater = function() {};
+    update = function() {
+      return $http.get(pxApiEndpoints.badge + "/" + vendor_id);
+    };
+    res = {
+      register: function(receiver) {
+        return callbacks.push(receiver);
+      },
+      setUpdater: function(receiver) {
+        return updater = receiver;
+      },
+      refresh: function() {
+        var call, i, len;
+        for (i = 0, len = callbacks.length; i < len; i++) {
+          call = callbacks[i];
+          call();
+        }
+        $ionicScrollDelegate.scrollTop();
+        return update().success(function(obj) {
+          return updater(obj);
+        });
+      }
+    };
+    pxUserCred.register(function(id) {
+      vendor_id = id;
+      return res.refresh();
+    });
+    return res;
+  }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) {
+    var callbacks, refreshData, res, urls, vendor_id;
+    vendor_id = 0;
+    pxUserCred.register(function(id, name) {
+      return vendor_id = parseInt(id);
+    });
     urls = {
-      pending: pxApiEndpoints.get + "/pending/" + vendor_id,
-      used: pxApiEndpoints.get + "/used/" + vendor_id,
-      expired: pxApiEndpoints.get + "/expired/" + vendor_id,
-      disputed: pxApiEndpoints.get + "/disputed/" + vendor_id
+      pending: pxApiEndpoints.get + "/pending/",
+      used: pxApiEndpoints.get + "/used/",
+      expired: pxApiEndpoints.get + "/expired/",
+      disputed: pxApiEndpoints.get + "/disputed/"
     };
     callbacks = {};
     refreshData = {
@@ -39,7 +75,7 @@
       },
       apiGet: function(key) {
         console.log("GET for " + key);
-        res = $http.get(urls[key]).success(function(sdata) {
+        res = $http.get(urls[key] + vendor_id).success(function(sdata) {
           if (!sdata.error) {
             refreshData[key].total = sdata.total_pages;
             refreshData[key].page = sdata.page;
@@ -53,7 +89,7 @@
       apiMore: function(key) {
         if (refreshData[key].page < refreshData[key].total) {
           refreshData[key].page += 1;
-          res = $http.get(urls[key] + "?page=" + refreshData[key].page).success(function(sdata) {
+          res = $http.get("" + urls[key] + vendor_id + "?page=" + refreshData[key].page).success(function(sdata) {
             if (!sdata.error) {
               return callbacks[key](sdata.data, true);
             }
@@ -69,7 +105,8 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function(data) {
+        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function(data) {
+          $log.info("Bill submitted successfully: " + JSON.stringify(data));
           return $cordovaToast.show("Bill submitted successfully", "short", "center");
         });
         return res;
@@ -81,33 +118,105 @@
         });
       }
     };
-  }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, vendor_id) {
-    var callbacks, res, updater, url;
-    url = pxApiEndpoints.badge + "/" + vendor_id;
-    callbacks = {};
-    updater = {};
-    return res = {
-      update: function() {
-        return $http.get(url);
-      },
-      setCallBack: function(key, receiver) {
-        return callbacks[key] = receiver;
-      },
-      setUpdater: function(receiver) {
-        return updater = receiver;
-      },
-      refresh: function() {
-        var k, v;
-        for (k in callbacks) {
-          v = callbacks[k];
-          v();
-        }
-        return updater();
-      },
-      updateAll: function() {
-        return updater();
+  }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
+    var announce, callbacks, changePassword, getCred, isLoggedIn, res, storeCred, userLogin;
+    storeCred = function(vendor, id, username, pass) {
+      var obj;
+      obj = {
+        vendor_name: vendor,
+        username: username,
+        vendor_id: id,
+        password: pass
+      };
+      return $window.localStorage['perkkx_creds'] = JSON.stringify(obj);
+    };
+    callbacks = [];
+    isLoggedIn = false;
+    getCred = function() {
+      var d;
+      d = $window.localStorage['perkkx_creds'];
+      if (d) {
+        return JSON.parse(d);
+      } else {
+        return {};
       }
     };
+    announce = function() {
+      var call, d, i, len, results;
+      d = getCred();
+      if (d.hasOwnProperty('vendor_id')) {
+        isLoggedIn = true;
+        results = [];
+        for (i = 0, len = callbacks.length; i < len; i++) {
+          call = callbacks[i];
+          results.push(call(d.vendor_id, d.vendor_name, d.username));
+        }
+        return results;
+      }
+    };
+    userLogin = function(user, pass) {
+      return $http.post(pxApiEndpoints.loginProxy, {
+        mode: "login",
+        username: user,
+        password: pass
+      });
+    };
+    changePassword = function(user, pass_old, pass_new) {
+      return $http.post(pxApiEndpoints.loginProxy, {
+        mode: "change_pass",
+        username: user,
+        password: pass_new,
+        password_old: pass_old
+      });
+    };
+    return res = {
+      confirmCreds: function(callback) {
+        var d;
+        d = getCred();
+        if (d.hasOwnProperty('vendor_id')) {
+          return userLogin(d.username, d.password).success(function(data) {
+            callback(data.result);
+            announce();
+            return $log.info("Got login data: " + JSON.stringify(data));
+          });
+        } else {
+          return callback(false);
+        }
+      },
+      login: function(username, pass, callback) {
+        return userLogin(username, pass).success(function(data) {
+          if (data.result) {
+            storeCred(data.vendor_name, data.vendor_id, username, pass);
+            announce();
+          }
+          return callback(data.result);
+        });
+      },
+      change_pass: function(username, pass_old, pass_new, callback) {
+        return changePassword(username, pass_old, pass_new).success(function(data) {
+          if (data.result) {
+            delete $window.localStorage['perkkx_creds'];
+          }
+          return callback(data.result);
+        });
+      },
+      register: function(receiver) {
+        callbacks.push(receiver);
+        return announce();
+      },
+      logout: function() {
+        delete $window.localStorage['perkkx_creds'];
+        return isLoggedIn = false;
+      },
+      isLoggedIn: function() {
+        return isLoggedIn;
+      }
+    };
+
+    /* NOTES
+      We can use confirmCreds and wait to clear the splash screen
+      any kind of loading spinners to be handled by the callback functions
+     */
   });
 
 }).call(this);
