@@ -3,7 +3,6 @@
   var hasProp = {}.hasOwnProperty;
 
   angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log, $cordovaToast) {
-    $log.info("initialised login");
     $scope.data = {
       username: '',
       password: '',
@@ -36,7 +35,7 @@
           $scope.data.username = '';
           $scope.data.password = '';
           $state.go('tab.redeem');
-          return $cordovaToast.show("Login successfully", "short", "bottom");
+          return $cordovaToast.show("Login success", "short", "bottom");
         }
       });
     };
@@ -81,7 +80,7 @@
             $scope.state.error = false;
             clear();
             $state.go('login');
-            return $cordovaToast.show("Password changed successfully, please login", "short", "bottom");
+            return $cordovaToast.show("Password changed successfully, please login", "long", "bottom");
           }
         });
       } else {

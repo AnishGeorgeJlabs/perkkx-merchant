@@ -1,6 +1,5 @@
 angular.module 'perkkx.controllers', []
 .controller 'LoginCtrl', ($scope, $state, pxUserCred, $log, $cordovaToast) ->
-  $log.info "initialised login"
   $scope.data =
     username: ''
     password: ''
@@ -33,7 +32,7 @@ angular.module 'perkkx.controllers', []
         $scope.data.username = ''
         $scope.data.password = ''
         $state.go('tab.redeem')
-        $cordovaToast.show "Login successfully", "short", "bottom"
+        $cordovaToast.show "Login success", "short", "bottom"
 
 .controller 'ChangePassCtrl', ($scope, $state, pxUserCred, $log, $cordovaToast) ->
   $scope.data =
@@ -77,7 +76,7 @@ angular.module 'perkkx.controllers', []
           $scope.state.error = false
           clear()
           $state.go('login')
-          $cordovaToast.show "Password changed successfully, please login", "short", "bottom"
+          $cordovaToast.show "Password changed successfully, please login", "long", "bottom"
     else
       $scope.state.isLoading = false
       $scope.state.error = true

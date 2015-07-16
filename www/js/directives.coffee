@@ -16,18 +16,13 @@ angular.module 'perkkx.directives', []
     submitObj: '=submitObj'
     defPaid: '=defaultPaid'
     defDiscount: '=defaultDiscount'
-    slider: '=slider'
     scrollBack: '=scrollBack'
   compile: (elem, attr) ->
     # attr.defaultPaid = '0' if not attr.defaultPaid
     # attr.defaultDiscount = '0' if not attr.defaultDiscount
-    attr.slider = 'true' if not attr.slider
     attr.scrollBack = 'false' if not attr.scrollBack
 
-  controller: ($scope, pxDateCheck, $log, $ionicPopup, $ionicScrollDelegate) ->
-
-    $scope.sliderCheck = () ->
-      $scope.slider and pxDateCheck $scope.submitObj.used_on
+  controller: ($scope, $log, $ionicPopup, $ionicScrollDelegate) ->
 
     $scope.dealOptsCheck = () ->
       $scope.submitObj.hasOwnProperty('dealOpts')
@@ -46,7 +41,6 @@ angular.module 'perkkx.directives', []
     cleanup = () ->
       $scope.paid = parseInt $scope.defPaid
       $scope.discount = parseInt $scope.defDiscount
-      $scope.invalid = false
 
     cleanup()
 
@@ -56,8 +50,7 @@ angular.module 'perkkx.directives', []
       cleanup()
 
     $scope.validate = () ->
-        result = $scope.invalid or
-          ($scope.paid > 0 and $scope.discount > 0)
+        result = $scope.paid > 0 and $scope.discount > 0
 
         $ionicPopup.alert({
           title: 'Unable to submit'
@@ -72,21 +65,14 @@ angular.module 'perkkx.directives', []
       $ionicScrollDelegate.scrollTop() if $scope.scrollBack
 
       res =
-        if $scope.invalid
-          status: 'expired'
-        else
-          status: 'used'
-          paid: parseInt($scope.paid)
-          discount: parseInt($scope.discount)
+        paid: parseInt($scope.paid)
+        discount: parseInt($scope.discount)
 
       res.submitted_on = parseInt( Date.now() )
       if $scope.dealOptsCheck()   # extraodinary case
-        $log.debug("submitting for bill #{JSON.stringify($scope.data.selectedOpt)}")
         res.used_on = $scope.submitObj.used_on
-        # add the correct cID according to the radio button selected
-        res.cID = $scope.data.selectedOpt.cID
+        res.cID = $scope.data.selectedOpt.cID       # add the correct cID according to the radio button selected
       else
-        $log.debug("no dealOpts")
         res.cID = $scope.submitObj.cID      # Normal cases
 
       if $scope.submitObj.hasOwnProperty('cID')
@@ -94,7 +80,6 @@ angular.module 'perkkx.directives', []
       res.rcode = $scope.submitObj.rcode
       res.userID = $scope.submitObj.rcode[0...6]
 
-      $log.debug "submitting, #{$scope.submitObj.cID} #{JSON.stringify(res)}"
       cleanup()
       $scope.submitFunc res
   templateUrl: 'directives/bill-form.html'

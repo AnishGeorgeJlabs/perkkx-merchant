@@ -20,22 +20,15 @@
         submitObj: '=submitObj',
         defPaid: '=defaultPaid',
         defDiscount: '=defaultDiscount',
-        slider: '=slider',
         scrollBack: '=scrollBack'
       },
       compile: function(elem, attr) {
-        if (!attr.slider) {
-          attr.slider = 'true';
-        }
         if (!attr.scrollBack) {
           return attr.scrollBack = 'false';
         }
       },
-      controller: function($scope, pxDateCheck, $log, $ionicPopup, $ionicScrollDelegate) {
+      controller: function($scope, $log, $ionicPopup, $ionicScrollDelegate) {
         var cleanup;
-        $scope.sliderCheck = function() {
-          return $scope.slider && pxDateCheck($scope.submitObj.used_on);
-        };
         $scope.dealOptsCheck = function() {
           return $scope.submitObj.hasOwnProperty('dealOpts');
         };
@@ -51,8 +44,7 @@
         });
         cleanup = function() {
           $scope.paid = parseInt($scope.defPaid);
-          $scope.discount = parseInt($scope.defDiscount);
-          return $scope.invalid = false;
+          return $scope.discount = parseInt($scope.defDiscount);
         };
         cleanup();
         $scope.cancel = function() {
@@ -64,7 +56,7 @@
         };
         $scope.validate = function() {
           var result;
-          result = $scope.invalid || ($scope.paid > 0 && $scope.discount > 0);
+          result = $scope.paid > 0 && $scope.discount > 0;
           if (!result) {
             $ionicPopup.alert({
               title: 'Unable to submit',
@@ -80,20 +72,15 @@
           if ($scope.scrollBack) {
             $ionicScrollDelegate.scrollTop();
           }
-          res = $scope.invalid ? {
-            status: 'expired'
-          } : {
-            status: 'used',
+          res = {
             paid: parseInt($scope.paid),
             discount: parseInt($scope.discount)
           };
           res.submitted_on = parseInt(Date.now());
           if ($scope.dealOptsCheck()) {
-            $log.debug("submitting for bill " + (JSON.stringify($scope.data.selectedOpt)));
             res.used_on = $scope.submitObj.used_on;
             res.cID = $scope.data.selectedOpt.cID;
           } else {
-            $log.debug("no dealOpts");
             res.cID = $scope.submitObj.cID;
           }
           if ($scope.submitObj.hasOwnProperty('cID')) {
@@ -101,7 +88,6 @@
           }
           res.rcode = $scope.submitObj.rcode;
           res.userID = $scope.submitObj.rcode.slice(0, 6);
-          $log.debug("submitting, " + $scope.submitObj.cID + " " + (JSON.stringify(res)));
           cleanup();
           return $scope.submitFunc(res);
         };
