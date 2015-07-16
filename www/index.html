@@ -60,6 +60,10 @@
               <i class="icon ion-log-out"></i>
               Logout
             </a>
+            <a class="item item-icon-left" ng-click="change_pass()" href="#">
+              <i class="icon ion-ios-gear"></i>
+              Change Password
+            </a>
           </div>
 
           <div class="list list-inset" ng-if="!state.registered">
@@ -80,8 +84,6 @@
                     ng-show="state.sideBar"
                     ng-click="menu()"></button>
           </ion-nav-buttons>
-          <ion-nav-back-button>
-          </ion-nav-back-button>
         </ion-nav-bar>
 
         <ion-nav-view></ion-nav-view>   <!-- Views will be rendered here -->

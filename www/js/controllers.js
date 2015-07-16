@@ -3,6 +3,7 @@
   var hasProp = {}.hasOwnProperty;
 
   angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log) {
+    $log.info("initialised login");
     $scope.data = {
       username: '',
       password: '',
@@ -30,17 +31,52 @@
         if (!res) {
           $scope.state.error = true;
           $scope.state.loginPage = true;
-          if (!res.hasOwnProperty('error')) {
-            return $scope.data.error = "Login failed";
-          } else {
-            return $scope.data.error = "Server error: " + res.error;
-          }
+          return $scope.data.error = "Login failed";
         } else {
           $state.go('tab.redeem');
           $scope.data.username = '';
           return $scope.data.password = '';
         }
       });
+    };
+  }).controller('ChangePassCtrl', function($scope, $state, pxUserCred, $log) {
+    var validate;
+    $scope.data = {
+      username: '',
+      password_old: '',
+      password_new: '',
+      password_new_rep: '',
+      error: ''
+    };
+    $scope.state = {
+      error: false,
+      isLoading: false
+    };
+    pxUserCred.register(function(id, vname, username) {
+      return $scope.data.username = username;
+    });
+    validate = function() {
+      return $scope.data.username !== '' && $scope.data.password_old !== '' && $scope.data.password_new !== '' && $scope.data.password_new === $scope.data.password_new_rep;
+    };
+    return $scope.submit = function() {
+      $scope.state.isLoading = true;
+      if (validate()) {
+        return pxUserCred.change_pass($scope.data.username, $scope.data.password_old, $scope.data.password_new, function(res) {
+          $scope.state.isLoading = false;
+          if (!res) {
+            $scope.state.error = true;
+            return $scope.data.error = "Password change failed";
+          } else {
+            $scope.state.error = false;
+            return $state.go('login');
+          }
+        });
+      } else {
+        $scope.state.isLoading = false;
+        $scope.state.error = true;
+        $scope.data.error = "the passwords do not match";
+        return $log.debug("change pass: " + (JSON.stringify($scope.data)));
+      }
     };
   }).controller('MainCtrl', function($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) {
     var callback;
@@ -91,11 +127,15 @@
       $scope.data.username = username;
       return $scope.state.registered = true;
     });
-    return $scope.logout = function() {
+    $scope.logout = function() {
       $scope.state.registered = false;
       $ionicSideMenuDelegate.toggleLeft(false);
       pxUserCred.logout();
       return $state.go('login');
+    };
+    return $scope.change_pass = function() {
+      $ionicSideMenuDelegate.toggleLeft(false);
+      return $state.go('change_pass');
     };
   }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
 

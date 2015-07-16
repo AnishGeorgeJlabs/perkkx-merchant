@@ -161,11 +161,11 @@
         password: pass
       });
     };
-    changePassword = function(user, pass, pass_old) {
-      return $http.post(pxApiEndpoints.login, {
+    changePassword = function(user, pass_old, pass_new) {
+      return $http.post(pxApiEndpoints.loginProxy, {
         mode: "change_pass",
         username: user,
-        password: pass,
+        password: pass_new,
         password_old: pass_old
       });
     };
@@ -188,6 +188,14 @@
           if (data.result) {
             storeCred(data.vendor_name, data.vendor_id, username, pass);
             announce();
+          }
+          return callback(data.result);
+        });
+      },
+      change_pass: function(username, pass_old, pass_new, callback) {
+        return changePassword(username, pass_old, pass_new).success(function(data) {
+          if (data.result) {
+            delete $window.localStorage['perkkx_creds'];
           }
           return callback(data.result);
         });

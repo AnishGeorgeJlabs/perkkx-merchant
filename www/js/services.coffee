@@ -122,8 +122,8 @@ angular.module 'perkkx.services', []
   userLogin = (user, pass) ->
     $http.post pxApiEndpoints.loginProxy, {mode: "login", username: user, password: pass}      # Just to be safe
 
-  changePassword = (user, pass, pass_old) ->
-    $http.post pxApiEndpoints.login, {mode: "change_pass", username: user , password: pass, password_old: pass_old}
+  changePassword = (user, pass_old, pass_new) ->
+    $http.post pxApiEndpoints.loginProxy, {mode: "change_pass", username: user , password: pass_new, password_old: pass_old}
 
   res =
     confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false
@@ -141,6 +141,13 @@ angular.module 'perkkx.services', []
         if data.result
           storeCred(data.vendor_name, data.vendor_id, username, pass)
           announce()
+        callback(data.result)
+
+
+    change_pass: (username, pass_old, pass_new, callback) ->
+      changePassword(username, pass_old, pass_new).success (data) ->
+        if data.result
+          delete $window.localStorage['perkkx_creds']
         callback(data.result)
 
     register: (receiver) ->       # Will take vendor_id, and vendor_name

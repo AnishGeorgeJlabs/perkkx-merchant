@@ -84,6 +84,11 @@ angular.module('perkkx', ['ionic', 'ngCordova', 'perkkx.controllers', 'perkkx.se
     url: '/login',
     templateUrl: 'templates/login.html',
     controller: 'LoginCtrl'
+  })
+  .state('change_pass',{
+    url: '/change_pass',
+    templateUrl: 'templates/change_pass.html',
+    controller: 'ChangePassCtrl'
   });
       /*
       .state('tab.expired', {

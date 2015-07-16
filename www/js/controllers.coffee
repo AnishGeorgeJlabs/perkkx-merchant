@@ -1,5 +1,6 @@
 angular.module 'perkkx.controllers', []
 .controller 'LoginCtrl', ($scope, $state, pxUserCred, $log) ->
+  $log.info "initialised login"
   $scope.data =
     username: ''
     password: ''
@@ -27,14 +28,47 @@ angular.module 'perkkx.controllers', []
       if not res
         $scope.state.error = true
         $scope.state.loginPage = true
-        if not res.hasOwnProperty('error')
-          $scope.data.error = "Login failed"
-        else
-          $scope.data.error = "Server error: "+res.error
+        $scope.data.error = "Login failed"
       else
         $state.go('tab.redeem')
         $scope.data.username = ''
         $scope.data.password = ''
+
+.controller 'ChangePassCtrl', ($scope, $state, pxUserCred, $log) ->
+  $scope.data =
+    username: ''
+    password_old: ''
+    password_new: ''
+    password_new_rep: ''
+    error: ''
+
+  $scope.state =
+    error: false
+    isLoading: false
+
+  pxUserCred.register (id, vname, username) ->
+    $scope.data.username = username
+
+  validate = () ->
+    $scope.data.username != '' and $scope.data.password_old != '' and
+      $scope.data.password_new != '' and $scope.data.password_new == $scope.data.password_new_rep
+
+  $scope.submit = () ->
+    $scope.state.isLoading = true
+    if validate()
+      pxUserCred.change_pass $scope.data.username, $scope.data.password_old, $scope.data.password_new, (res) ->
+        $scope.state.isLoading = false
+        if not res
+          $scope.state.error = true
+          $scope.data.error = "Password change failed"
+        else
+          $scope.state.error = false
+          $state.go('login')
+    else
+      $scope.state.isLoading = false
+      $scope.state.error = true
+      $scope.data.error = "the passwords do not match"
+      $log.debug "change pass: #{JSON.stringify($scope.data)}"
 
 
 .controller 'MainCtrl', ($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) ->
@@ -92,6 +126,10 @@ angular.module 'perkkx.controllers', []
     $ionicSideMenuDelegate.toggleLeft(false)
     pxUserCred.logout()
     $state.go('login')
+
+  $scope.change_pass = () ->
+    $ionicSideMenuDelegate.toggleLeft(false)
+    $state.go('change_pass')
 
 
 .controller 'RedeemCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->

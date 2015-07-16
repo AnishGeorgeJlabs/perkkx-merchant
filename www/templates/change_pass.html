@@ -1,0 +1,38 @@
+<ion-view view-title="Change Password" hide-nav-bar="false">
+    <ion-content class="has-header padding" scroll="false">
+        <div class="list list-inset list-borderless">
+            <div class="item item-image">
+                <img src="img/header.png" class="px-main-logo">
+            </div>
+        </div>
+        <div class="list list-inset">
+            <label class="item item-input">
+                <span class="input-label">Username</span>
+                <input type="text" placeholder="Enter username" ng-model="data.username" ng-disabled="true">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">Old Password</span>
+                <input type="password" placeholder="Enter password" ng-model="data.password_old">
+            </label>
+            <label class="item item-divider item-input">
+                <span class="input-label">New Password</span>
+                <input type="password" placeholder="Enter password" ng-model="data.password_new">
+            </label>
+            <label class="item item-input">
+                <span class="input-label">New Password</span>
+                <input type="password" placeholder="Repeat new password" ng-model="data.password_new_rep">
+            </label>
+            <button class="item button button-block button-positive" ng-click="submit()">Submit</button>
+        </div>
+        <div ng-show="state.isLoading">
+            <p class="text-center">
+                <ion-spinner></ion-spinner>
+            </p>
+        </div>
+        <div class="list list-inset" ng-if="state.error">
+            <div class="item item-assertive">
+                {{ data.error }}
+            </div>
+        </div>
+    </ion-content>
+</ion-view>
