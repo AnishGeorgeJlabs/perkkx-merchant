@@ -7705,6 +7705,9 @@ a.button {
 .px-bill-input {
   padding-left: 5px !important; }
 
+.item.px-bill-form {
+  padding-left: 0px !important; }
+
 .px-item-content {
   padding-top: 5px !important;
   padding-bottom: 5px !important; }

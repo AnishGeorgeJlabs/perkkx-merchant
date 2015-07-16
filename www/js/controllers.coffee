@@ -1,6 +1,5 @@
 angular.module 'perkkx.controllers', []
 .controller 'LoginCtrl', ($scope, $state, pxUserCred, $log, $cordovaToast) ->
-  $log.info "initialised login"
   $scope.data =
     username: ''
     password: ''
@@ -33,7 +32,7 @@ angular.module 'perkkx.controllers', []
         $scope.data.username = ''
         $scope.data.password = ''
         $state.go('tab.redeem')
-        $cordovaToast.show "Login successfully", "short", "bottom"
+        $cordovaToast.show "Login success", "short", "bottom"
 
 .controller 'ChangePassCtrl', ($scope, $state, pxUserCred, $log, $cordovaToast) ->
   $scope.data =
@@ -77,7 +76,7 @@ angular.module 'perkkx.controllers', []
           $scope.state.error = false
           clear()
           $state.go('login')
-          $cordovaToast.show "Password changed successfully, please login", "short", "bottom"
+          $cordovaToast.show "Password changed successfully, please login", "long", "bottom"
     else
       $scope.state.isLoading = false
       $scope.state.error = true
@@ -120,13 +119,10 @@ angular.module 'perkkx.controllers', []
 
 .controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate)->
 
-  $scope.state =
-    registered: false
-
   $scope.data =
     title: "Perkkx"
-    vendor_id: ''
     vendor_name: ''
+    username: ''
 
   pxUserCred.register (id, name, username) ->
     $scope.data.vendor_id = id
@@ -136,7 +132,6 @@ angular.module 'perkkx.controllers', []
 
 
   $scope.logout = () ->
-    $scope.state.registered = false
     $ionicSideMenuDelegate.toggleLeft(false)
     pxUserCred.logout()
     $state.go('login')
@@ -146,7 +141,7 @@ angular.module 'perkkx.controllers', []
     $state.go('change_pass')
 
 
-.controller 'RedeemCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
+.controller 'RedeemCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider, pxUserCred) ->
   ###
     Controller for the first tab,
     used to search for the coupon and showing the deal
@@ -202,6 +197,8 @@ angular.module 'perkkx.controllers', []
       $scope.clearInput()   # also clears state
       pxBadgeProvider.refresh()
 
+  pxUserCred.register () ->
+    $scope.clearInput()
 
   # -------- Watchers ------------- #
   # JUST to get the input size limit working
