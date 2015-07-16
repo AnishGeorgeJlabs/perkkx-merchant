@@ -6,7 +6,7 @@
       rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0);
       return moment() > rDate;
     };
-  }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, pxUserCred) {
+  }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, pxUserCred, $ionicScrollDelegate) {
     var callbacks, res, update, updater, vendor_id;
     vendor_id = 0;
     pxUserCred.register(function(id) {
@@ -30,6 +30,7 @@
           call = callbacks[i];
           call();
         }
+        $ionicScrollDelegate.scrollTop();
         return update().success(function(obj) {
           return updater(obj);
         });

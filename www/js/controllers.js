@@ -42,7 +42,7 @@
         }
       });
     };
-  }).controller('MainCtrl', function($scope, $state, pxUserCred, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) {
+  }).controller('MainCtrl', function($scope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) {
     var callback;
     $scope.badges = {
       used: 0,
@@ -68,15 +68,7 @@
     return pxUserCred.register(function() {
       return pxBadgeProvider.refresh();
     });
-
-    /*
-    $scope.checkLogin = () ->
-      $log.debug "checking login"
-      if not pxUserCred.isLoggedIn()
-        $log.debug "not logged in"
-        $state.go('login')
-     */
-  }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate, $window) {
+  }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
     $scope.state = {
       registered: false
     };

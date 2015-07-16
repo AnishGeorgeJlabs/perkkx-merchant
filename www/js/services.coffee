@@ -6,7 +6,7 @@ angular.module 'perkkx.services', []
     rDate = moment(data).add(1, 'd').hour(5).minute(0).second(0)
     return moment() > rDate
 
-.factory 'pxBadgeProvider', ($http, $log, pxApiEndpoints, pxUserCred) ->
+.factory 'pxBadgeProvider', ($http, $log, pxApiEndpoints, pxUserCred, $ionicScrollDelegate) ->
 # Simple factory for badge work
 
   vendor_id = 0
@@ -28,6 +28,7 @@ angular.module 'perkkx.services', []
 
     refresh: () ->
       call() for call in callbacks
+      $ionicScrollDelegate.scrollTop()
       update().success (obj) -> updater(obj)
 
 .factory 'pxApiConnect', ($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) ->

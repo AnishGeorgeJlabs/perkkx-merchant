@@ -37,7 +37,7 @@ angular.module 'perkkx.controllers', []
         $scope.data.password = ''
 
 
-.controller 'MainCtrl', ($scope, $state, pxUserCred, pxBadgeProvider, $log, $rootScope, $ionicSideMenuDelegate) ->
+.controller 'MainCtrl', ($scope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) ->
   # --- Private --------------- #
   $scope.badges =
     used: 0
@@ -61,15 +61,8 @@ angular.module 'perkkx.controllers', []
   pxUserCred.register () ->
     pxBadgeProvider.refresh()
 
-  ###
-  $scope.checkLogin = () ->
-    $log.debug "checking login"
-    if not pxUserCred.isLoggedIn()
-      $log.debug "not logged in"
-      $state.go('login')
-  ###
 
-.controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate, $window) ->
+.controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate)->
 
   $scope.state =
     registered: false
