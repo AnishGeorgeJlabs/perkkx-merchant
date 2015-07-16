@@ -119,13 +119,10 @@ angular.module 'perkkx.controllers', []
 
 .controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate)->
 
-  $scope.state =
-    registered: false
-
   $scope.data =
     title: "Perkkx"
-    vendor_id: ''
     vendor_name: ''
+    username: ''
 
   pxUserCred.register (id, name, username) ->
     $scope.data.vendor_id = id
@@ -135,7 +132,6 @@ angular.module 'perkkx.controllers', []
 
 
   $scope.logout = () ->
-    $scope.state.registered = false
     $ionicSideMenuDelegate.toggleLeft(false)
     pxUserCred.logout()
     $state.go('login')
@@ -145,7 +141,7 @@ angular.module 'perkkx.controllers', []
     $state.go('change_pass')
 
 
-.controller 'RedeemCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider) ->
+.controller 'RedeemCtrl', ($log, $scope, pxApiConnect, pxBadgeProvider, pxUserCred) ->
   ###
     Controller for the first tab,
     used to search for the coupon and showing the deal
@@ -201,6 +197,8 @@ angular.module 'perkkx.controllers', []
       $scope.clearInput()   # also clears state
       pxBadgeProvider.refresh()
 
+  pxUserCred.register () ->
+    $scope.clearInput()
 
   # -------- Watchers ------------- #
   # JUST to get the input size limit working

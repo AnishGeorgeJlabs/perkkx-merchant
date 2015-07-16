@@ -125,13 +125,10 @@
       }
     });
   }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
-    $scope.state = {
-      registered: false
-    };
     $scope.data = {
       title: "Perkkx",
-      vendor_id: '',
-      vendor_name: ''
+      vendor_name: '',
+      username: ''
     };
     pxUserCred.register(function(id, name, username) {
       $scope.data.vendor_id = id;
@@ -140,7 +137,6 @@
       return $scope.state.registered = true;
     });
     $scope.logout = function() {
-      $scope.state.registered = false;
       $ionicSideMenuDelegate.toggleLeft(false);
       pxUserCred.logout();
       return $state.go('login');
@@ -149,7 +145,7 @@
       $ionicSideMenuDelegate.toggleLeft(false);
       return $state.go('change_pass');
     };
-  }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider) {
+  }).controller('RedeemCtrl', function($log, $scope, pxApiConnect, pxBadgeProvider, pxUserCred) {
 
     /*
       Controller for the first tab,
@@ -207,6 +203,9 @@
         return pxBadgeProvider.refresh();
       });
     };
+    pxUserCred.register(function() {
+      return $scope.clearInput();
+    });
     return $scope.$watch(function() {
       return $scope.data.rcode;
     }, function(new_val, old_val) {
