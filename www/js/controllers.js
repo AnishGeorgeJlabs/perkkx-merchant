@@ -4,7 +4,7 @@
 
   angular.module('perkkx.controllers', []).controller('LoginCtrl', function($scope, $state, pxUserCred, $log) {
     $scope.data = {
-      vendor_id: null,
+      username: '',
       password: '',
       error: ""
     };
@@ -25,7 +25,7 @@
     return $scope.submit = function() {
       $scope.state.isLoading = true;
       $scope.state.error = false;
-      return pxUserCred.login($scope.data.vendor_id, $scope.data.password, function(res) {
+      return pxUserCred.login($scope.data.username, $scope.data.password, function(res) {
         $scope.state.isLoading = false;
         if (!res) {
           $scope.state.error = true;
@@ -37,7 +37,7 @@
           }
         } else {
           $state.go('tab.redeem');
-          $scope.data.vendor_id = null;
+          $scope.data.username = '';
           return $scope.data.password = '';
         }
       });
@@ -64,10 +64,7 @@
     $scope.menu = function() {
       return $ionicSideMenuDelegate.toggleLeft();
     };
-    pxBadgeProvider.setUpdater(callback);
-    return pxUserCred.register(function() {
-      return pxBadgeProvider.refresh();
-    });
+    return pxBadgeProvider.setUpdater(callback);
   }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
     $scope.state = {
       registered: false
@@ -77,9 +74,10 @@
       vendor_id: '',
       vendor_name: ''
     };
-    pxUserCred.register(function(id, name) {
+    pxUserCred.register(function(id, name, username) {
       $scope.data.vendor_id = id;
       $scope.data.vendor_name = name;
+      $scope.data.username = username;
       return $scope.state.registered = true;
     });
     return $scope.logout = function() {

@@ -10,16 +10,13 @@ angular.module 'perkkx.services', []
 # Simple factory for badge work
 
   vendor_id = 0
-  pxUserCred.register (id) ->
-    vendor_id = id
 
   callbacks = []
-  updater = (obj) ->
+  updater = () ->
 
   update = () -> return $http.get "#{pxApiEndpoints.badge}/#{vendor_id}"
 
   res =
-
     register: (receiver) ->
       callbacks.push(receiver)
 
@@ -30,6 +27,12 @@ angular.module 'perkkx.services', []
       call() for call in callbacks
       $ionicScrollDelegate.scrollTop()
       update().success (obj) -> updater(obj)
+
+  pxUserCred.register (id) ->
+    vendor_id = id
+    res.refresh()
+
+  return res
 
 .factory 'pxApiConnect', ($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) ->
   # Api connection for the main get and post methods
@@ -93,10 +96,10 @@ angular.module 'perkkx.services', []
 
 
 .factory 'pxUserCred', ($window, $http, pxApiEndpoints, $log) ->
-  $log.info "pxUserInitialized"
-  storeCred = (vendor, id, pass) ->
+  storeCred = (vendor, id, username, pass) ->
     obj =
       vendor_name: vendor
+      username: username
       vendor_id: id          # Not sure if it is vendor_id or username
       password: pass
     $window.localStorage['perkkx_creds'] = JSON.stringify(obj)
@@ -114,29 +117,29 @@ angular.module 'perkkx.services', []
     d = getCred()
     if d.hasOwnProperty('vendor_id')
       isLoggedIn = true
-      call(d.vendor_id, d.vendor_name) for call in callbacks
+      call(d.vendor_id, d.vendor_name, d.username) for call in callbacks
 
   userLogin = (user, pass) ->
-    $http.post pxApiEndpoints.loginProxy, {mode: "login", vendor_id: parseInt(user), password: pass}      # Just to be safe
+    $http.post pxApiEndpoints.loginProxy, {mode: "login", username: user, password: pass}      # Just to be safe
 
   changePassword = (user, pass, pass_old) ->
-    $http.post pxApiEndpoints.login, {mode: "change_pass", vendor_id: parseInt(user), password: pass, password_old: pass_old}
+    $http.post pxApiEndpoints.login, {mode: "change_pass", username: user , password: pass, password_old: pass_old}
 
   res =
     confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false
       d = getCred()
       if d.hasOwnProperty('vendor_id')
-        userLogin(d.vendor_id, d.password).success (data) ->
+        userLogin(d.username, d.password).success (data) ->
           callback(data.result)
           announce()
           $log.info "Got login data: "+JSON.stringify(data)
       else
         callback(false)
 
-    login: (id, pass, callback) ->        # Do a login taking things from the login page
-      userLogin(id, pass).success (data) ->
+    login: (username, pass, callback) ->        # Do a login taking things from the login page
+      userLogin(username, pass).success (data) ->
         if data.result
-          storeCred(data.vendor_name, id, pass)
+          storeCred(data.vendor_name, data.vendor_id, username, pass)
           announce()
         callback(data.result)
 

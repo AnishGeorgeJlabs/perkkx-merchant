@@ -1,7 +1,7 @@
 angular.module 'perkkx.controllers', []
 .controller 'LoginCtrl', ($scope, $state, pxUserCred, $log) ->
   $scope.data =
-    vendor_id: null
+    username: ''
     password: ''
     error: ""
 
@@ -22,7 +22,7 @@ angular.module 'perkkx.controllers', []
   $scope.submit = () ->
     $scope.state.isLoading = true
     $scope.state.error = false
-    pxUserCred.login $scope.data.vendor_id, $scope.data.password, (res) ->
+    pxUserCred.login $scope.data.username, $scope.data.password, (res) ->
       $scope.state.isLoading = false
       if not res
         $scope.state.error = true
@@ -33,7 +33,7 @@ angular.module 'perkkx.controllers', []
           $scope.data.error = "Server error: "+res.error
       else
         $state.go('tab.redeem')
-        $scope.data.vendor_id = null
+        $scope.data.username = ''
         $scope.data.password = ''
 
 
@@ -54,12 +54,8 @@ angular.module 'perkkx.controllers', []
   $scope.menu = () ->
     $ionicSideMenuDelegate.toggleLeft()
 
-
   # --------- Setup ----------- #
   pxBadgeProvider.setUpdater callback
-
-  pxUserCred.register () ->
-    pxBadgeProvider.refresh()
 
 
 .controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate)->
@@ -72,9 +68,10 @@ angular.module 'perkkx.controllers', []
     vendor_id: ''
     vendor_name: ''
 
-  pxUserCred.register (id, name) ->
+  pxUserCred.register (id, name, username) ->
     $scope.data.vendor_id = id
     $scope.data.vendor_name = name
+    $scope.data.username = username
     $scope.state.registered = true
 
 

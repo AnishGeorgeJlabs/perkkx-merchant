@@ -9,15 +9,12 @@
   }).factory('pxBadgeProvider', function($http, $log, pxApiEndpoints, pxUserCred, $ionicScrollDelegate) {
     var callbacks, res, update, updater, vendor_id;
     vendor_id = 0;
-    pxUserCred.register(function(id) {
-      return vendor_id = id;
-    });
     callbacks = [];
-    updater = function(obj) {};
+    updater = function() {};
     update = function() {
       return $http.get(pxApiEndpoints.badge + "/" + vendor_id);
     };
-    return res = {
+    res = {
       register: function(receiver) {
         return callbacks.push(receiver);
       },
@@ -36,6 +33,11 @@
         });
       }
     };
+    pxUserCred.register(function(id) {
+      vendor_id = id;
+      return res.refresh();
+    });
+    return res;
   }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) {
     var callbacks, refreshData, res, urls, vendor_id;
     vendor_id = 0;
@@ -118,11 +120,11 @@
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
     var announce, callbacks, changePassword, getCred, isLoggedIn, res, storeCred, userLogin;
-    $log.info("pxUserInitialized");
-    storeCred = function(vendor, id, pass) {
+    storeCred = function(vendor, id, username, pass) {
       var obj;
       obj = {
         vendor_name: vendor,
+        username: username,
         vendor_id: id,
         password: pass
       };
@@ -147,7 +149,7 @@
         results = [];
         for (i = 0, len = callbacks.length; i < len; i++) {
           call = callbacks[i];
-          results.push(call(d.vendor_id, d.vendor_name));
+          results.push(call(d.vendor_id, d.vendor_name, d.username));
         }
         return results;
       }
@@ -155,14 +157,14 @@
     userLogin = function(user, pass) {
       return $http.post(pxApiEndpoints.loginProxy, {
         mode: "login",
-        vendor_id: parseInt(user),
+        username: user,
         password: pass
       });
     };
     changePassword = function(user, pass, pass_old) {
       return $http.post(pxApiEndpoints.login, {
         mode: "change_pass",
-        vendor_id: parseInt(user),
+        username: user,
         password: pass,
         password_old: pass_old
       });
@@ -172,7 +174,7 @@
         var d;
         d = getCred();
         if (d.hasOwnProperty('vendor_id')) {
-          return userLogin(d.vendor_id, d.password).success(function(data) {
+          return userLogin(d.username, d.password).success(function(data) {
             callback(data.result);
             announce();
             return $log.info("Got login data: " + JSON.stringify(data));
@@ -181,10 +183,10 @@
           return callback(false);
         }
       },
-      login: function(id, pass, callback) {
-        return userLogin(id, pass).success(function(data) {
+      login: function(username, pass, callback) {
+        return userLogin(username, pass).success(function(data) {
           if (data.result) {
-            storeCred(data.vendor_name, id, pass);
+            storeCred(data.vendor_name, data.vendor_id, username, pass);
             announce();
           }
           return callback(data.result);
