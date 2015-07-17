@@ -7,6 +7,9 @@ angular.module 'perkkx.directives', []
     hRedeem: '=redeem'
     hExpiry: '=expiry'
     hBill: '=bill'
+  controller: ($scope) ->
+    $scope.checkExpiry = (ed) ->
+      moment(ed) < moment().add(6, 'M')
 
 .directive 'pxBillForm', () ->
   restrict: 'E'

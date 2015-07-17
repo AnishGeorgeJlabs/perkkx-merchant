@@ -25,6 +25,18 @@
 
 </div>
 <div class="item item-text-wrap px-item-content" ng-if="hRedeem || hExpiry || hBill">
+    <p ng-if="hRedeem" class="px-smaller-text">
+        Redeemed on {{ coupon.used_on | date }}
+    </p>
+    <p ng-if='hExpiry && checkExpiry(coupon.expiry)' class="px-smaller-text assertive">
+        Valid till {{ coupon.expiry | date }}
+    </p>
+    <p ng-if="hBill" class="px-smaller-text">
+        Bill submitted on {{ coupon.submitted_on | date}}
+    </p>
+</div>
+<!--
+<div class="item item-text-wrap px-item-content" ng-if="hRedeem || hExpiry || hBill">
     <div ng-if='hRedeem' class="row px-smaller-text">
         Redeemed on {{ coupon.used_on | date }}
     </div>
@@ -35,3 +47,4 @@
         Bill submitted on {{ coupon.submitted_on | date}}
     </div>
 </div>
+-->

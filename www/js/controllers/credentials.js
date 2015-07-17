@@ -14,11 +14,10 @@
     pxUserCred.confirmCreds(function(res) {
       $log.info("got result for confirmation as : " + res);
       $scope.state.isLoading = false;
-      if (!res) {
-        return $scope.state.loginPage = true;
-      } else {
-        return $state.go('tab.redeem');
+      if (res) {
+        $state.go('tab.redeem');
       }
+      return $scope.state.loginPage = true;
     });
     return $scope.submit = function() {
       $scope.state.isLoading = true;
@@ -27,7 +26,6 @@
         $scope.state.isLoading = false;
         if (!res) {
           $scope.state.error = true;
-          $scope.state.loginPage = true;
           return $scope.data.error = "Login failed";
         } else {
           $scope.data.username = '';

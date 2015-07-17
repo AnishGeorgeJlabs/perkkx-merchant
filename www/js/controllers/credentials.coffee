@@ -13,11 +13,9 @@ angular.module 'perkkx.controllers.credentials', []
   pxUserCred.confirmCreds (res) ->
     $log.info "got result for confirmation as : #{res}"
     $scope.state.isLoading = false
-
-    if not res
-      $scope.state.loginPage = true
-    else
+    if res
       $state.go('tab.redeem')
+    $scope.state.loginPage = true
 
   $scope.submit = () ->
     $scope.state.isLoading = true
@@ -26,7 +24,6 @@ angular.module 'perkkx.controllers.credentials', []
       $scope.state.isLoading = false
       if not res
         $scope.state.error = true
-        $scope.state.loginPage = true
         $scope.data.error = "Login failed"
       else
         $scope.data.username = ''
