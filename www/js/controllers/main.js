@@ -2,7 +2,7 @@
 (function() {
   var hasProp = {}.hasOwnProperty;
 
-  angular.module('perkkx.controllers.main', []).controller('MainCtrl', function($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) {
+  angular.module('perkkx.controllers.main', []).controller('MainCtrl', function($scope, $rootScope, $state, $log, $ionicSideMenuDelegate, $ionicPlatform, $ionicPopup, pxUserCred, pxBadgeProvider) {
 
     /*
       Parent for the view controllers. manages the badges and all for the tabs
@@ -32,7 +32,7 @@
       return $ionicSideMenuDelegate.toggleLeft();
     };
     pxBadgeProvider.setUpdater(callback);
-    return $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       $log.info("Changing state from " + fromState.name + " to " + toState.name);
       if (toState.name === 'login' || toState.name === 'change_pass') {
         return $scope.state.sideBar = false;
@@ -40,6 +40,23 @@
         return $scope.state.sideBar = true;
       }
     });
+    return $ionicPlatform.registerBackButtonAction(function() {
+      if ($state.is('tab.redeem')) {
+        return $ionicPopup.confirm({
+          title: "Exit App",
+          content: "Are you sure you want to exit Perkkx?",
+          okType: 'button-clear button-small button-assertive',
+          okText: 'Exit',
+          cancelType: 'button-clear button-small'
+        }).then(function(result) {
+          if (result) {
+            return navigator.app.exitApp();
+          }
+        });
+      } else {
+        return $state.go('tab.redeem');
+      }
+    }, 120);
   }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
 
     /*

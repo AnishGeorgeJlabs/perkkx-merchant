@@ -12,7 +12,7 @@
     badge: baseUrl + "/count",
     login: baseUrl + "/login",
     loginProxy: "http://localhost:8100/login"
-  }).constant('pxApiEndpointso', {
+  }).constant('pxApiEndpoints_old', {
     checkValid: 'http://localhost:8100/lvalidate',
     post: 'http://localhost:8100/lsubmit',
     postProxy: 'http://localhost:8100/lsubmit',

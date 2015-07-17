@@ -99,7 +99,7 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function(data) {
+        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function(data) {
           $log.info("Bill submitted successfully: " + JSON.stringify(data));
           return $cordovaToast.show("Bill submitted successfully", "short", "center");
         });
@@ -149,14 +149,14 @@
       }
     };
     userLogin = function(user, pass) {
-      return $http.post(pxApiEndpoints.loginProxy, {
+      return $http.post(pxApiEndpoints.login, {
         mode: "login",
         username: user,
         password: pass
       });
     };
     changePassword = function(user, pass_old, pass_new) {
-      return $http.post(pxApiEndpoints.loginProxy, {
+      return $http.post(pxApiEndpoints.login, {
         mode: "change_pass",
         username: user,
         password: pass_new,

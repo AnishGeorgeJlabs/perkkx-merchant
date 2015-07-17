@@ -1,5 +1,7 @@
 angular.module 'perkkx.controllers.main', []
-.controller 'MainCtrl', ($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) ->
+.controller 'MainCtrl', ($scope, $rootScope, $state, $log,
+                         $ionicSideMenuDelegate, $ionicPlatform, $ionicPopup
+                         pxUserCred, pxBadgeProvider ) ->
   ###
     Parent for the view controllers. manages the badges and all for the tabs
   ###
@@ -33,6 +35,21 @@ angular.module 'perkkx.controllers.main', []
     else
       $scope.state.sideBar = true
 
+  $ionicPlatform.registerBackButtonAction () ->
+    if $state.is 'tab.redeem'
+      $ionicPopup.confirm
+        title: "Exit App"
+        content: "Are you sure you want to exit Perkkx?"
+        okType: 'button-clear button-small button-assertive'
+        okText: 'Exit'
+        cancelType: 'button-clear button-small'
+      .then (result) ->
+        if result
+          #$ionicPlatform.exitApp()
+          navigator.app.exitApp()
+    else
+      $state.go 'tab.redeem'
+  , 120
 
 .controller 'SideBarCtrl', ($scope, pxUserCred, $state, $ionicSideMenuDelegate)->
   ###

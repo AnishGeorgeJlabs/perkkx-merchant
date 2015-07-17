@@ -9,7 +9,7 @@ angular.module 'perkkx.constants', []
     login: "#{baseUrl}/login"
     loginProxy: "http://localhost:8100/login"
 
-.constant 'pxApiEndpointso',   # TODO
+.constant 'pxApiEndpoints_old',   # TODO
     checkValid: 'http://localhost:8100/lvalidate',
     post: 'http://localhost:8100/lsubmit',    # Actual Post api
     postProxy: 'http://localhost:8100/lsubmit',    # Actual Post api

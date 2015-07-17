@@ -75,7 +75,7 @@ angular.module 'perkkx.services', []
       else {more: false}
 
     apiSubmit: (data) ->                  # submit bill info
-      res = $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
+      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id}", data       # TODO: change
       .success (data) ->
         $log.info "Bill submitted successfully: "+JSON.stringify(data)
         $cordovaToast.show "Bill submitted successfully", "short", "center"
@@ -113,10 +113,10 @@ angular.module 'perkkx.services', []
       call(d.vendor_id, d.vendor_name, d.username) for call in callbacks
 
   userLogin = (user, pass) ->
-    $http.post pxApiEndpoints.loginProxy, {mode: "login", username: user, password: pass}      # Just to be safe
+    $http.post pxApiEndpoints.login, {mode: "login", username: user, password: pass}      # Just to be safe
 
   changePassword = (user, pass_old, pass_new) ->
-    $http.post pxApiEndpoints.loginProxy, {mode: "change_pass", username: user , password: pass_new, password_old: pass_old}
+    $http.post pxApiEndpoints.login, {mode: "change_pass", username: user , password: pass_new, password_old: pass_old}
 
   res =
     confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false
