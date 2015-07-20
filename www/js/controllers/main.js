@@ -40,7 +40,7 @@
       }
     });
     return $ionicPlatform.registerBackButtonAction(function() {
-      if ($state.is('tab.redeem' || $state.is('login'))) {
+      if ($state.is('tab.redeem') || $state.is('login')) {
         return $ionicPopup.confirm({
           title: "Exit App",
           content: "Are you sure you want to exit Perkkx?",

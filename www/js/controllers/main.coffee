@@ -35,7 +35,7 @@ angular.module 'perkkx.controllers.main', []
       $scope.state.sideBar = true
 
   $ionicPlatform.registerBackButtonAction () ->
-    if $state.is 'tab.redeem' or $state.is 'login'
+    if $state.is('tab.redeem') or $state.is('login')
       $ionicPopup.confirm
         title: "Exit App"
         content: "Are you sure you want to exit Perkkx?"

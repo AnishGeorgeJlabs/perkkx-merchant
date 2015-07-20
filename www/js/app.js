@@ -12,14 +12,14 @@ angular.module('perkkx', ['ionic', 'ngCordova',
 .run(function($ionicPlatform, $ionicPopup, $cordovaNetwork) {
   $ionicPlatform.ready(function() {
     if($cordovaNetwork.isOffline()) {
-      $ionicPopup.confirm({
+      $ionicPopup.alert({
         title: "Internet Disconnected",
-        content: "Perkkx needs an active internet connection to work, please check your connection and relaunch the application"
+        content: "Perkkx needs an active internet connection to work, please check your connection and relaunch the application",
+        okType: 'button-clear button-small button-assertive',
+        cancelType: 'button-clear button-small'
       })
-      .then(function(result) {
-        if(!result) {
-          navigator.app.exitApp()
-        }
+      .then(function() {
+        navigator.app.exitApp()
       });
     }
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
