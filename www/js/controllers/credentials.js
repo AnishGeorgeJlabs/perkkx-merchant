@@ -53,8 +53,8 @@
       error: false,
       isLoading: false
     };
-    pxUserCred.register(function(id, vname, username) {
-      return $scope.data.username = username;
+    pxUserCred.register(function(d) {
+      return $scope.data.username = d.username;
     });
     validate = function() {
       return $scope.data.username !== '' && $scope.data.password_old !== '' && $scope.data.password_new !== '' && $scope.data.password_new === $scope.data.password_new_rep;

@@ -35,8 +35,8 @@
   }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) {
     var callbacks, refreshData, res, urls, vendor_id;
     vendor_id = 0;
-    pxUserCred.register(function(id, name) {
-      return vendor_id = parseInt(id);
+    pxUserCred.register(function(d) {
+      return vendor_id = parseInt(d.vendor_id);
     });
     urls = {
       pending: pxApiEndpoints.get + "/pending/",
@@ -143,7 +143,7 @@
         results = [];
         for (i = 0, len = callbacks.length; i < len; i++) {
           call = callbacks[i];
-          results.push(call(d.vendor_id, d.vendor_name, d.username));
+          results.push(call(d));
         }
         return results;
       }

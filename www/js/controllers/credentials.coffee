@@ -49,8 +49,8 @@ angular.module 'perkkx.controllers.credentials', []
     error: false
     isLoading: false
 
-  pxUserCred.register (id, vname, username) ->
-    $scope.data.username = username
+  pxUserCred.register (d) ->
+    $scope.data.username = d.username
 
   validate = () ->
     $scope.data.username != '' and $scope.data.password_old != '' and

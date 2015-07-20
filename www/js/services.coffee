@@ -31,8 +31,8 @@ angular.module 'perkkx.services', []
   # Api connection for the main get and post methods
 
   vendor_id = 0
-  pxUserCred.register (id, name) ->
-    vendor_id = parseInt(id)    # just to be safe
+  pxUserCred.register (d) ->
+    vendor_id = parseInt(d.vendor_id)    # just to be safe
 
   urls =
     pending: "#{pxApiEndpoints.get}/pending/"
@@ -110,7 +110,7 @@ angular.module 'perkkx.services', []
     d = getCred()
     if d.hasOwnProperty('vendor_id')
       isLoggedIn = true
-      call(d.vendor_id, d.vendor_name, d.username) for call in callbacks
+      call(d) for call in callbacks
 
   userLogin = (user, pass) ->
     $http.post pxApiEndpoints.login, {mode: "login", username: user, password: pass}      # Just to be safe

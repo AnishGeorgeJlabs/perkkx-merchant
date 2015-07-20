@@ -57,14 +57,14 @@ angular.module 'perkkx.controllers.main', []
   ###
   $scope.data =
     title: "Perkkx"
-    vendor_name: ''
-    username: ''
+  #  vendor_name: ''
+  #  username: ''
 
-  pxUserCred.register (id, name, username) ->
-    $scope.data.vendor_id = id
-    $scope.data.vendor_name = name
-    $scope.data.username = username
-    $scope.state.registered = true
+  pxUserCred.register (d) ->
+    $scope.data.vendor_id = d.vendor_id
+    $scope.data.vendor_name = d.vendor_name
+    $scope.data.username = d.username
+    $scope.data.address = d.address      # Might not be there, undefined
 
 
   $scope.logout = () ->

@@ -63,15 +63,13 @@
       Controller for the sidebar
      */
     $scope.data = {
-      title: "Perkkx",
-      vendor_name: '',
-      username: ''
+      title: "Perkkx"
     };
-    pxUserCred.register(function(id, name, username) {
-      $scope.data.vendor_id = id;
-      $scope.data.vendor_name = name;
-      $scope.data.username = username;
-      return $scope.state.registered = true;
+    pxUserCred.register(function(d) {
+      $scope.data.vendor_id = d.vendor_id;
+      $scope.data.vendor_name = d.vendor_name;
+      $scope.data.username = d.username;
+      return $scope.data.address = d.address;
     });
     $scope.logout = function() {
       $ionicSideMenuDelegate.toggleLeft(false);
