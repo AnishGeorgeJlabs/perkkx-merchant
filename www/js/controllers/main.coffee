@@ -29,14 +29,13 @@ angular.module 'perkkx.controllers.main', []
 
   # --------- State checking -- #
   $rootScope.$on '$stateChangeStart', (event, toState, toParams, fromState, fromParams) ->
-    $log.info "Changing state from #{fromState.name} to #{toState.name}"
     if toState.name == 'login' || toState.name == 'change_pass'
       $scope.state.sideBar = false
     else
       $scope.state.sideBar = true
 
   $ionicPlatform.registerBackButtonAction () ->
-    if $state.is 'tab.redeem'
+    if $state.is 'tab.redeem' or $state.is 'login'
       $ionicPopup.confirm
         title: "Exit App"
         content: "Are you sure you want to exit Perkkx?"

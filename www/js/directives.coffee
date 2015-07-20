@@ -42,8 +42,8 @@ angular.module 'perkkx.directives', []
     )
 
     cleanup = () ->
-      $scope.paid = parseInt $scope.defPaid
-      $scope.discount = parseInt $scope.defDiscount
+      $scope.data.paid = parseInt $scope.defPaid
+      $scope.data.discount = parseInt $scope.defDiscount
 
     cleanup()
 
@@ -53,11 +53,11 @@ angular.module 'perkkx.directives', []
       cleanup()
 
     $scope.validate = () ->
-        result = $scope.paid > 0 and $scope.discount > 0
+        result = $scope.data.paid > 0 and $scope.data.discount > 0
 
         $ionicPopup.alert({
           title: 'Unable to submit'
-          template: 'The bill values you entered are invalid'
+          template: "The bill values you entered are invalid: #{$scope.data.paid} and #{$scope.data.discount}"
           okType: 'button-positive button-small button-clear'
         }) if not result
 
@@ -68,8 +68,8 @@ angular.module 'perkkx.directives', []
       $ionicScrollDelegate.scrollTop() if $scope.scrollBack
 
       res =
-        paid: parseInt($scope.paid)
-        discount: parseInt($scope.discount)
+        paid: parseInt($scope.data.paid)
+        discount: parseInt($scope.data.discount)
 
       res.submitted_on = parseInt( Date.now() )
       if $scope.dealOptsCheck()   # extraodinary case

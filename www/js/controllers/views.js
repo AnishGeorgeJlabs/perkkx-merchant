@@ -80,6 +80,7 @@
       return pxApiConnect.apiGet('used');
     };
     $scope.refresh = function() {
+      pxBadgeProvider.updateBadgesOnly();
       return $scope.initGet()["finally"](function() {
         return $scope.$broadcast('scroll.refreshComplete');
       });
@@ -130,6 +131,7 @@
       return pxApiConnect.apiGet('disputed');
     };
     $scope.refresh = function() {
+      pxBadgeProvider.updateBadgesOnly();
       return $scope.initGet()["finally"](function() {
         return $scope.$broadcast('scroll.refreshComplete');
       });

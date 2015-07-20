@@ -33,7 +33,6 @@
     };
     pxBadgeProvider.setUpdater(callback);
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      $log.info("Changing state from " + fromState.name + " to " + toState.name);
       if (toState.name === 'login' || toState.name === 'change_pass') {
         return $scope.state.sideBar = false;
       } else {
@@ -41,7 +40,7 @@
       }
     });
     return $ionicPlatform.registerBackButtonAction(function() {
-      if ($state.is('tab.redeem')) {
+      if ($state.is('tab.redeem' || $state.is('login'))) {
         return $ionicPopup.confirm({
           title: "Exit App",
           content: "Are you sure you want to exit Perkkx?",

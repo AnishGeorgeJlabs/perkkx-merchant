@@ -48,8 +48,8 @@
           }
         });
         cleanup = function() {
-          $scope.paid = parseInt($scope.defPaid);
-          return $scope.discount = parseInt($scope.defDiscount);
+          $scope.data.paid = parseInt($scope.defPaid);
+          return $scope.data.discount = parseInt($scope.defDiscount);
         };
         cleanup();
         $scope.cancel = function() {
@@ -61,11 +61,11 @@
         };
         $scope.validate = function() {
           var result;
-          result = $scope.paid > 0 && $scope.discount > 0;
+          result = $scope.data.paid > 0 && $scope.data.discount > 0;
           if (!result) {
             $ionicPopup.alert({
               title: 'Unable to submit',
-              template: 'The bill values you entered are invalid',
+              template: "The bill values you entered are invalid: " + $scope.data.paid + " and " + $scope.data.discount,
               okType: 'button-positive button-small button-clear'
             });
           }
@@ -78,8 +78,8 @@
             $ionicScrollDelegate.scrollTop();
           }
           res = {
-            paid: parseInt($scope.paid),
-            discount: parseInt($scope.discount)
+            paid: parseInt($scope.data.paid),
+            discount: parseInt($scope.data.discount)
           };
           res.submitted_on = parseInt(Date.now());
           if ($scope.dealOptsCheck()) {

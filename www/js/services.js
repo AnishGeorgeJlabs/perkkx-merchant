@@ -22,9 +22,10 @@
           call();
         }
         $ionicScrollDelegate.scrollTop();
-        return update().success(function(obj) {
-          return updater(obj);
-        });
+        return update().success(updater);
+      },
+      updateBadgesOnly: function() {
+        return update().success(updater);
       }
     };
     pxUserCred.register(function(d) {
@@ -37,7 +38,7 @@
     vendor_id = 0;
     pxUserCred.register(function(d) {
       return vendor_id = parseInt(d.vendor_id);
-    });
+    }, true);
     urls = {
       pending: pxApiEndpoints.get + "/pending/",
       used: pxApiEndpoints.get + "/used/",
@@ -68,7 +69,7 @@
         return callbacks[key] = receiver;
       },
       apiGet: function(key) {
-        console.log("GET for " + key);
+        console.log("GET for " + key + " with vendor: " + vendor_id);
         res = $http.get(urls[key] + vendor_id).success(function(sdata) {
           if (!sdata.error) {
             refreshData[key].total = sdata.total_pages;
@@ -114,8 +115,9 @@
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
     var announce, callbacks, changePassword, getCred, isLoggedIn, res, storeCred, userLogin;
-    storeCred = function(username, data) {
+    storeCred = function(username, pass, data) {
       data['username'] = username;
+      data['password'] = pass;
       return $window.localStorage['perkkx_creds'] = JSON.stringify(data);
     };
     callbacks = [];
@@ -174,7 +176,7 @@
       login: function(username, pass, callback) {
         return userLogin(username, pass).success(function(data) {
           if (data.result) {
-            storeCred(username, data.data);
+            storeCred(username, pass, data.data);
             announce();
           }
           return callback(data.result);
@@ -188,8 +190,12 @@
           return callback(data.result);
         });
       },
-      register: function(receiver) {
-        callbacks.push(receiver);
+      register: function(receiver, priorityFlag) {
+        if (priorityFlag) {
+          callbacks.unshift(receiver);
+        } else {
+          callbacks.push(receiver);
+        }
         return announce();
       },
       logout: function() {

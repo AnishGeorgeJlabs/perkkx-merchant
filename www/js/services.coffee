@@ -19,7 +19,10 @@ angular.module 'perkkx.services', []
     refresh: () ->
       call() for call in callbacks
       $ionicScrollDelegate.scrollTop()
-      update().success (obj) -> updater(obj)
+      update().success updater
+
+    updateBadgesOnly: () ->
+      update().success updater
 
   pxUserCred.register (d) ->
     vendor_id = d.vendor_id
@@ -33,6 +36,7 @@ angular.module 'perkkx.services', []
   vendor_id = 0
   pxUserCred.register (d) ->
     vendor_id = parseInt(d.vendor_id)    # just to be safe
+  , true
 
   urls =
     pending: "#{pxApiEndpoints.get}/pending/"
@@ -53,7 +57,7 @@ angular.module 'perkkx.services', []
       callbacks[key] = receiver
 
     apiGet: (key) ->                    # Get data
-      console.log "GET for #{key}"
+      console.log "GET for #{key} with vendor: #{vendor_id}"
       res = $http.get urls[key] + vendor_id
       .success (sdata) ->
         if not sdata.error
@@ -89,8 +93,9 @@ angular.module 'perkkx.services', []
 
 
 .factory 'pxUserCred', ($window, $http, pxApiEndpoints, $log) ->
-  storeCred = (username, data) ->
+  storeCred = (username, pass, data) ->
     data['username'] = username
+    data['password'] = pass
     $window.localStorage['perkkx_creds'] = JSON.stringify(data)
 
   callbacks = []
@@ -128,7 +133,7 @@ angular.module 'perkkx.services', []
     login: (username, pass, callback) ->        # Do a login taking things from the login page
       userLogin(username, pass).success (data) ->
         if data.result
-          storeCred(username, data.data)
+          storeCred(username, pass, data.data)
           announce()
         callback(data.result)
 
@@ -139,8 +144,11 @@ angular.module 'perkkx.services', []
           delete $window.localStorage['perkkx_creds']
         callback(data.result)
 
-    register: (receiver) ->       # Will take vendor_id, and vendor_name
-      callbacks.push(receiver)
+    register: (receiver, priorityFlag) ->       # Will take vendor_id, and vendor_name
+      if priorityFlag
+        callbacks.unshift(receiver)
+      else
+        callbacks.push(receiver)
       announce()
 
     logout: () ->

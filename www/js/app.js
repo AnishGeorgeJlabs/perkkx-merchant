@@ -9,20 +9,18 @@ angular.module('perkkx', ['ionic', 'ngCordova',
   'perkkx.controllers.main', 'perkkx.controllers.views', 'perkkx.controllers.credentials'
 ])
 
-.run(function($ionicPlatform, $ionicPopup) {
+.run(function($ionicPlatform, $ionicPopup, $cordovaNetwork) {
   $ionicPlatform.ready(function() {
-    if(window.Connection) {
-      if(navigator.connection.type == Connection.NONE) {
-        $ionicPopup.confirm({
-          title: "Internet Disconnected",
-          content: "Perkkx needs an active internet connection to work, please check your connection and relaunch the application"
-        })
-        .then(function(result) {
-          if(!result) {
-            ionic.Platform.exitApp();
-          }
-        });
-      }
+    if($cordovaNetwork.isOffline()) {
+      $ionicPopup.confirm({
+        title: "Internet Disconnected",
+        content: "Perkkx needs an active internet connection to work, please check your connection and relaunch the application"
+      })
+      .then(function(result) {
+        if(!result) {
+          navigator.app.exitApp()
+        }
+      });
     }
     // Hide the accessory bar by default (remove this to show the accessory bar above the keyboard
     // for form inputs)

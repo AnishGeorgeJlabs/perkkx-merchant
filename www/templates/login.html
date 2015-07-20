@@ -5,7 +5,8 @@
                 <img src="img/main_logo.svg" class="px-main-logo">
             </div>
         </div>
-        <div class="list list-inset" ng-if="state.loginPage">
+        <form class="list list-inset" ng-if="state.loginPage"
+              ng-submit="submit()">
             <label class="item item-input">
                 <span class="input-label">Username</span>
                 <input type="text" placeholder="Enter username" ng-model="data.username">
@@ -14,8 +15,8 @@
                 <span class="input-label">Password</span>
                 <input type="password" placeholder="Enter password" ng-model="data.password">
             </label>
-            <button class="item button button-block button-positive" ng-click="submit()">Login</button>
-        </div>
+            <button class="item button button-block button-positive" type="submit">Login</button>
+        </form>
         <div ng-show="state.isLoading">
             <p class="text-center">
                 <ion-spinner></ion-spinner>
