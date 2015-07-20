@@ -7682,6 +7682,9 @@ a.button {
   font-size: small !important;
   padding-left: 5px !important; }
 
+.item.px-smaller-text {
+  padding-left: 16px !important; }
+
 .px-smaller-text.assertive {
   color: #c53302 !important; }
 

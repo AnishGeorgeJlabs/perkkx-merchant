@@ -27,8 +27,8 @@
         });
       }
     };
-    pxUserCred.register(function(id) {
-      vendor_id = id;
+    pxUserCred.register(function(d) {
+      vendor_id = d.vendor_id;
       return res.refresh();
     });
     return res;
@@ -114,15 +114,9 @@
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
     var announce, callbacks, changePassword, getCred, isLoggedIn, res, storeCred, userLogin;
-    storeCred = function(vendor, id, username, pass) {
-      var obj;
-      obj = {
-        vendor_name: vendor,
-        username: username,
-        vendor_id: id,
-        password: pass
-      };
-      return $window.localStorage['perkkx_creds'] = JSON.stringify(obj);
+    storeCred = function(username, data) {
+      data['username'] = username;
+      return $window.localStorage['perkkx_creds'] = JSON.stringify(data);
     };
     callbacks = [];
     isLoggedIn = false;
@@ -180,7 +174,7 @@
       login: function(username, pass, callback) {
         return userLogin(username, pass).success(function(data) {
           if (data.result) {
-            storeCred(data.vendor_name, data.vendor_id, username, pass);
+            storeCred(username, data.data);
             announce();
           }
           return callback(data.result);

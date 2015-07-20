@@ -21,8 +21,8 @@ angular.module 'perkkx.services', []
       $ionicScrollDelegate.scrollTop()
       update().success (obj) -> updater(obj)
 
-  pxUserCred.register (id) ->
-    vendor_id = id
+  pxUserCred.register (d) ->
+    vendor_id = d.vendor_id
     res.refresh()
 
   return res
@@ -75,7 +75,7 @@ angular.module 'perkkx.services', []
       else {more: false}
 
     apiSubmit: (data) ->                  # submit bill info
-      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id}", data       # TODO: change
+      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id}", data
       .success (data) ->
         $log.info "Bill submitted successfully: "+JSON.stringify(data)
         $cordovaToast.show "Bill submitted successfully", "short", "center"
@@ -89,13 +89,9 @@ angular.module 'perkkx.services', []
 
 
 .factory 'pxUserCred', ($window, $http, pxApiEndpoints, $log) ->
-  storeCred = (vendor, id, username, pass) ->
-    obj =
-      vendor_name: vendor
-      username: username
-      vendor_id: id          # Not sure if it is vendor_id or username
-      password: pass
-    $window.localStorage['perkkx_creds'] = JSON.stringify(obj)
+  storeCred = (username, data) ->
+    data['username'] = username
+    $window.localStorage['perkkx_creds'] = JSON.stringify(data)
 
   callbacks = []
   isLoggedIn = false
@@ -132,7 +128,7 @@ angular.module 'perkkx.services', []
     login: (username, pass, callback) ->        # Do a login taking things from the login page
       userLogin(username, pass).success (data) ->
         if data.result
-          storeCred(data.vendor_name, data.vendor_id, username, pass)
+          storeCred(username, data.data)
           announce()
         callback(data.result)
 

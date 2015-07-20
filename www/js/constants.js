@@ -7,17 +7,9 @@
   angular.module('perkkx.constants', []).constant('pxApiEndpoints', {
     checkValid: baseUrl + "/validate",
     post: baseUrl + "/submit",
-    postProxy: 'http://localhost:8100/submit',
     get: "" + baseUrl,
     badge: baseUrl + "/count",
-    login: baseUrl + "/login",
-    loginProxy: "http://localhost:8100/login"
-  }).constant('pxApiEndpoints_old', {
-    checkValid: 'http://localhost:8100/lvalidate',
-    post: 'http://localhost:8100/lsubmit',
-    postProxy: 'http://localhost:8100/lsubmit',
-    get: 'http://localhost:8100/merchantapp',
-    badge: 'http://localhost:8100/lcount'
+    login: baseUrl + "/login"
   });
 
 }).call(this);
