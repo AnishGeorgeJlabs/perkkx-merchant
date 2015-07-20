@@ -2,7 +2,7 @@
 (function() {
   var hasProp = {}.hasOwnProperty;
 
-  angular.module('perkkx.controllers.main', []).controller('MainCtrl', function($scope, $rootScope, $state, pxUserCred, pxBadgeProvider, $log, $ionicSideMenuDelegate) {
+  angular.module('perkkx.controllers.main', []).controller('MainCtrl', function($scope, $rootScope, $state, $log, $ionicSideMenuDelegate, $ionicPlatform, $ionicPopup, pxUserCred, pxBadgeProvider) {
 
     /*
       Parent for the view controllers. manages the badges and all for the tabs
@@ -32,29 +32,43 @@
       return $ionicSideMenuDelegate.toggleLeft();
     };
     pxBadgeProvider.setUpdater(callback);
-    return $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
-      $log.info("Changing state from " + fromState.name + " to " + toState.name);
+    $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       if (toState.name === 'login' || toState.name === 'change_pass') {
         return $scope.state.sideBar = false;
       } else {
         return $scope.state.sideBar = true;
       }
     });
+    return $ionicPlatform.registerBackButtonAction(function() {
+      if ($state.is('tab.redeem') || $state.is('login')) {
+        return $ionicPopup.confirm({
+          title: "Exit App",
+          content: "Are you sure you want to exit Perkkx?",
+          okType: 'button-clear button-small button-assertive',
+          okText: 'Exit',
+          cancelType: 'button-clear button-small'
+        }).then(function(result) {
+          if (result) {
+            return navigator.app.exitApp();
+          }
+        });
+      } else {
+        return $state.go('tab.redeem');
+      }
+    }, 120);
   }).controller('SideBarCtrl', function($scope, pxUserCred, $state, $ionicSideMenuDelegate) {
 
     /*
       Controller for the sidebar
      */
     $scope.data = {
-      title: "Perkkx",
-      vendor_name: '',
-      username: ''
+      title: "Perkkx"
     };
-    pxUserCred.register(function(id, name, username) {
-      $scope.data.vendor_id = id;
-      $scope.data.vendor_name = name;
-      $scope.data.username = username;
-      return $scope.state.registered = true;
+    pxUserCred.register(function(d) {
+      $scope.data.vendor_id = d.vendor_id;
+      $scope.data.vendor_name = d.vendor_name;
+      $scope.data.username = d.username;
+      return $scope.data.address = d.address;
     });
     $scope.logout = function() {
       $ionicSideMenuDelegate.toggleLeft(false);

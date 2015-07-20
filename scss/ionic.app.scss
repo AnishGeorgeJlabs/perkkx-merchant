@@ -27,6 +27,13 @@ $ionicons-font-path: "../lib/ionic/fonts" !default;
 
 .px-smaller-text {
   font-size: small !important;
+  padding-left: 5px !important;
+}
+.item.px-smaller-text {
+  padding-left: 16px !important;
+}
+.px-smaller-text.assertive {
+  color: $assertive !important;
 }
 
 .px-header-img {

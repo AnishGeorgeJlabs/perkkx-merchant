@@ -14,11 +14,10 @@
     pxUserCred.confirmCreds(function(res) {
       $log.info("got result for confirmation as : " + res);
       $scope.state.isLoading = false;
-      if (!res) {
-        return $scope.state.loginPage = true;
-      } else {
-        return $state.go('tab.redeem');
+      if (res) {
+        $state.go('tab.redeem');
       }
+      return $scope.state.loginPage = true;
     });
     return $scope.submit = function() {
       $scope.state.isLoading = true;
@@ -27,7 +26,6 @@
         $scope.state.isLoading = false;
         if (!res) {
           $scope.state.error = true;
-          $scope.state.loginPage = true;
           return $scope.data.error = "Login failed";
         } else {
           $scope.data.username = '';
@@ -55,8 +53,8 @@
       error: false,
       isLoading: false
     };
-    pxUserCred.register(function(id, vname, username) {
-      return $scope.data.username = username;
+    pxUserCred.register(function(d) {
+      return $scope.data.username = d.username;
     });
     validate = function() {
       return $scope.data.username !== '' && $scope.data.password_old !== '' && $scope.data.password_new !== '' && $scope.data.password_new === $scope.data.password_new_rep;

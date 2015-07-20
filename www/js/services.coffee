@@ -19,10 +19,13 @@ angular.module 'perkkx.services', []
     refresh: () ->
       call() for call in callbacks
       $ionicScrollDelegate.scrollTop()
-      update().success (obj) -> updater(obj)
+      update().success updater
 
-  pxUserCred.register (id) ->
-    vendor_id = id
+    updateBadgesOnly: () ->
+      update().success updater
+
+  pxUserCred.register (d) ->
+    vendor_id = d.vendor_id
     res.refresh()
 
   return res
@@ -31,8 +34,9 @@ angular.module 'perkkx.services', []
   # Api connection for the main get and post methods
 
   vendor_id = 0
-  pxUserCred.register (id, name) ->
-    vendor_id = parseInt(id)    # just to be safe
+  pxUserCred.register (d) ->
+    vendor_id = parseInt(d.vendor_id)    # just to be safe
+  , true
 
   urls =
     pending: "#{pxApiEndpoints.get}/pending/"
@@ -53,7 +57,7 @@ angular.module 'perkkx.services', []
       callbacks[key] = receiver
 
     apiGet: (key) ->                    # Get data
-      console.log "GET for #{key}"
+      console.log "GET for #{key} with vendor: #{vendor_id}"
       res = $http.get urls[key] + vendor_id
       .success (sdata) ->
         if not sdata.error
@@ -75,7 +79,7 @@ angular.module 'perkkx.services', []
       else {more: false}
 
     apiSubmit: (data) ->                  # submit bill info
-      res = $http.post "#{pxApiEndpoints.postProxy}/#{vendor_id}", data       # TODO: change
+      res = $http.post "#{pxApiEndpoints.post}/#{vendor_id}", data
       .success (data) ->
         $log.info "Bill submitted successfully: "+JSON.stringify(data)
         $cordovaToast.show "Bill submitted successfully", "short", "center"
@@ -89,13 +93,10 @@ angular.module 'perkkx.services', []
 
 
 .factory 'pxUserCred', ($window, $http, pxApiEndpoints, $log) ->
-  storeCred = (vendor, id, username, pass) ->
-    obj =
-      vendor_name: vendor
-      username: username
-      vendor_id: id          # Not sure if it is vendor_id or username
-      password: pass
-    $window.localStorage['perkkx_creds'] = JSON.stringify(obj)
+  storeCred = (username, pass, data) ->
+    data['username'] = username
+    data['password'] = pass
+    $window.localStorage['perkkx_creds'] = JSON.stringify(data)
 
   callbacks = []
   isLoggedIn = false
@@ -110,13 +111,13 @@ angular.module 'perkkx.services', []
     d = getCred()
     if d.hasOwnProperty('vendor_id')
       isLoggedIn = true
-      call(d.vendor_id, d.vendor_name, d.username) for call in callbacks
+      call(d) for call in callbacks
 
   userLogin = (user, pass) ->
-    $http.post pxApiEndpoints.loginProxy, {mode: "login", username: user, password: pass}      # Just to be safe
+    $http.post pxApiEndpoints.login, {mode: "login", username: user, password: pass}      # Just to be safe
 
   changePassword = (user, pass_old, pass_new) ->
-    $http.post pxApiEndpoints.loginProxy, {mode: "change_pass", username: user , password: pass_new, password_old: pass_old}
+    $http.post pxApiEndpoints.login, {mode: "change_pass", username: user , password: pass_new, password_old: pass_old}
 
   res =
     confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false
@@ -132,7 +133,7 @@ angular.module 'perkkx.services', []
     login: (username, pass, callback) ->        # Do a login taking things from the login page
       userLogin(username, pass).success (data) ->
         if data.result
-          storeCred(data.vendor_name, data.vendor_id, username, pass)
+          storeCred(username, pass, data.data)
           announce()
         callback(data.result)
 
@@ -143,8 +144,11 @@ angular.module 'perkkx.services', []
           delete $window.localStorage['perkkx_creds']
         callback(data.result)
 
-    register: (receiver) ->       # Will take vendor_id, and vendor_name
-      callbacks.push(receiver)
+    register: (receiver, priorityFlag) ->       # Will take vendor_id, and vendor_name
+      if priorityFlag
+        callbacks.unshift(receiver)
+      else
+        callbacks.push(receiver)
       announce()
 
     logout: () ->

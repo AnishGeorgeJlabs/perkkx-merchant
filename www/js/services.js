@@ -22,22 +22,23 @@
           call();
         }
         $ionicScrollDelegate.scrollTop();
-        return update().success(function(obj) {
-          return updater(obj);
-        });
+        return update().success(updater);
+      },
+      updateBadgesOnly: function() {
+        return update().success(updater);
       }
     };
-    pxUserCred.register(function(id) {
-      vendor_id = id;
+    pxUserCred.register(function(d) {
+      vendor_id = d.vendor_id;
       return res.refresh();
     });
     return res;
   }).factory('pxApiConnect', function($http, $log, pxApiEndpoints, pxUserCred, $cordovaToast) {
     var callbacks, refreshData, res, urls, vendor_id;
     vendor_id = 0;
-    pxUserCred.register(function(id, name) {
-      return vendor_id = parseInt(id);
-    });
+    pxUserCred.register(function(d) {
+      return vendor_id = parseInt(d.vendor_id);
+    }, true);
     urls = {
       pending: pxApiEndpoints.get + "/pending/",
       used: pxApiEndpoints.get + "/used/",
@@ -68,7 +69,7 @@
         return callbacks[key] = receiver;
       },
       apiGet: function(key) {
-        console.log("GET for " + key);
+        console.log("GET for " + key + " with vendor: " + vendor_id);
         res = $http.get(urls[key] + vendor_id).success(function(sdata) {
           if (!sdata.error) {
             refreshData[key].total = sdata.total_pages;
@@ -99,7 +100,7 @@
         }
       },
       apiSubmit: function(data) {
-        res = $http.post(pxApiEndpoints.postProxy + "/" + vendor_id, data).success(function(data) {
+        res = $http.post(pxApiEndpoints.post + "/" + vendor_id, data).success(function(data) {
           $log.info("Bill submitted successfully: " + JSON.stringify(data));
           return $cordovaToast.show("Bill submitted successfully", "short", "center");
         });
@@ -114,15 +115,10 @@
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
     var announce, callbacks, changePassword, getCred, isLoggedIn, res, storeCred, userLogin;
-    storeCred = function(vendor, id, username, pass) {
-      var obj;
-      obj = {
-        vendor_name: vendor,
-        username: username,
-        vendor_id: id,
-        password: pass
-      };
-      return $window.localStorage['perkkx_creds'] = JSON.stringify(obj);
+    storeCred = function(username, pass, data) {
+      data['username'] = username;
+      data['password'] = pass;
+      return $window.localStorage['perkkx_creds'] = JSON.stringify(data);
     };
     callbacks = [];
     isLoggedIn = false;
@@ -143,20 +139,20 @@
         results = [];
         for (i = 0, len = callbacks.length; i < len; i++) {
           call = callbacks[i];
-          results.push(call(d.vendor_id, d.vendor_name, d.username));
+          results.push(call(d));
         }
         return results;
       }
     };
     userLogin = function(user, pass) {
-      return $http.post(pxApiEndpoints.loginProxy, {
+      return $http.post(pxApiEndpoints.login, {
         mode: "login",
         username: user,
         password: pass
       });
     };
     changePassword = function(user, pass_old, pass_new) {
-      return $http.post(pxApiEndpoints.loginProxy, {
+      return $http.post(pxApiEndpoints.login, {
         mode: "change_pass",
         username: user,
         password: pass_new,
@@ -180,7 +176,7 @@
       login: function(username, pass, callback) {
         return userLogin(username, pass).success(function(data) {
           if (data.result) {
-            storeCred(data.vendor_name, data.vendor_id, username, pass);
+            storeCred(username, pass, data.data);
             announce();
           }
           return callback(data.result);
@@ -194,8 +190,12 @@
           return callback(data.result);
         });
       },
-      register: function(receiver) {
-        callbacks.push(receiver);
+      register: function(receiver, priorityFlag) {
+        if (priorityFlag) {
+          callbacks.unshift(receiver);
+        } else {
+          callbacks.push(receiver);
+        }
         return announce();
       },
       logout: function() {

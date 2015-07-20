@@ -81,6 +81,7 @@ angular.module 'perkkx.controllers.views', []
     pxApiConnect.apiGet 'used'
 
   $scope.refresh = () ->                                      # For refreshing
+    pxBadgeProvider.updateBadgesOnly()
     $scope.initGet()
     .finally () ->
       $scope.$broadcast('scroll.refreshComplete')
@@ -123,6 +124,7 @@ angular.module 'perkkx.controllers.views', []
   $scope.initGet = () -> pxApiConnect.apiGet 'disputed'
 
   $scope.refresh = () ->
+    pxBadgeProvider.updateBadgesOnly()
     $scope.initGet()
     .finally () ->
       $scope.$broadcast('scroll.refreshComplete')
