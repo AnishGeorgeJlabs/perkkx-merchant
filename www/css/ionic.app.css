@@ -7776,6 +7776,10 @@ i.px-icon {
 .dark-bg h2, .dark-bg h3, .dark-bg p, .dark-bg a {
   color: #F0F1F1; }
 
+/* Form validation */
+input:focus {
+  border-bottom: 2px solid #aaaaaa !important; }
+
 /* Not good
 ion-content.px-center {
   display: -webkit-box;

@@ -28,7 +28,7 @@
     <p ng-if="hRedeem" class="px-smaller-text">
         Redeemed on {{ coupon.used_on | date }}
     </p>
-    <p ng-if='hExpiry && checkExpiry(coupon.expiry)' class="px-smaller-text assertive">
+    <p ng-if='hExpiry && coupon.hasOwnProperty("expiry")' class="px-smaller-text assertive">
         Valid till {{ coupon.expiry | date }}
     </p>
     <p ng-if="hBill" class="px-smaller-text">

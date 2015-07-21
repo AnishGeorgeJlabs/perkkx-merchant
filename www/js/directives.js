@@ -9,11 +9,6 @@
         hRedeem: '=redeem',
         hExpiry: '=expiry',
         hBill: '=bill'
-      },
-      controller: function($scope) {
-        return $scope.checkExpiry = function(ed) {
-          return moment(ed) < moment().add(6, 'M');
-        };
       }
     };
   }).directive('pxBillForm', function() {

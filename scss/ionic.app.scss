@@ -156,6 +156,11 @@ $tab-pending: #f8943d !default;
   color: #F0F1F1;
 }
 
+/* Form validation */
+input:focus {
+  border-bottom: 2px solid lighten($dark, 40%) !important;
+}
+
 /* Not good
 ion-content.px-center {
   display: -webkit-box;
