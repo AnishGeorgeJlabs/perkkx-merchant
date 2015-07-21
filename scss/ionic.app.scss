@@ -158,7 +158,10 @@ $tab-pending: #f8943d !default;
 
 /* Form validation */
 input:focus {
-  border-bottom: 2px solid lighten($dark, 40%) !important;
+  border-bottom: 2px solid lighten($dark, 40%);
+}
+.ion-search + input:focus {
+  border: 0;
 }
 
 /* Not good

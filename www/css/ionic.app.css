@@ -7778,7 +7778,10 @@ i.px-icon {
 
 /* Form validation */
 input:focus {
-  border-bottom: 2px solid #aaaaaa !important; }
+  border-bottom: 2px solid #aaaaaa; }
+
+.ion-search + input:focus {
+  border: 0; }
 
 /* Not good
 ion-content.px-center {
