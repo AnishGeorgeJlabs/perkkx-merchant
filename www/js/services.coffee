@@ -131,18 +131,19 @@ angular.module 'perkkx.services', []
         callback(false)
 
     login: (username, pass, callback) ->        # Do a login taking things from the login page
-      userLogin(username, pass).success (data) ->
+      sPass = md5(pass)
+      userLogin(username, sPass).success (data) ->
         if data.result
-          storeCred(username, pass, data.data)
+          storeCred(username, sPass, data.data)
           announce()
         callback(data.result)
 
 
     change_pass: (username, pass_old, pass_new, callback) ->
-      changePassword(username, pass_old, pass_new).success (data) ->
+      changePassword(username, md5(pass_old), md5(pass_new)).success (data) ->
         if data.result
           delete $window.localStorage['perkkx_creds']
-        callback(data.result)
+        callback(data.result)       # Make sure the caller sends the app to required login state
 
     register: (receiver, priorityFlag) ->       # Will take vendor_id, and vendor_name
       if priorityFlag

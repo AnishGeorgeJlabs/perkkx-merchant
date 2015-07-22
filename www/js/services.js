@@ -174,16 +174,18 @@
         }
       },
       login: function(username, pass, callback) {
-        return userLogin(username, pass).success(function(data) {
+        var sPass;
+        sPass = md5(pass);
+        return userLogin(username, sPass).success(function(data) {
           if (data.result) {
-            storeCred(username, pass, data.data);
+            storeCred(username, sPass, data.data);
             announce();
           }
           return callback(data.result);
         });
       },
       change_pass: function(username, pass_old, pass_new, callback) {
-        return changePassword(username, pass_old, pass_new).success(function(data) {
+        return changePassword(username, md5(pass_old), md5(pass_new)).success(function(data) {
           if (data.result) {
             delete $window.localStorage['perkkx_creds'];
           }
