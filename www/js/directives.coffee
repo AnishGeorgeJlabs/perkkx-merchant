@@ -50,7 +50,9 @@ angular.module 'perkkx.directives', []
       cleanup()
 
     $scope.validate = () ->
-        result = $scope.data.paid > 0 and $scope.data.discount > 0
+        paid = parseInt($scope.data.paid)
+        discount = parseInt($scope.data.discount)
+        result = 0 < paid > discount > 0
 
         $ionicPopup.alert({
           title: 'Unable to submit'

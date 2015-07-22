@@ -55,8 +55,10 @@
           return cleanup();
         };
         $scope.validate = function() {
-          var result;
-          result = $scope.data.paid > 0 && $scope.data.discount > 0;
+          var discount, paid, result;
+          paid = parseInt($scope.data.paid);
+          discount = parseInt($scope.data.discount);
+          result = ((0 < paid && paid > discount) && discount > 0);
           if (!result) {
             $ionicPopup.alert({
               title: 'Unable to submit',
