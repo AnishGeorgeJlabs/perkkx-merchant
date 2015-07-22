@@ -5,6 +5,11 @@
               on-refresh="refresh()">
         </ion-refresher>
         <ion-list>
+            <div class="list list-inset list-borderless" ng-if="!codes.length">
+                <div class="item item-text-wrap text-center px-small-text">
+                    No used codes
+                </div>
+            </div>
             <div class="list list-inset" ng-repeat="code in codes"
                 ng-init="formshow = false; detailshow = false" >
                 <div ng-click="detailshow = formshow ? detailshow : !detailshow">
