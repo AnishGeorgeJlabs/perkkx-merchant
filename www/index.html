@@ -84,13 +84,16 @@
 
       <ion-side-menu-content>
 
-        <ion-nav-bar class="bar-stable">
-          <ion-nav-buttons side="left">
+        <ion-header-bar class="bar-stable">
+          <div class="buttons">
             <button class="padding-left button button-clear icon ion-navicon"
                     ng-show="state.sideBar"
                     ng-click="menu()"></button>
-          </ion-nav-buttons>
-        </ion-nav-bar>
+          </div>
+          <div class="title">
+            <img src="img/perkkx_lgo.svg" class="px-header-img">
+          </div>
+        </ion-header-bar>
 
         <ion-nav-view></ion-nav-view>   <!-- Views will be rendered here -->
 
