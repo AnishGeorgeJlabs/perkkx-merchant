@@ -58,9 +58,7 @@
           <div class="list list-inset list-borderless">
             <div class="item item-text-wrap">
               This application is registered to <strong>{{ data.vendor_name }}</strong>
-            </div>
-            <div class="item item-text-wrap px-smaller-text" ng-if="data.address">
-              {{data.address}}
+              <p ng-if="data.address" class="padding-top">Outlet: <strong>{{data.address}}</strong></p>
             </div>
             <div class="item item-text-wrap">
               Logged in as: <strong>{{ data.username }}</strong>
