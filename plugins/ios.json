@@ -64,6 +64,9 @@
         },
         "nl.x-services.plugins.toast": {
             "PACKAGE_NAME": "com.ionicframework.perkkx791578"
+        },
+        "cordova-plugin-whitelist": {
+            "PACKAGE_NAME": "com.ionicframework.perkkx791578"
         }
     },
     "dependent_plugins": {}
