@@ -26,13 +26,13 @@
 </div>
 <div class="item item-text-wrap px-item-content" ng-if="hRedeem || hExpiry || hBill">
     <p ng-if="hRedeem" class="px-smaller-text">
-        Redeemed on {{ coupon.used_on | date }}
+        Redeemed on {{ coupon.used_on | date : "MMM d, y 'at' h:mm a" : "+0530" }}
     </p>
     <p ng-if='hExpiry && coupon.hasOwnProperty("expiry")' class="px-smaller-text assertive">
-        Valid till {{ coupon.expiry | date }}
+        Valid till {{ coupon.expiry | date : "MMM d, y" }}
     </p>
     <p ng-if="hBill" class="px-smaller-text">
-        Bill submitted on {{ coupon.submitted_on | date}}
+        Bill submitted on {{ coupon.submitted_on | date : "MMM d, y 'at' h:mm a" : "+0530" }}
     </p>
 </div>
 <!--
