@@ -78,7 +78,6 @@
             paid: parseInt($scope.data.paid),
             discount: parseInt($scope.data.discount)
           };
-          //res.submitted_on = parseInt(Date.now());
           if ($scope.dealOptsCheck()) {
             res.used_on = $scope.submitObj.used_on;
             res.cID = $scope.data.selectedOpt.cID;

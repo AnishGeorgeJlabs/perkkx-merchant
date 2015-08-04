@@ -70,7 +70,6 @@ angular.module 'perkkx.directives', []
         paid: parseInt($scope.data.paid)
         discount: parseInt($scope.data.discount)
 
-      res.submitted_on = parseInt( Date.now() )
       if $scope.dealOptsCheck()   # extraodinary case
         res.used_on = $scope.submitObj.used_on
         res.cID = $scope.data.selectedOpt.cID       # add the correct cID according to the radio button selected

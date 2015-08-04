@@ -29,7 +29,10 @@
       if (data.valid) {
         $scope.data.resultCode = data.data;
         $scope.state.haveResult = true;
-        return $scope.state.billshow = true;
+        $scope.state.billshow = true;
+        if (window.cordova && window.cordova.plugins && window.cordova.plugins.Keyboard) {
+          return cordova.plugins.Keyboard.close();
+        }
       } else {
         $log.debug("else part");
         return $scope.state.isError = true;
