@@ -8,6 +8,7 @@
     "jquery": "~2.1.4",
     "moment": "~2.10.3",
     "ngCordova": "~0.1.17-alpha",
-    "cryptojs": "*"
+    "cryptojs": "*",
+    "blueimp-md5": "~1.1.1"
   }
 }
