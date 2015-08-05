@@ -11,6 +11,8 @@ angular.module 'perkkx.directives', []
 .directive 'pxLoginImg', () ->
   restrict: 'E'
   templateUrl: 'directives/loginImg.html'
+  scope:
+    title: '=title'
 
 .directive 'pxBillForm', () ->
   restrict: 'E'

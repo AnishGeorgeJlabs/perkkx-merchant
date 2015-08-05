@@ -14,7 +14,10 @@
   }).directive('pxLoginImg', function() {
     return {
       restrict: 'E',
-      templateUrl: 'directives/loginImg.html'
+      templateUrl: 'directives/loginImg.html',
+      scope: {
+        title: '=title'
+      }
     };
   }).directive('pxBillForm', function() {
     return {
