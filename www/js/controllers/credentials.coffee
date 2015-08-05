@@ -53,8 +53,13 @@ angular.module 'perkkx.controllers.credentials', []
     $scope.data.username = d.username
 
   validate = () ->
-    $scope.data.username != '' and $scope.data.password_old != '' and
+    r1 = $scope.data.username != '' and
       $scope.data.password_new != '' and $scope.data.password_new == $scope.data.password_new_rep
+    r2 = $scope.firstLogin() or $scope.data.password_old != ''
+    r1 and r2
+
+  $scope.firstLogin = () ->
+    pxUserCred.firstLogin()
 
   $scope.cancel = () ->
     clear()
@@ -64,16 +69,34 @@ angular.module 'perkkx.controllers.credentials', []
     $scope.state.isLoading = true
     $scope.state.error = false
     if validate()
-      pxUserCred.change_pass $scope.data.username, $scope.data.password_old, $scope.data.password_new, (res) ->
-        $scope.state.isLoading = false
-        if not res
-          $scope.state.error = true
-          $scope.data.error = "Password change failed"
-        else
-          $scope.state.error = false
-          clear()
-          $state.go('login')
-          $cordovaToast.show "Password changed successfully, please login", "long", "bottom"
+      if firstLogin()
+        pxUserCred.new_pass $scope.data.username, $scope.data.password_new, (res) ->
+          if res
+            $scope.state.error = false
+            clear()
+            pxUserCred.login $scope.data.username, $scope.data.password_new, (resl) ->
+              $scope.state.isLoading = false
+              if resl
+                $state.go('tab.redeem')
+                $cordovaToast.show "Password changed successfully", "long", "bottom"
+              else
+                $state.go('login')
+                $cordovaToast.show "Unexpected password change error", "long", "bottom"
+          else
+            $scope.state.isLoading = false
+            $scope.state.error = true
+            $scope.data.error = "Unexpected password change error"
+      else
+        pxUserCred.change_pass $scope.data.username, $scope.data.password_old, $scope.data.password_new, (res) ->
+          $scope.state.isLoading = false
+          if not res
+            $scope.state.error = true
+            $scope.data.error = "Password change failed"
+          else
+            $scope.state.error = false
+            clear()
+            $state.go('login')
+            $cordovaToast.show "Password changed successfully, please login", "long", "bottom"
     else
       $scope.state.isLoading = false
       $scope.state.error = true

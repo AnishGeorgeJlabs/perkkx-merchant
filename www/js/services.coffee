@@ -100,6 +100,7 @@ angular.module 'perkkx.services', []
 
   callbacks = []
   isLoggedIn = false
+  firstLogin = false
 
   getCred = () ->
     d = $window.localStorage['perkkx_creds']
@@ -119,6 +120,10 @@ angular.module 'perkkx.services', []
   changePassword = (user, pass_old, pass_new) ->
     $http.post pxApiEndpoints.login, {mode: "change_pass", username: user , password: pass_new, password_old: pass_old}
 
+  newPassword = (user, pass_new, callback) ->
+    d = getCred()
+    changePassword(user, d.password, pass_new)
+
   res =
     confirmCreds: (callback) ->           # Confirm that the stuff we have in local storage is correct. Results in true or false
       d = getCred()
@@ -136,6 +141,7 @@ angular.module 'perkkx.services', []
         if data.result
           storeCred(username, sPass, data.data)
           announce()
+          firstLogin = !data.verified
         callback(data.result)
 
 
@@ -144,6 +150,13 @@ angular.module 'perkkx.services', []
         if data.result
           delete $window.localStorage['perkkx_creds']
         callback(data.result)       # Make sure the caller sends the app to required login state
+
+    new_pass: (username, new_pass, callback) ->
+      newPassword(username, md5(new_pass)).success (data) ->
+        if data.result
+          delete $window.localStorage['perkkx_creds']
+        callback(data.result)
+
 
     register: (receiver, priorityFlag) ->       # Will take vendor_id, and vendor_name
       if priorityFlag
@@ -157,6 +170,7 @@ angular.module 'perkkx.services', []
       isLoggedIn = false
 
     isLoggedIn: () -> isLoggedIn
+    firstLogin: () -> firstLogin
 
   ### NOTES
     We can use confirmCreds and wait to clear the splash screen

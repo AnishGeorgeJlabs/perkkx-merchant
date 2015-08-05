@@ -114,7 +114,7 @@
       }
     };
   }).factory('pxUserCred', function($window, $http, pxApiEndpoints, $log) {
-    var announce, callbacks, changePassword, getCred, isLoggedIn, res, storeCred, userLogin;
+    var announce, callbacks, changePassword, firstLogin, getCred, isLoggedIn, newPassword, res, storeCred, userLogin;
     storeCred = function(username, pass, data) {
       data['username'] = username;
       data['password'] = pass;
@@ -122,6 +122,7 @@
     };
     callbacks = [];
     isLoggedIn = false;
+    firstLogin = false;
     getCred = function() {
       var d;
       d = $window.localStorage['perkkx_creds'];
@@ -159,6 +160,11 @@
         password_old: pass_old
       });
     };
+    newPassword = function(user, pass_new, callback) {
+      var d;
+      d = getCred();
+      return changePassword(user, d.password, pass_new);
+    };
     return res = {
       confirmCreds: function(callback) {
         var d;
@@ -180,12 +186,21 @@
           if (data.result) {
             storeCred(username, sPass, data.data);
             announce();
+            firstLogin = !data.verified;
           }
           return callback(data.result);
         });
       },
       change_pass: function(username, pass_old, pass_new, callback) {
         return changePassword(username, md5(pass_old), md5(pass_new)).success(function(data) {
+          if (data.result) {
+            delete $window.localStorage['perkkx_creds'];
+          }
+          return callback(data.result);
+        });
+      },
+      new_pass: function(username, new_pass, callback) {
+        return newPassword(username, md5(new_pass)).success(function(data) {
           if (data.result) {
             delete $window.localStorage['perkkx_creds'];
           }
@@ -206,6 +221,9 @@
       },
       isLoggedIn: function() {
         return isLoggedIn;
+      },
+      firstLogin: function() {
+        return firstLogin;
       }
     };
 

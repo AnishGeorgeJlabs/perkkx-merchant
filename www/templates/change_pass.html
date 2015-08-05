@@ -2,14 +2,21 @@
     <ion-content class="padding">
         <px-login-img></px-login-img>
         <div class="list list-inset">
-            <label class="item item-input item-divider">
+            <label class="item item-input item-divider" ng-if="!firstLogin()">
                 <span class="input-label">Username</span>
                 <input type="text" placeholder="Enter username" ng-model="data.username" ng-disabled="true">
             </label>
-            <label class="item item-input">
+            <label class="item item-input" ng-if="!firstLogin()">
                 <span class="input-label">Old Password</span>
                 <input type="password" placeholder="Enter password" ng-model="data.password_old">
             </label>
+
+
+            <div class="item item-text-wrap" ng-if="firstLogin()">
+              Hello {{data.username}}, this is your first time loggin into <strong>Perkkx</strong>. Please change
+              your password.
+            </div>
+
             <label class="item item-input">
                 <span class="input-label">New Password</span>
                 <input type="password" placeholder="Enter password" ng-model="data.password_new">

@@ -57,7 +57,13 @@
       return $scope.data.username = d.username;
     });
     validate = function() {
-      return $scope.data.username !== '' && $scope.data.password_old !== '' && $scope.data.password_new !== '' && $scope.data.password_new === $scope.data.password_new_rep;
+      var r1, r2;
+      r1 = $scope.data.username !== '' && $scope.data.password_new !== '' && $scope.data.password_new === $scope.data.password_new_rep;
+      r2 = $scope.firstLogin() || $scope.data.password_old !== '';
+      return r1 && r2;
+    };
+    $scope.firstLogin = function() {
+      return pxUserCred.firstLogin();
     };
     $scope.cancel = function() {
       clear();
@@ -67,18 +73,41 @@
       $scope.state.isLoading = true;
       $scope.state.error = false;
       if (validate()) {
-        return pxUserCred.change_pass($scope.data.username, $scope.data.password_old, $scope.data.password_new, function(res) {
-          $scope.state.isLoading = false;
-          if (!res) {
-            $scope.state.error = true;
-            return $scope.data.error = "Password change failed";
-          } else {
-            $scope.state.error = false;
-            clear();
-            $state.go('login');
-            return $cordovaToast.show("Password changed successfully, please login", "long", "bottom");
-          }
-        });
+        if (firstLogin()) {
+          return pxUserCred.new_pass($scope.data.username, $scope.data.password_new, function(res) {
+            if (res) {
+              $scope.state.error = false;
+              clear();
+              return pxUserCred.login($scope.data.username, $scope.data.password_new, function(resl) {
+                $scope.state.isLoading = false;
+                if (resl) {
+                  $state.go('tab.redeem');
+                  return $cordovaToast.show("Password changed successfully", "long", "bottom");
+                } else {
+                  $state.go('login');
+                  return $cordovaToast.show("Unexpected password change error", "long", "bottom");
+                }
+              });
+            } else {
+              $scope.state.isLoading = false;
+              $scope.state.error = true;
+              return $scope.data.error = "Unexpected password change error";
+            }
+          });
+        } else {
+          return pxUserCred.change_pass($scope.data.username, $scope.data.password_old, $scope.data.password_new, function(res) {
+            $scope.state.isLoading = false;
+            if (!res) {
+              $scope.state.error = true;
+              return $scope.data.error = "Password change failed";
+            } else {
+              $scope.state.error = false;
+              clear();
+              $state.go('login');
+              return $cordovaToast.show("Password changed successfully, please login", "long", "bottom");
+            }
+          });
+        }
       } else {
         $scope.state.isLoading = false;
         $scope.state.error = true;
