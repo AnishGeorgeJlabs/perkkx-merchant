@@ -14,7 +14,10 @@ angular.module 'perkkx.controllers.credentials', []
     $log.info "got result for confirmation as : #{res}"
     $scope.state.isLoading = false
     if res
-      $state.go('tab.redeem')
+      if pxUserCred.firstLogin()
+        $state.go('change_pass')
+      else
+        $state.go('tab.redeem')
     $scope.state.loginPage = true
 
   $scope.submit = () ->
@@ -28,7 +31,10 @@ angular.module 'perkkx.controllers.credentials', []
       else
         $scope.data.username = ''
         $scope.data.password = ''
-        $state.go('tab.redeem')
+        if pxUserCred.firstLogin()
+          $state.go('change_pass')
+        else
+          $state.go('tab.redeem')
         $cordovaToast.show "Login success", "short", "bottom"
 
 
@@ -69,18 +75,20 @@ angular.module 'perkkx.controllers.credentials', []
     $scope.state.isLoading = true
     $scope.state.error = false
     if validate()
-      if firstLogin()
+      if $scope.firstLogin()
         pxUserCred.new_pass $scope.data.username, $scope.data.password_new, (res) ->
           if res
             $scope.state.error = false
-            clear()
             pxUserCred.login $scope.data.username, $scope.data.password_new, (resl) ->
               $scope.state.isLoading = false
+              clear()
               if resl
                 $state.go('tab.redeem')
+                $log.debug("Password change for first timer success")
                 $cordovaToast.show "Password changed successfully", "long", "bottom"
               else
                 $state.go('login')
+                $log.debug("Password change for first timer FAILED")
                 $cordovaToast.show "Unexpected password change error", "long", "bottom"
           else
             $scope.state.isLoading = false

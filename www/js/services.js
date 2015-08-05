@@ -160,7 +160,7 @@
         password_old: pass_old
       });
     };
-    newPassword = function(user, pass_new, callback) {
+    newPassword = function(user, pass_new) {
       var d;
       d = getCred();
       return changePassword(user, d.password, pass_new);
@@ -171,6 +171,7 @@
         d = getCred();
         if (d.hasOwnProperty('vendor_id')) {
           return userLogin(d.username, d.password).success(function(data) {
+            firstLogin = !data.verified;
             callback(data.result);
             announce();
             return $log.info("Got login data: " + JSON.stringify(data));
@@ -181,6 +182,7 @@
       },
       login: function(username, pass, callback) {
         var sPass;
+        $log.debug("pxUserCred login: " + username + ", " + pass);
         sPass = md5(pass);
         return userLogin(username, sPass).success(function(data) {
           if (data.result) {

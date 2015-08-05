@@ -120,7 +120,7 @@ angular.module 'perkkx.services', []
   changePassword = (user, pass_old, pass_new) ->
     $http.post pxApiEndpoints.login, {mode: "change_pass", username: user , password: pass_new, password_old: pass_old}
 
-  newPassword = (user, pass_new, callback) ->
+  newPassword = (user, pass_new) ->
     d = getCred()
     changePassword(user, d.password, pass_new)
 
@@ -129,6 +129,7 @@ angular.module 'perkkx.services', []
       d = getCred()
       if d.hasOwnProperty('vendor_id')
         userLogin(d.username, d.password).success (data) ->
+          firstLogin = !data.verified
           callback(data.result)
           announce()
           $log.info "Got login data: "+JSON.stringify(data)
@@ -136,6 +137,7 @@ angular.module 'perkkx.services', []
         callback(false)
 
     login: (username, pass, callback) ->        # Do a login taking things from the login page
+      $log.debug "pxUserCred login: #{username}, #{pass}"
       sPass = md5(pass)
       userLogin(username, sPass).success (data) ->
         if data.result
