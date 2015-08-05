@@ -11,6 +11,11 @@
         hBill: '=bill'
       }
     };
+  }).directive('pxLoginImg', function() {
+    return {
+      restrict: 'E',
+      templateUrl: 'directives/loginImg.html'
+    };
   }).directive('pxBillForm', function() {
     return {
       restrict: 'E',

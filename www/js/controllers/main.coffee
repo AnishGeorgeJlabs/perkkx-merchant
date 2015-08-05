@@ -24,6 +24,9 @@ angular.module 'perkkx.controllers.main', []
   $scope.menu = () ->
     $ionicSideMenuDelegate.toggleLeft()
 
+  $scope.navBarCheck = () ->
+    not($state.is('login') or $state.is('change_pass'))
+
   # --------- Setup ----------- #
   pxBadgeProvider.setUpdater callback
 

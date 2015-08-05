@@ -1,14 +1,14 @@
 {
-  "name": "HelloIonic",
-  "private": "true",
-  "devDependencies": {
-    "ionic": "driftyco/ionic-bower#1.0.0"
-  },
-  "dependencies": {
-    "jquery": "~2.1.4",
-    "moment": "~2.10.3",
-    "ngCordova": "~0.1.17-alpha",
-    "cryptojs": "*",
-    "blueimp-md5": "~1.1.1"
-  }
+"name": "HelloIonic",
+"private": "true",
+"devDependencies": {
+"ionic": "driftyco/ionic-bower#1.0.0"
+},
+"dependencies": {
+"jquery": "~2.1.4",
+"moment": "~2.10.3",
+"ngCordova": "~0.1.17-alpha",
+"cryptojs": "*",
+"blueimp-md5": "~1.1.1"
+}
 }

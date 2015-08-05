@@ -8,6 +8,10 @@ angular.module 'perkkx.directives', []
     hExpiry: '=expiry'
     hBill: '=bill'
 
+.directive 'pxLoginImg', () ->
+  restrict: 'E'
+  templateUrl: 'directives/loginImg.html'
+
 .directive 'pxBillForm', () ->
   restrict: 'E'
   scope:
