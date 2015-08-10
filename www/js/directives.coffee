@@ -61,7 +61,7 @@ angular.module 'perkkx.directives', []
       $log.info "Values for pd and ds : #{pd}, #{ds}"
 
       errormsg = ""
-      patt = /^\d+$/
+      patt = /^\d+(\.\d{2})?$/
       if not patt.test(pd) or not patt.test(ds)
         errormsg = "The bill values you entered are invalid: #{pd} and #{ds}"
       else

@@ -68,7 +68,7 @@
           ds = $scope.data.discount;
           $log.info("Values for pd and ds : " + pd + ", " + ds);
           errormsg = "";
-          patt = /^\d+$/;
+          patt = /^\d+(\.\d{2})?$/;
           if (!patt.test(pd) || !patt.test(ds)) {
             errormsg = "The bill values you entered are invalid: " + pd + " and " + ds;
           } else {
