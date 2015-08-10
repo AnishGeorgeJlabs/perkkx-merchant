@@ -91,20 +91,21 @@ i.px-icon {
   color: $balanced;
   padding-top: 5px !important;
 }
-
+/*
 $tab-redeem: #dc4b39 !default;
 $tab-used: #00a651 !default;
 $tab-pending: #f8943d !default;
-
+*/
 .tab-item {
   color: $dark;
   &.tab-item-active,
   &.active,
   &.activated {
-    color: $tab-redeem;
-    border-color: $tab-redeem !important;
+    color: $positive;
+    border-color: $positive !important;
   }
 }
+/*
 .tab-item+.tab-item  {
   color: $dark;
   &.tab-item-active,
@@ -124,6 +125,7 @@ $tab-pending: #f8943d !default;
     border-color: $tab-pending !important;
   }
 }
+*/
 .px-cancel-button {
   background: #ebebeb !important;
   color: #8c9098 !important;
