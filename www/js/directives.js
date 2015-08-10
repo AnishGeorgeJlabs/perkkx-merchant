@@ -63,14 +63,29 @@
           return cleanup();
         };
         $scope.validate = function() {
-          var discount, paid, result;
-          paid = parseInt($scope.data.paid);
-          discount = parseInt($scope.data.discount);
-          result = ((0 < paid && paid > discount) && discount > 0);
+          var discount, ds, errormsg, paid, patt, pd, result;
+          pd = $scope.data.paid;
+          ds = $scope.data.discount;
+          $log.info("Values for pd and ds : " + pd + ", " + ds);
+          errormsg = "";
+          patt = /^\d+$/;
+          if (!patt.test(pd) || !patt.test(ds)) {
+            errormsg = "The bill values you entered are invalid: " + pd + " and " + ds;
+          } else {
+            paid = parseInt(pd);
+            discount = parseInt(ds);
+            if (paid <= 0 || discount <= 0) {
+              errormsg = "The bill values must be greater than 0";
+            } else if (discount >= paid) {
+              errormsg = "The discount amount should be less than the amount paid";
+            }
+          }
+          result = errormsg === "";
+          $log.debug(("Result: " + result + ", Error message: ") + errormsg);
           if (!result) {
             $ionicPopup.alert({
               title: 'Unable to submit',
-              template: "The bill values you entered are invalid: " + $scope.data.paid + " and " + $scope.data.discount,
+              template: errormsg,
               okType: 'button-positive button-small button-clear'
             });
           }

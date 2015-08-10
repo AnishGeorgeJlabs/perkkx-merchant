@@ -56,17 +56,33 @@ angular.module 'perkkx.directives', []
       cleanup()
 
     $scope.validate = () ->
-        paid = parseInt($scope.data.paid)
-        discount = parseInt($scope.data.discount)
-        result = 0 < paid > discount > 0
+      pd = $scope.data.paid
+      ds = $scope.data.discount
+      $log.info "Values for pd and ds : #{pd}, #{ds}"
 
-        $ionicPopup.alert({
-          title: 'Unable to submit'
-          template: "The bill values you entered are invalid: #{$scope.data.paid} and #{$scope.data.discount}"
-          okType: 'button-positive button-small button-clear'
-        }) if not result
+      errormsg = ""
+      patt = /^\d+$/
+      if not patt.test(pd) or not patt.test(ds)
+        errormsg = "The bill values you entered are invalid: #{pd} and #{ds}"
+      else
+        paid = parseInt(pd)
+        discount = parseInt(ds)
+        if paid <= 0 or discount <= 0
+          errormsg = "The bill values must be greater than 0"
+        else if discount >= paid
+          errormsg = "The discount amount should be less than the amount paid"
 
-        result
+      #result = 0 < paid > discount > 0
+      result = errormsg == ""
+      $log.debug "Result: #{result}, Error message: "+errormsg
+
+      $ionicPopup.alert({
+        title: 'Unable to submit'
+        template: errormsg
+        okType: 'button-positive button-small button-clear'
+      }) if not result
+
+      result
 
     $scope.submit = () ->
       $scope.formshow = false
