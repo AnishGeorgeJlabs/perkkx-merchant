@@ -4,7 +4,7 @@
         <p class="title dark">These users have rated the experience at your store. Please enter the bill details
         in case they have visited</p>
     </ion-header-bar> -->
-    <ion-content class='has-header'>
+    <ion-content class='has-header' on-swipe-right="goTo('used')">
         <ion-refresher
                 pulling-text="Pull to refresh"
                 on-refresh="refresh()">

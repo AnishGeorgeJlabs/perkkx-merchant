@@ -34,6 +34,9 @@
     $scope.navBarCheck = function() {
       return !($state.is('login') || $state.is('change_pass'));
     };
+    $scope.goTo = function(substate) {
+      return $state.go('tab.' + substate);
+    };
     pxBadgeProvider.setUpdater(callback);
     $rootScope.$on('$stateChangeStart', function(event, toState, toParams, fromState, fromParams) {
       if (toState.name === 'login' || toState.name === 'change_pass') {

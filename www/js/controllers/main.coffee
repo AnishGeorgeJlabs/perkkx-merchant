@@ -27,6 +27,9 @@ angular.module 'perkkx.controllers.main', []
   $scope.navBarCheck = () ->
     not($state.is('login') or $state.is('change_pass'))
 
+  $scope.goTo = (substate) ->
+    $state.go('tab.'+substate)
+
   # --------- Setup ----------- #
   pxBadgeProvider.setUpdater callback
 

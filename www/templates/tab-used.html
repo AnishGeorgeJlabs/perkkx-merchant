@@ -1,5 +1,5 @@
 <ion-view>
-    <ion-content>
+    <ion-content on-swipe-left="goTo('pending')" on-swipe-right="goTo('redeem')">
         <ion-refresher
               pulling-text="Pull to refresh"
               on-refresh="refresh()">
